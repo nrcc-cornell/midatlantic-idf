@@ -1,0 +1,24 @@
+#search-cont {
+  grid-column: 17/25;
+  grid-row: 1;
+}
+
+#search-result {
+  grid-column: 17/25;
+  grid-row: 2/25;
+
+  #result-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  #favorite-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    
+  }
+}
+
