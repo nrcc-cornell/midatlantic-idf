@@ -6,15 +6,16 @@
 
   #grid {
     position: absolute;
-    top: 150px;
+    top: 100px;
     display: grid;
     grid-template-columns: repeat(24, 1fr);
     grid-template-rows: repeat(18, 1fr);
-    grid-gap: 24px;
-    padding: 24px;
+    // grid-gap: 24px;
+    padding-left: 12px;
+    padding-right: 12px;
     box-sizing: border-box;
     width: 100%;
-    height: calc(100vh - 300px);
+    height: calc(100vh - 250px);
     overflow: hidden;
     pointer-events: none;
 

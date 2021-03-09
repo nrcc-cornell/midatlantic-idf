@@ -1,7 +1,6 @@
 #map-cont {
   width: 100vw;
-  height: 100vh;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 250px);
 
   .marker {
     display: flex;
@@ -51,12 +50,12 @@
 
   #legend {
     position: absolute;
-    bottom: 24px;
-    right: 24px;
+    bottom: 36px;
+    right: 36px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 12px;
+    padding: 2px;
     width: 20vw;
     height: 5vh;
     border-radius: 100px;
