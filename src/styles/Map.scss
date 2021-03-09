@@ -1,6 +1,7 @@
 #map-cont {
   width: 100vw;
-  height: calc(100vh - 300px);
+  height: 100vh;
+  height: calc(100vh - 200px);
 
   .marker {
     display: flex;
@@ -33,7 +34,7 @@
       width: 8px;
       height: 8px;
       border-radius: 100%;
-      box-shadow: 0px 0 0px 8px rgba(255, 255, 255, 0.9);
+      box-shadow: 0px 0 0px 8px rgba(12, 159, 228, 0.89);
       transition: all 0.3s;
     }
   }
