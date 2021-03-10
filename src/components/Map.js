@@ -1,5 +1,5 @@
 import {useState, useContext} from 'react'
-import ReactMapGL, {Source, Layer, Marker, Popup} from 'react-map-gl'
+import ReactMapGL, {NavigationControl, Source, Layer, Marker, Popup} from 'react-map-gl'
 
 import '../styles/Map.scss'
 import {data, stations, counties, virginaCounties} from '../data'
@@ -9,12 +9,12 @@ import {CurrentContext} from '../contexts/CurrentContext'
 
 function Map() {
   const [viewport, setViewport] = useState({
-    width: "100%",
-    height: "100%",
+    // width: "100%",
+    // height: "100%",
     latitude: 39.25,
     longitude: -76.25,
-    zoom: 6.1,
-    minZoom: 6.1,
+    zoom: 5.8,
+    minZoom: 5.8,
     bearing: -10,
     pitch: 40
   });
@@ -30,18 +30,18 @@ function Map() {
   let max = Math.ceil(currentData.max*10)/10
   let min = Math.floor(currentData.min*10)/10
 
-  // max = 1+Math.max(max-1, 1-min)
-  // min = 1-Math.max(max-1, 1-min)
+  max = 1+Math.max(max-1, 1-min)
+  min = 1-Math.max(max-1, 1-min)
 
-  const calcS = (mean) => {
-    let result = ((mean - min) / (max - min) * 25);
-    return result
-  };
+  // const calcS = (mean) => {
+  //   let result = ((mean - min) / (max - min) * 25);
+  //   return result
+  // };
 
-  const calcL = (mean) => {
-    let result = ((mean - min) / (max - min) * 50);
-    return result
-  };
+  // const calcL = (mean) => {
+  //   let result = ((mean - min) / (max - min) * 50);
+  //   return result
+  // };
 
 
   let colorExpression = ['match', ['get', 'FIPS']]
@@ -57,8 +57,16 @@ function Map() {
     //   color = `hsla(100, 0%, 40%, 1)`
     // }
 
+    if(mean > 1) {
+      color = `hsla(110, ${(mean-1) / (max-1) * 25 + 75}%, ${50 - (mean-1) / (max-1) * 50}%, 1)`
+    } else if (mean<1) {
+      color = `hsla(40, ${(mean-1) / (min-1) * 25 + 75}%, ${(mean-1) / (min-1) * 20 + 50}%, 1)`
+    } else {
+      color = `hsla(110, 75%, 50%, 1)`
+    }
 
-    color = `hsla(110, ${calcS(mean) + 75}%, ${50 - calcL(mean)}%, 1)`
+    // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1), hsla(40, 100%, 70%, 1))`
+    // color = `hsla(110, ${calcS(mean) + 75}%, ${50 - calcL(mean)}%, 1)`
 
     colorExpression.push(id, color)
   })
@@ -100,23 +108,25 @@ function Map() {
     setPopup(null)
   }
 
-  const handleHover = event => {
-    // let feature = event.features && event.features[0]
-    // if(feature && (feature.layer.id === "counties" || feature.layer.id === "county-names")) {
-    //   setTooltip({
-    //     id: feature.properties.GEOID,
-    //     longitude: event.lngLat[0],
-    //     latitude: event.lngLat[1]
-    //   })
-    // } else {
-    //   setTooltip(null)
-    // }
-  }
+  const handleHover = (event) => {
+    let feature = event.features && event.features[0]
+    if(feature && (feature.layer.id === "county-join" || feature.layer.id === "county-join-names")) {
+      setTooltip({
+        id: feature.properties.FIPS,
+        longitude: event.lngLat[0],
+        latitude: event.lngLat[1]
+      })
+    } else {
+      setTooltip(null)
+    }
+  };
 
   return (
     <div id="map-cont">
       <ReactMapGL
         {...viewport}
+        width= "100%"
+        height= "100%"
         onViewportChange={nextViewport => setViewport(nextViewport)}
         // mapboxApiAccessToken="pk.eyJ1IjoiYWRyaWVuemhlbmciLCJhIjoiY2tkamI5am9iMDN6NjJxbW8xZmY4d2puYiJ9.nQG7j4_lTdRg0jdfZMTWlw"
         // mapStyle="mapbox://styles/adrienzheng/ckidysz96357819k58txti52f"
@@ -136,24 +146,31 @@ function Map() {
 
         {/* <Source type = "vector" url = "mapbox://adrienzheng.604t4hsd">
           <Layer beforeId="waterway-label" {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", counties]]}/>
-        </Source>
-
-        <Source type = "vector" url = "mapbox://adrienzheng.604t4hsd">
+          </Source>
+          
+          <Source type = "vector" url = "mapbox://adrienzheng.604t4hsd">
           <Layer beforeId="waterway-label" {...countyNameLayer} filter={["in", ["get", "GEOID"], ["literal", counties]]}/>
         </Source> */}
+        
+        
         <Markers
           onMarkerMouseEnter={handleMarkerMouseEnter}
           onMarkerMouseLeave={handleMarkerMouseLeave}
         />
-        <div id="legend">
-          <div id="legend-color" style={{
-            backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1))`
-            // backgroundImage: `linear-gradient(270deg, hsla(160, 100%, 70%, 1), hsla(100, 0%, 40%, 1), hsla(40, 100%, 70%, 1))`
-          }}>
-            <div className="legend-text">{min}</div>
-            {/* <div className="legend-text">1.0</div> */}
-            <div className="legend-text">{max}</div>
+
+        <div className="legend-controls-container">
+          <div id="legend">
+            <div id="legend-color" style={{
+              backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1), hsla(40, 100%, 70%, 1))`
+              // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1))`
+              // backgroundImage: `linear-gradient(270deg, hsla(160, 100%, 70%, 1), hsla(100, 0%, 40%, 1), hsla(40, 100%, 70%, 1))`
+            }}>
+              <div className="legend-text">{min}</div>
+              <div className="legend-text">1.0</div>
+              <div className="legend-text">{max}</div>
+            </div>
           </div>
+          <NavigationControl className="map-nav" showCompass={false} />
         </div>
         {popup && <Popup
           tipSize={5}
