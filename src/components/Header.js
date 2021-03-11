@@ -6,7 +6,19 @@ const Header = () => {
   const [page, setPage] = useState(null);
 
   useEffect(() => {
-    let currPath = window.location.pathname;
+    let currPathArr = window.location.pathname.split('/');
+    console.log(currPathArr);
+
+    if (currPathArr.includes('ScopeFull')) {
+      var currPath = '/ScopeFull';
+    } else if (currPathArr.includes('ScopeVA')) {
+      var currPath = '/ScopeFull';
+    } else {
+      var currPath = '/';
+    }
+
+    console.log(currPath);
+
     let initLink = document.querySelector(`a[href='${currPath}']`);
     initLink.classList.toggle('active');
     setPage(initLink);
