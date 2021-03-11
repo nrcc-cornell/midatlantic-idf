@@ -52,3 +52,27 @@
     }
   }
 }
+
+@media (max-width: 1400px) {
+  .footer {
+    height: 100px;
+
+    .footer-logos {
+      min-width: 150px;
+      margin-left: 20px;
+    }
+
+    .footer-text {
+      height: 100px;
+      min-width: none;
+      width: calc(100vw - 150px);
+      padding: 0;
+
+      p {
+        width: 98%;
+        margin: 7px;
+        font-size: 10px;
+      }
+    }
+  }
+}

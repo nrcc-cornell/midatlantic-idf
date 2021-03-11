@@ -49,7 +49,6 @@ function Chart() {
     let xLabels = {}
     xValues.forEach((val, index) => xLabels[val] = categories[index])
     
-
     categories.forEach((duration, index) => {
       let mid = parseFloat(station[duration][`${options['rp']}-mid`])
       observed.push([xValues[index], mid])
@@ -57,10 +56,12 @@ function Chart() {
       projectedInterval75.push([xValues[index], parseFloat((mid*_25).toFixed(3)), parseFloat((mid*_75).toFixed(3))])
       projection.push([xValues[index], parseFloat((mid*mean).toFixed(3))])
     })
+
+
     let chartOptions = {
       chart: {
         zoomType: 'x',
-        height: tabPanel.current.offsetHeight - 24
+        height: tabPanel.current.offsetHeight
       },
 
       title: {
@@ -71,11 +72,14 @@ function Chart() {
 
       xAxis: {
         title: {
-          text: 'Intensity Duration Frequency(hours)'
+          text: 'Intensity Duration Frequency'
         },
+        tickPositions: [xValues[0], ...xValues.slice(6)],
         labels: {
           enabled: true,
-          formatter: function() {return xLabels[this.value]}
+          formatter: function() {
+            return xLabels[this.value]
+          }
         }
       },
 
@@ -88,10 +92,18 @@ function Chart() {
       tooltip: {
         formatter: function () {
           return this.points.reduce(function (s, point) {
-              return `${s}<br/>${point.series.name}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y}</b> inches`
+            if (s.includes('min') && !s.includes('minutes')) {
+              s = `${s.match(/\d+/)} minutes`;
+            } else if (s.includes('hr')) {
+              s = `${s.match(/\d+/)} hours`;
+            }
+
+            return `<b>${s}</b><br/>${point.series.name}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y}</b> inches`
           }, '<b>' + xLabels[this.x] + '</b>');
         },
-        shared: true
+        shared: true,
+        useHTML: true,
+        outside: true
       },
 
       series: [
@@ -139,7 +151,7 @@ function Chart() {
           <TableRow>
             <TableCell />
             <TableCell colSpan={5} align="center" >Projected {options['tp']} Intensity</TableCell>
-            <TableCell colSpan={1} align="center" >Observed70-1999 Intensity</TableCell>
+            <TableCell colSpan={1} align="center" >Observed 1970-1999 Intensity</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Duration</TableCell>
@@ -150,7 +162,6 @@ function Chart() {
             <TableCell align="center">90th</TableCell>
             <TableCell align="center">Mean</TableCell>   
           </TableRow>
-          
         </TableHead>
         <TableBody>
           {categories.map(duration => 

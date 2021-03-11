@@ -94,3 +94,9 @@
     }
   }
 }
+
+@media (max-width: 1400px) {
+  #map-cont {
+    height: calc(100vh - 200px);
+  }
+}
