@@ -1,6 +1,12 @@
 import {useState, useContext, useEffect} from 'react'
 import './styles/App.scss';
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+
 import Chart from './components/Chart'
 import Map from './components/Map'
 import Options from './components/Options'
@@ -71,26 +77,44 @@ function App() {
   // }, [])
 
   return (
-    <div className="App">
-      <Header />
-
-      <div className="content">
-        <OptionsContext.Provider value={{options, setOptions}}>
-        <ChartContext.Provider value={{chart, setChart}}>
-        <CurrentContext.Provider value={{current, setCurrent}}>
-          <Map />
-          <div id="grid">
-            <Options />
-            <Search />
-            <Chart />
-          </div>
-        </CurrentContext.Provider>
-        </ChartContext.Provider>
-        </OptionsContext.Provider>
+    <Router>
+      <div className="App">
+        <Header />
+        <div className="content">
+          <OptionsContext.Provider value={{options, setOptions}}>
+          <ChartContext.Provider value={{chart, setChart}}>
+          <CurrentContext.Provider value={{current, setCurrent}}>
+            <Switch>
+              <Route path="/ScopeFull">
+                <Map scope="full"/>
+                <div id="grid">
+                  <Options />
+                  <Search />
+                  <Chart />
+                </div>
+              </Route>
+              <Route path="/ScopeVA">
+                <Map scope="virginia"/>
+                <div id="grid">
+                  <Options />
+                  <Search />
+                  <Chart />
+                </div>
+              </Route>
+              <Route path="/">
+                <div style={{fontSize: '60px', width: 'fit-content', padding: '60px', margin: '0 auto'}}>Under Construction</div>
+                <div style={{fontSize: '30px', position: 'absolute', right: '40px', top: '150px'}}>Please navigate to a different page</div>
+                <div style={{position: 'absolute', fontSize: '80px', right: '350px', top: '100px', color: 'red'}}>^</div>
+                <div style={{position: 'absolute', fontSize: '80px', right: '80px', top: '100px', color: 'red'}}>^</div>
+              </Route>
+            </Switch>
+          </CurrentContext.Provider>
+          </ChartContext.Provider>
+          </OptionsContext.Provider>
+        </div>
+        <Footer />
       </div>
-
-      <Footer />
-    </div>
+    </Router>
   )
 }
 

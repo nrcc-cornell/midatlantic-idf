@@ -42,13 +42,37 @@
 
   .nav {
     height: fit-content;
-    width: 240px;
+    width: 600px;
     position: absolute;
     right: 35px;
-    top: 70px;
-    font-size: 20px;
+    top: 64px;
+    font-size: 22px;
     font-weight: 300;
     display: flex;
     justify-content: space-between;
+
+    .active {
+      text-decoration: underline !important;
+    }
+
+    .link {
+      box-sizing: border-box;
+      padding: 5px;
+      transition: all .2s;
+      
+      &:hover {
+        transform: scale(1.1);
+        cursor: pointer;
+
+        a {
+          color: black;
+        }
+      }
+      
+      a {
+        color: rgb(36, 36, 36);
+        text-decoration: none;
+      }
+    }
   }
 }

@@ -1,13 +1,14 @@
-import {useState, useContext} from 'react'
+import {useState, useEffect, useContext} from 'react'
 import ReactMapGL, {NavigationControl, Source, Layer, Marker, Popup} from 'react-map-gl'
+import PropTypes from 'prop-types';
 
 import '../styles/Map.scss'
-import {data, stations, counties, virginaCounties} from '../data'
+import {data, stations, counties, virginiaCounties} from '../data'
 import {OptionsContext} from '../contexts/OptionsContext'
 import {ChartContext} from '../contexts/ChartContext'
 import {CurrentContext} from '../contexts/CurrentContext'
 
-function Map() {
+function Map(props) {
   const [viewport, setViewport] = useState({
     // width: "100%",
     // height: "100%",
@@ -18,6 +19,28 @@ function Map() {
     bearing: -10,
     pitch: 40
   });
+
+  useEffect(() => {
+    if (props.scope === 'virginia') {
+      setViewport({
+        latitude: 37.5,
+        longitude: -77.65,
+        zoom: 6.4,
+        minZoom: 6.4,
+        bearing: -10,
+        pitch: 40
+      })
+    } else {
+      setViewport({
+        latitude: 39.25,
+        longitude: -76.25,
+        zoom: 5.8,
+        minZoom: 5.8,
+        bearing: -10,
+        pitch: 40
+      })
+    }
+  }, [props.scope]);
 
   const [popup, setPopup] = useState(null)
   const [tooltip, setTooltip] = useState(null)
@@ -121,6 +144,12 @@ function Map() {
     }
   };
 
+  if (props.scope === 'virginia') {
+    var countyFilter = virginiaCounties;
+  } else {
+    var countyFilter = counties;
+  }
+
   return (
     <div id="map-cont">
       <ReactMapGL
@@ -136,11 +165,11 @@ function Map() {
       >
         <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county" >
           {/* <Layer beforeId='watershed-boundary' {...countyLayer} /> */}
-          <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "FIPS"], ["literal", counties]]}/>
+          <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
         </Source>
 
         <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county-points" >
-          <Layer {...countyNameLayer} filter={["in", ["get", "FIPS"], ["literal", counties]]}/>
+          <Layer {...countyNameLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
           {/* <Layer {...countyNameLayer} /> */}
         </Source>
 
@@ -156,6 +185,7 @@ function Map() {
         <Markers
           onMarkerMouseEnter={handleMarkerMouseEnter}
           onMarkerMouseLeave={handleMarkerMouseLeave}
+          scope={props.scope}
         />
 
         <div className="legend-controls-container">
@@ -214,7 +244,11 @@ function Map() {
   );
 }
 
-const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave}) => {
+Map.propTypes = {
+  scope: PropTypes.string
+};
+
+const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave, scope}) => {
   const {current, setCurrent} = useContext(CurrentContext)
   const {chart, setChart} = useContext(ChartContext)
 
@@ -224,22 +258,29 @@ const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave}) => {
   }
 
   return <>
-    {Object.entries(stations).map(([id, {latitude, longitude}]) => 
-      <Marker
-        latitude={parseFloat(latitude)}
-        longitude={parseFloat(longitude)}
-        key={'marker-'+id}
-      >
-        <div
-          className={`marker ${current===id && "current"}`}
-          onMouseEnter={() => onMarkerMouseEnter(id)}
-          onMouseLeave={onMarkerMouseLeave}
-          onClick={() => handleClick(id)}
-        >
-          <div className="marker-dot"></div>
-        </div>
-      </Marker>)}
-    </>
+    {Object.entries(stations).map(([id, {fips, latitude, longitude}]) => {
+      if (scope === 'full' || fips.split('').slice(0,2).join('') === '51') {
+        return (
+          <Marker
+            latitude={parseFloat(latitude)}
+            longitude={parseFloat(longitude)}
+            key={'marker-'+id}
+          >
+            <div
+              className={`marker ${current===id && "current"}`}
+              onMouseEnter={() => onMarkerMouseEnter(id)}
+              onMouseLeave={onMarkerMouseLeave}
+              onClick={() => handleClick(id)}
+            >
+              <div className="marker-dot"></div>
+            </div>
+          </Marker>
+        );
+      } else {
+        return '';
+      }
+    })}
+  </>
 }
 
 export default Map
