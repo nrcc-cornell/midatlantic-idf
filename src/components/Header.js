@@ -7,17 +7,14 @@ const Header = () => {
 
   useEffect(() => {
     let currPathArr = window.location.pathname.split('/');
-    console.log(currPathArr);
 
-    if (currPathArr.includes('ScopeFull')) {
-      var currPath = '/ScopeFull';
-    } else if (currPathArr.includes('ScopeVA')) {
-      var currPath = '/ScopeFull';
+    if (currPathArr.includes('map')) {
+      var currPath = '/map';
+    } else if (currPathArr.includes('usage')) {
+      var currPath = '/usage';
     } else {
       var currPath = '/';
     }
-
-    console.log(currPath);
 
     let initLink = document.querySelector(`a[href='${currPath}']`);
     initLink.classList.toggle('active');
@@ -39,8 +36,8 @@ const Header = () => {
       </div>
       <nav className="nav">
         <div className="link"><Link onClick={(event)=>handleClick(event)} to="/">Home</Link></div>
-        <div className="link"><Link onClick={(event)=>handleClick(event)} to="/ScopeFull">Chesapeake Bay Watershed</Link></div>
-        <div className="link"><Link onClick={(event)=>handleClick(event)} to="/ScopeVA">Virginia Only</Link></div>
+        <div className="link"><Link onClick={(event)=>handleClick(event)} to="/map">Map</Link></div>
+        <div className="link"><Link onClick={(event)=>handleClick(event)} to="/usage">How to Use</Link></div>
       </nav>
     </header>
   );

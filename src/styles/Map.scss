@@ -42,9 +42,12 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding: 12px;
+    padding: 0px;
     .popup-title {
       font-weight: 600;
+    }
+    .popup-num {
+      margin-left: 12px;
     }
   }
 
@@ -61,8 +64,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      box-sizing: border-box;
       padding: 2px;
-      width: 20vw;
+      margin-right: 10px;
+      width: 100%;
+      // width: 20vw;
       height: 5vh;
       border-radius: 100px;
       overflow: hidden;
@@ -98,5 +104,20 @@
 @media (max-width: 1400px) {
   #map-cont {
     height: calc(100vh - 200px);
+    
+    .legend-controls-container {
+      width: 330px;
+    }
   }
 }
+
+@media (max-width: 1200px) {
+  #map-cont {
+    .legend-controls-container {
+      width: 250px;
+    }
+  }
+}
+
+
+// Media queries to make the legend shorten

@@ -22,7 +22,7 @@ import {CurrentContext} from './contexts/CurrentContext'
 
 import './styles/Map.scss'
 function App() {
-  const [options, setOptions] = useState({"emission": "4.5", "tp": "2020-2070", "rp": "2"})
+  const [options, setOptions] = useState({"emission": "4.5", "tp": "2020-2070", "rp": "2", "area": "bay"})
   const [chart, setChart] = useState(false)
   const [current, setCurrent] = useState(null)
 
@@ -85,21 +85,19 @@ function App() {
           <ChartContext.Provider value={{chart, setChart}}>
           <CurrentContext.Provider value={{current, setCurrent}}>
             <Switch>
-              <Route path="/ScopeFull">
-                <Map scope="full"/>
+              <Route path="/map">
+                <Map />
                 <div id="grid">
                   <Options />
                   <Search />
                   <Chart />
                 </div>
               </Route>
-              <Route path="/ScopeVA">
-                <Map scope="virginia"/>
-                <div id="grid">
-                  <Options />
-                  <Search />
-                  <Chart />
-                </div>
+              <Route path="/usage">
+                <div style={{fontSize: '60px', width: 'fit-content', padding: '60px', margin: '0 auto'}}>Under Construction</div>
+                <div style={{fontSize: '30px', position: 'absolute', right: '230px', top: '150px'}}>Please navigate to a different page</div>
+                <div style={{position: 'absolute', fontSize: '80px', right: '580px', top: '100px', color: 'red'}}>^</div>
+                <div style={{position: 'absolute', fontSize: '80px', right: '340px', top: '100px', color: 'red'}}>^</div>
               </Route>
               <Route path="/">
                 <div style={{fontSize: '60px', width: 'fit-content', padding: '60px', margin: '0 auto'}}>Under Construction</div>

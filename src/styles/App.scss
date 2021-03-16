@@ -8,6 +8,7 @@
     position: absolute;
     top: 100px;
     display: grid;
+    grid-gap: 12px;
     grid-template-columns: repeat(24, 1fr);
     grid-template-rows: repeat(18, 1fr);
     padding-left: 12px;

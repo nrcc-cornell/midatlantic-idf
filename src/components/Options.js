@@ -1,16 +1,20 @@
-import {useContext} from 'react'
+import {useContext, useState} from 'react'
 
 import {
   Button,
   FormControl,
-  FormControlLabel,
+  // FormControlLabel,
   FormGroup,
   InputLabel,
   MenuItem,
   Select,
-  Switch,
+  // Switch,
   Typography
 } from '@material-ui/core'
+
+// import { withStyles } from '@material-ui/core/styles';
+// import { green } from '@material-ui/core/colors';
+// import Grid from '@material-ui/core/Grid';
 
 
 import VisibilityIcon from '@material-ui/icons/Visibility'
@@ -22,17 +26,39 @@ import {CurrentContext} from '../contexts/CurrentContext'
 
 import '../styles/Options.scss'
 
+// const DataSwitch = withStyles({
+//   switchBase: {
+//     transition: 'all .5s',
+//     color: green[500],
+//     '&$checked': {
+//       color: green[500],
+//     },
+//     '&$checked + $track': {
+//       backgroundColor: green[500],
+//     },
+//   },
+//   checked: {},
+//   track: {backgroundColor: green[500]},
+// })(Switch);
+
 function Options() {
+  // const [vaScope, setVAScope] = useState(false);
 
   const {options, setOptions} = useContext(OptionsContext)
   const {chart, setChart} = useContext(ChartContext)
   const {current} = useContext(CurrentContext)
+
   
   const handleChange = (event, field) => {
     let newOptions = {...options}
     newOptions[field] = event.target.value
     setOptions(newOptions)
   }
+
+  // const handleToggle = (event) => {
+  //   // Also fly to new viewport and filter down data
+  //   setVAScope(event.target.checked);
+  // };
 
   return (
     <div id="options-cont" className="card">
@@ -83,6 +109,42 @@ function Options() {
             <MenuItem value={"2050-2100"}>2050-2100</MenuItem>
           </Select>
         </FormControl>
+        <FormControl>
+          <InputLabel>
+            Area of Concern
+          </InputLabel>
+          <Select
+            displayEmpty
+            value={options['area']}
+            onChange={event => handleChange(event, "area")}
+          >
+            <MenuItem value={"bay"}>Chesapeake Bay Watershed</MenuItem>
+            <MenuItem value={"virginia"}>Virginia</MenuItem>
+          </Select>
+        </FormControl>
+        
+        {/* <div id="switch-container"> */}
+          {/* <div className="switch-label">Chesapeake Bay</div>
+          <FormControlLabel
+            control={
+              <Switch
+              checked={vaScope}
+              onChange={handleToggle}
+              name="scopeFilter"
+              color="rgb(255, 0, 0)"
+              />
+            }
+          />
+          <div className="switch-label">Virginia</div> */}
+
+          {/* <Grid component="label" container alignItems="center" spacing={1}>
+            <Grid item><div className="switch-label">Chesapeake Bay</div></Grid>
+            <Grid item>
+              <DataSwitch checked={vaScope} onChange={handleToggle} name="ScopeFilter" />
+            </Grid>
+            <Grid item><div className="switch-label">Virginia</div></Grid>
+          </Grid> */}
+        {/* </div> */}
       </FormGroup>
       <Button
         id="chart-toggle"

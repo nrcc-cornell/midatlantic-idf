@@ -1,6 +1,5 @@
 import {useState, useEffect, useContext} from 'react'
 import ReactMapGL, {NavigationControl, Source, Layer, Marker, Popup} from 'react-map-gl'
-import PropTypes from 'prop-types';
 
 import '../styles/Map.scss'
 import {data, stations, counties, virginiaCounties} from '../data'
@@ -8,7 +7,7 @@ import {OptionsContext} from '../contexts/OptionsContext'
 import {ChartContext} from '../contexts/ChartContext'
 import {CurrentContext} from '../contexts/CurrentContext'
 
-function Map(props) {
+function Map() {
   const [viewport, setViewport] = useState({
     // width: "100%",
     // height: "100%",
@@ -20,34 +19,13 @@ function Map(props) {
     pitch: 40
   });
 
-  useEffect(() => {
-    if (props.scope === 'virginia') {
-      setViewport({
-        latitude: 37.5,
-        longitude: -77.65,
-        zoom: 6.4,
-        minZoom: 6.4,
-        bearing: -10,
-        pitch: 40
-      })
-    } else {
-      setViewport({
-        latitude: 39.25,
-        longitude: -76.25,
-        zoom: 5.8,
-        minZoom: 5.8,
-        bearing: -10,
-        pitch: 40
-      })
-    }
-  }, [props.scope]);
-
+  
   const [popup, setPopup] = useState(null)
   const [tooltip, setTooltip] = useState(null)
-
-  const {options: {emission, rp, tp}} = useContext(OptionsContext)
+  const [countyFilter, setCountyFilter] = useState(counties)
   
-
+  const {options: {emission, rp, tp, area}} = useContext(OptionsContext)
+ 
   const currentData = data[emission][tp][rp]
   
   let max = Math.ceil(currentData.max*10)/10
@@ -144,11 +122,89 @@ function Map(props) {
     }
   };
 
-  if (props.scope === 'virginia') {
-    var countyFilter = virginiaCounties;
-  } else {
-    var countyFilter = counties;
-  }
+  const getVAViewSettings = () => {
+    let viewWidth = document.querySelector('html').clientWidth;
+    let l = -79.8
+    let z = 5.0
+
+    if (viewWidth <= 1570 && viewWidth > 1375) {
+        z = 6.1;
+    } else if (viewWidth <= 1375 && viewWidth > 1260) {
+        z = 5.9;
+    } else if (viewWidth <= 1260 && viewWidth > 1185) {
+        z = 5.7;
+    } else if (viewWidth <= 1185 && viewWidth > 1060) {
+        z = 5.5;
+    } else if (viewWidth <= 1060) {
+        z = 5.3;
+        l = -80.2;
+    }
+
+    return {
+      longitude: l,
+      zoom: z,
+      minZoom: z
+    }
+  };
+
+
+
+  useEffect(() => {
+    if (area === 'virginia') {
+      setCountyFilter(virginiaCounties);
+
+      let viewSetting = getVAViewSettings();
+      setViewport({
+        ...viewSetting,
+        latitude: 37.2,
+        bearing: -10,
+        pitch: 40
+      })
+    } else {
+      setCountyFilter(counties);
+      if (document.querySelector('html').clientHeight >= 850 && 
+      document.querySelector('html').clientWidth >= 1300) {
+        var viewSetting = {
+          longitude: -78.1,
+          zoom: 5.9,
+          minZoom: 5.9,
+        }
+      } else {
+        var viewSetting = {
+          longitude: -78.60,
+          zoom: 5.5,
+          minZoom: 5.5,
+        }
+      }
+
+      setViewport({
+        ...viewSetting,
+        latitude: 39.25,
+        bearing: -10,
+        pitch: 40
+      })
+    }
+  }, [area]);
+
+  // if (props.scope === 'virginia') {
+  //   var countyFilter = virginiaCounties;
+  // } else {
+  //   var countyFilter = counties;
+  // }
+
+  const handlePanning = (view) => {
+    let nextView = view;
+
+    if (nextView.latitude > 44 || nextView.latitude < 36) {
+      nextView.latitude = viewport.latitude;
+    }
+
+    if (nextView.longitude > -71.5 || nextView.longitude < -82) {
+      nextView.longitude = viewport.longitude;
+    }
+
+    setViewport(nextView);
+  };
 
   return (
     <div id="map-cont">
@@ -156,7 +212,7 @@ function Map(props) {
         {...viewport}
         width= "100%"
         height= "100%"
-        onViewportChange={nextViewport => setViewport(nextViewport)}
+        onViewportChange={nextViewport => handlePanning(nextViewport)}
         // mapboxApiAccessToken="pk.eyJ1IjoiYWRyaWVuemhlbmciLCJhIjoiY2tkamI5am9iMDN6NjJxbW8xZmY4d2puYiJ9.nQG7j4_lTdRg0jdfZMTWlw"
         // mapStyle="mapbox://styles/adrienzheng/ckidysz96357819k58txti52f"
         mapboxApiAccessToken="pk.eyJ1IjoiYmVuZWNrIiwiYSI6ImNrbTBvNWNtdTB1eXUyb21yeWhpbWZrYWMifQ.rSYtPIiS9ZbnnCdSbtm4wQ"
@@ -185,7 +241,8 @@ function Map(props) {
         <Markers
           onMarkerMouseEnter={handleMarkerMouseEnter}
           onMarkerMouseLeave={handleMarkerMouseLeave}
-          scope={props.scope}
+          scope={area}
+          // scope={props.scope}
         />
 
         <div className="legend-controls-container">
@@ -244,10 +301,6 @@ function Map(props) {
   );
 }
 
-Map.propTypes = {
-  scope: PropTypes.string
-};
-
 const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave, scope}) => {
   const {current, setCurrent} = useContext(CurrentContext)
   const {chart, setChart} = useContext(ChartContext)
@@ -259,7 +312,7 @@ const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave, scope}) => {
 
   return <>
     {Object.entries(stations).map(([id, {fips, latitude, longitude}]) => {
-      if (scope === 'full' || fips.split('').slice(0,2).join('') === '51') {
+      if ((scope === 'bay' && counties.includes(fips)) || (scope === 'virginia' && virginiaCounties.includes(fips))) {
         return (
           <Marker
             latitude={parseFloat(latitude)}

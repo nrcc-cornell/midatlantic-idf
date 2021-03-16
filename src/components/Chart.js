@@ -67,7 +67,8 @@ function Chart() {
       title: {
         text: `<div>Intensity Duration Frequency Curves: ${options['rp']}-Year Return duration</div>
         <div>RCP ${options['emission']} Observed Atlas 14 Value vs. Projection (${options['tp']})</div>`,
-        useHTML: true
+        // useHTML: true
+        useHTML: false
       },
 
       xAxis: {
@@ -84,9 +85,12 @@ function Chart() {
       },
 
       yAxis: {
-          title: {
-              text: "Intensity(inches)"
-          }
+        title: {
+          text: "Intensity(inches)"
+        },
+        minorTicks: true,
+        endOnTick: false,
+        gridLineWidth: 2
       },
 
       tooltip: {
@@ -128,7 +132,20 @@ function Chart() {
           color: "#00b7ff",
           data: projection
         }
-      ]
+      ],
+
+      legend: {
+        floating: true,
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'bottom',
+        y: -50,
+        backgroundColor: '#FFFFFF',
+        shadow: true,
+        borderRadius: 5
+        // Getting closer. Fiddle with positoining of the legend and start/stop of yAxis
+        // Then reduce space taken from top by the title and tab nav
+      }
 
     }
     return (
@@ -179,6 +196,8 @@ function Chart() {
       </Table>
     )
   }
+
+
 
   return (
     <div id="chart-cont" className={`card ${!chart && 'hidden'}`}>

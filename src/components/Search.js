@@ -27,6 +27,7 @@ function Search() {
   const [favoriteVisible, setFavoriteVisible] = useState(false)
 
   const handleChange = (event) => {
+    setChart(false)
     setTerms(event.target.value)
   }
 
@@ -96,6 +97,15 @@ function Search() {
     store.set('favorite', newFav)
   }
 
+  const limitLabelLength = (name) => {
+    let nameArr = name.split('');
+    if (nameArr.length > 16) {
+      return nameArr.slice(0,13).join('') + '...';
+    } else {
+      return name;
+    }
+  };
+
   const renderResults = () => {
     if (loading) {
       return <CircularProgress />
@@ -104,7 +114,7 @@ function Search() {
     } else if (Object.entries(results).length>0) {
       return <>{Object.entries(results).map(([id, name]) => <Chip 
         key={id}
-        label={name}
+        label={limitLabelLength(name)}
         icon={(favorite && favorite[id]) ? (
           <StarIcon onClick={(event) => toggleFavorite(id, name, event)}/>
         ): (
@@ -125,7 +135,7 @@ function Search() {
     } else {
       return <>{Object.entries(favorite).map(([id, name]) => <Chip 
         key={`favorite-${id}`}
-        label={name}
+        label={limitLabelLength(name)}
         icon={(favorite && favorite[id]) ? (
           <StarIcon onClick={(event) => toggleFavorite(id, name, event)}/>
         ): (
@@ -150,16 +160,17 @@ function Search() {
       <div id="search-cont" className="card">
         <TextField
           label="Search"
-          helperText="Type in zip codes or names to find stations"
+          placeholder="Enter zip codes or station names"
+          // helperText="Type in zip codes or names to find stations"
           fullWidth
           inputMode="search"
           onChange={handleChange}
           value = {terms}
-          onFocus={() => setFavoriteVisible(true)}
+          // onFocus={() => setFavoriteVisible(true)}
           // onBlur={() => setFavoriteVisible(false)}
         />
       </div>
-      <div id="search-result">
+      {/* <div id="search-result">
         {terms.trim().length>0 && <div id="result-wrapper"  className="card">
           {renderResults()}
         </div>}
@@ -167,6 +178,16 @@ function Search() {
           <Typography style = {{flexBasis: "100%"}} variant="caption">My Favorite Stations</Typography>
           {renderFavorite()}
         </div>}
+      </div> */}
+      <div id="search-result" className="card">
+        {terms.trim().length>0 && <div id="result-wrapper">
+          <Typography style = {{flexBasis: "100%"}} variant="caption">Search Results</Typography>
+          {renderResults()}
+        </div>}
+        <div id="favorite-wrapper">
+          <Typography style = {{flexBasis: "100%"}} variant="caption">My Favorite Stations</Typography>
+          {renderFavorite()}
+        </div>
       </div>
     </>
   )
