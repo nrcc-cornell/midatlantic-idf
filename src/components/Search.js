@@ -179,14 +179,16 @@ function Search() {
           {renderFavorite()}
         </div>}
       </div> */}
-      <div id="search-result" className="card">
-        {terms.trim().length>0 && <div id="result-wrapper">
-          <Typography style = {{flexBasis: "100%"}} variant="caption">Search Results</Typography>
-          {renderResults()}
-        </div>}
-        <div id="favorite-wrapper">
-          <Typography style = {{flexBasis: "100%"}} variant="caption">My Favorite Stations</Typography>
-          {renderFavorite()}
+      <div id="search-result">
+        <div id="srw" className="card">
+          {terms.trim().length>0 && <div id="result-wrapper">
+            <Typography style = {{flexBasis: "100%"}} variant="caption">Search Results</Typography>
+            {renderResults()}
+          </div>}
+          <div id="favorite-wrapper">
+            <Typography style = {{flexBasis: "100%"}} variant="caption">My Favorite Stations</Typography>
+            {renderFavorite()}
+          </div>
         </div>
       </div>
     </>

@@ -1,11 +1,11 @@
 import {useState, useContext, useEffect} from 'react'
 import './styles/App.scss';
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
+// import {
+//   BrowserRouter as Router,
+//   Switch,
+//   Route
+// } from "react-router-dom";
 
 import Chart from './components/Chart'
 import Map from './components/Map'
@@ -77,15 +77,23 @@ function App() {
   // }, [])
 
   return (
-    <Router>
+    // <Router>
       <div className="App">
         <Header />
         <div className="content">
           <OptionsContext.Provider value={{options, setOptions}}>
           <ChartContext.Provider value={{chart, setChart}}>
           <CurrentContext.Provider value={{current, setCurrent}}>
-            <Switch>
-              <Route path="/map">
+          
+          <Map />
+          <div id="grid">
+            <Options />
+            <Search />
+            <Chart />
+          </div>
+          
+            {/* <Switch>
+              <Route path="/be99/Chesapeake/map">
                 <Map />
                 <div id="grid">
                   <Options />
@@ -93,7 +101,7 @@ function App() {
                   <Chart />
                 </div>
               </Route>
-              <Route path="/usage">
+              <Route path="/be99/Cheasapeake/usage">
                 <div style={{fontSize: '60px', width: 'fit-content', padding: '60px', margin: '0 auto'}}>Under Construction</div>
                 <div style={{fontSize: '30px', position: 'absolute', right: '230px', top: '150px'}}>Please navigate to a different page</div>
                 <div style={{position: 'absolute', fontSize: '80px', right: '580px', top: '100px', color: 'red'}}>^</div>
@@ -105,14 +113,14 @@ function App() {
                 <div style={{position: 'absolute', fontSize: '80px', right: '350px', top: '100px', color: 'red'}}>^</div>
                 <div style={{position: 'absolute', fontSize: '80px', right: '80px', top: '100px', color: 'red'}}>^</div>
               </Route>
-            </Switch>
+            </Switch> */}
           </CurrentContext.Provider>
           </ChartContext.Provider>
           </OptionsContext.Provider>
         </div>
         <Footer />
       </div>
-    </Router>
+    // </Router>
   )
 }
 

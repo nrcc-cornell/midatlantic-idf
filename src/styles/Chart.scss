@@ -6,6 +6,13 @@
   transition: all 0.5s;
   // padding-top: 5px !important;
   padding-bottom: 5px !important;
+  position: relative;
+
+  .station-name {
+    position: absolute;
+    top: 17px;
+    right: 17px;
+  }
 
   #chart-control {
     display: flex;

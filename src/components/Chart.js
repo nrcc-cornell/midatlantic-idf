@@ -122,15 +122,15 @@ function Chart() {
           color: "#91dfff",
           data: projectedInterval75
         },{
-          name: `Observed Atlas 14 Value`,
-          type: "line",
-          color: "#ff6969",
-          data: observed
-        },{
           name: `Projected ${options['tp']}`,
           type: "line",
           color: "#00b7ff",
           data: projection
+        },{
+          name: `Observed Atlas 14 Value`,
+          type: "line",
+          color: "#ff6969",
+          data: observed
         }
       ],
 
@@ -197,10 +197,9 @@ function Chart() {
     )
   }
 
-
-
   return (
     <div id="chart-cont" className={`card ${!chart && 'hidden'}`}>
+      <div className="station-name">{chart && current && stations[current]["station_name"]}</div>
       <div id="chart-control">
         <Tabs
           value={mode}

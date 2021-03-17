@@ -42,18 +42,20 @@
 
   .nav {
     height: fit-content;
-    width: 320px;
+    // width: 320px;
     position: absolute;
-    right: 35px;
-    top: 64px;
-    font-size: 22px;
+    right: 70px;
+    top: 55px;
+    // right: 35px;
+    // top: 64px;
+    font-size: 30px;
     font-weight: 300;
-    display: flex;
-    justify-content: space-between;
+    // display: flex;
+    // justify-content: space-between;
 
-    .active {
-      text-decoration: underline !important;
-    }
+    // .active {
+    //   text-decoration: underline !important;
+    // }
 
     .link {
       box-sizing: border-box;
@@ -64,15 +66,15 @@
         transform: scale(1.1);
         cursor: pointer;
 
-        a {
-          color: black;
-        }
+      //   a {
+      //     color: black;
+      //   }
       }
       
-      a {
-        color: rgb(36, 36, 36);
-        text-decoration: none;
-      }
+      // a {
+      //   color: rgb(36, 36, 36);
+      //   text-decoration: none;
+      // }
     }
   }
 }

@@ -1,5 +1,5 @@
 import {useState, useEffect, useContext} from 'react'
-import ReactMapGL, {NavigationControl, Source, Layer, Marker, Popup} from 'react-map-gl'
+import ReactMapGL, {NavigationControl, Source, Layer, Marker, Popup, FlyToInterpolator} from 'react-map-gl'
 
 import '../styles/Map.scss'
 import {data, stations, counties, virginiaCounties} from '../data'
@@ -13,10 +13,10 @@ function Map() {
     // height: "100%",
     latitude: 39.25,
     longitude: -76.25,
-    zoom: 5.8,
+    zoom: 5,
     minZoom: 5.8,
     bearing: -10,
-    pitch: 40
+    pitch: 40,
   });
 
   
@@ -122,68 +122,80 @@ function Map() {
     }
   };
 
-  const getVAViewSettings = () => {
-    let viewWidth = document.querySelector('html').clientWidth;
-    let l = -79.8
-    let z = 5.0
+  // Only needed if we decide to do something when clicking the counties
+  // const handleClick = (event) => {
+  //   console.log(event);
+  // };
 
-    if (viewWidth <= 1570 && viewWidth > 1375) {
-        z = 6.1;
-    } else if (viewWidth <= 1375 && viewWidth > 1260) {
-        z = 5.9;
-    } else if (viewWidth <= 1260 && viewWidth > 1185) {
-        z = 5.7;
-    } else if (viewWidth <= 1185 && viewWidth > 1060) {
-        z = 5.5;
-    } else if (viewWidth <= 1060) {
-        z = 5.3;
-        l = -80.2;
+  const getViewSettings = () => {
+    let viewWidth = document.querySelector('html').clientWidth;
+    let viewHeight = document.querySelector('html').clientHeight;
+    let lat, long, zoom;
+
+    if (area === 'bay') {
+      lat = 39.25;
+      long = -78.1;
+      zoom = 6.0;
+  
+      if (viewHeight <= 950 && viewHeight > 850) {
+        zoom = 5.8;
+      } else if (viewHeight <= 850) {
+        zoom = 5.6;
+      }
+  
+      if (viewWidth <= 1255 && viewWidth > 1150 && zoom >= 6.0) {
+        zoom = 5.8
+      } else if (viewWidth <= 1150 && viewWidth > 1055 && zoom >= 5.8) {
+        zoom = 5.6
+      } else if (viewWidth <= 1055 && zoom >= 5.6) {
+        zoom = 5.5
+        long = -78.4
+      }
+
+    } else {
+      lat = 37.2;
+      long = -79.7;
+      zoom = 6.5;
+  
+      if (viewWidth <= 1800 && viewWidth > 1570) {
+        zoom = 6.3;
+      } else if (viewWidth <= 1570 && viewWidth > 1375) {
+        zoom = 6.1;
+      } else if (viewWidth <= 1375 && viewWidth > 1260) {
+        zoom = 5.9;
+      } else if (viewWidth <= 1260 && viewWidth > 1185) {
+        zoom = 5.7;
+      } else if (viewWidth <= 1185 && viewWidth > 1060) {
+        zoom = 5.5;
+      } else if (viewWidth <= 1060) {
+        zoom = 5.3;
+        long = -80.2;
+      }
     }
 
     return {
-      longitude: l,
-      zoom: z,
-      minZoom: z
+      latitude: lat,
+      longitude: long,
+      zoom: zoom,
+      minZoom: zoom
     }
   };
-
-
 
   useEffect(() => {
     if (area === 'virginia') {
       setCountyFilter(virginiaCounties);
-
-      let viewSetting = getVAViewSettings();
-      setViewport({
-        ...viewSetting,
-        latitude: 37.2,
-        bearing: -10,
-        pitch: 40
-      })
     } else {
       setCountyFilter(counties);
-      if (document.querySelector('html').clientHeight >= 850 && 
-      document.querySelector('html').clientWidth >= 1300) {
-        var viewSetting = {
-          longitude: -78.1,
-          zoom: 5.9,
-          minZoom: 5.9,
-        }
-      } else {
-        var viewSetting = {
-          longitude: -78.60,
-          zoom: 5.5,
-          minZoom: 5.5,
-        }
-      }
-
-      setViewport({
-        ...viewSetting,
-        latitude: 39.25,
-        bearing: -10,
-        pitch: 40
-      })
     }
+
+    var viewSetting = getViewSettings();
+    setViewport({
+      ...viewSetting,
+      bearing: -10,
+      pitch: 40,
+      transitionDuration: 1000,
+      transitionInterpolator: new FlyToInterpolator(),
+    })
   }, [area]);
 
   // if (props.scope === 'virginia') {
@@ -218,6 +230,8 @@ function Map() {
         mapboxApiAccessToken="pk.eyJ1IjoiYmVuZWNrIiwiYSI6ImNrbTBvNWNtdTB1eXUyb21yeWhpbWZrYWMifQ.rSYtPIiS9ZbnnCdSbtm4wQ"
         mapStyle="mapbox://styles/beneck/ckm0vcgpk82b117nlfwc1ixt8"
         onHover={handleHover}
+        // Only needed if we decide to so something when clicking on counties
+        // onClick={handleClick}
       >
         <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county" >
           {/* <Layer beforeId='watershed-boundary' {...countyLayer} /> */}
