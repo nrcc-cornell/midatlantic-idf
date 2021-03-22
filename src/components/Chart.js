@@ -10,6 +10,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Button
 } from '@material-ui/core'
 
 import Highcharts from 'highcharts'
@@ -73,7 +74,7 @@ function Chart() {
 
       xAxis: {
         title: {
-          text: 'Intensity Duration Frequency'
+          text: 'Duration'
         },
         tickPositions: [xValues[0], ...xValues.slice(6)],
         labels: {
@@ -105,6 +106,7 @@ function Chart() {
             return `<b>${s}</b><br/>${point.series.name}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y}</b> inches`
           }, '<b>' + xLabels[this.x] + '</b>');
         },
+        backgroundColor: "#FFFFFF",
         shared: true,
         useHTML: true,
         outside: true
@@ -168,9 +170,9 @@ function Chart() {
           <TableRow>
             <TableCell />
             <TableCell colSpan={5} align="center" >Projected {options['tp']} Intensity</TableCell>
-            <TableCell colSpan={1} align="center" >Observed 1970-1999 Intensity</TableCell>
+            <TableCell colSpan={1} align="center" >Observed Atlas-14 Intensity 1970-1999</TableCell>
           </TableRow>
-          <TableRow>
+          <TableRow className="sticky-row">
             <TableCell>Duration</TableCell>
             <TableCell align="center">10th</TableCell>
             <TableCell align="center">25th</TableCell>
@@ -189,12 +191,115 @@ function Chart() {
               <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*mean).toFixed(3)}</TableCell>
               <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_75).toFixed(3)}</TableCell>
               <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_90).toFixed(3)}</TableCell>
-              <TableCell align="center">{parseFloat(station[duration][`${options['rp']}-mid`])}</TableCell>
+              <TableCell className="col-shaded" align="center">{parseFloat(station[duration][`${options['rp']}-mid`])}</TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
     )
+  }
+
+  const renderComparisonTable = () => {
+    let station = stations[current]
+    let fips = station.fips
+    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
+    let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr", "2day", "3day", "4day", "7day"]
+    
+
+    return (
+      <Table stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell>Duration</TableCell>
+            <TableCell align="center">Observed Atlas-14 Mean Intensity 1970-1999</TableCell>
+            <TableCell align="center">Projected {options['tp']} Mean Intensity</TableCell>
+            <TableCell align="center">Change</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {categories.map((duration) => {
+            let change = ((parseFloat(station[duration][`${options['rp']}-mid`])*mean) - parseFloat(station[duration][`${options['rp']}-mid`])).toFixed(3);
+            let sign = change<=0?"":"+";
+
+            return (
+              <TableRow key={duration}>
+                <TableCell>{duration}</TableCell>
+                <TableCell align="center">{parseFloat(station[duration][`${options['rp']}-mid`])}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*mean).toFixed(3)}</TableCell>
+                <TableCell align="center">{`${sign}${change}`}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    )
+  }
+
+  const handleDownload = () => {
+    var headers = [
+      ['Station:', stations[current]["station_name"], '', '', '', '', '',''],
+      ['Return Period:', `${options['rp']}-year`, '', '', '', '', '',''],
+      ['Emission Scenario:', `RCP ${options['emission']}`, '', '', '', '', '',''],
+      ['Time Period:', options['tp'], '', '', '', '', ''],
+      ['', '', '', '', '', '', '', ''],
+      ['', '', '', `Projected ${options['tp']} Intensity`, '', '', 'Observed 1970-1999 Intensity', 'Projected Mean Change'],
+      ['Duration', '10th', '25th', 'Mean', '75th', '90th', 'Mean', 'Difference']
+    ];
+    let station = stations[current]
+    let fips = station.fips
+    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
+    let _10 = data[options['emission']][options['tp']][options['rp']][fips]['10%']
+    let _90 = data[options['emission']][options['tp']][options['rp']][fips]['90%']
+    let _25 = data[options['emission']][options['tp']][options['rp']][fips]['25%']
+    let _75 = data[options['emission']][options['tp']][options['rp']][fips]['75%']
+    let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr", "2day", "3day", "4day", "7day"]
+    
+    let dataArr = categories.map((duration) => {
+      let row = [duration];  
+      row.push((parseFloat(station[duration][`${options['rp']}-mid`])*_10).toFixed(3));
+      row.push((parseFloat(station[duration][`${options['rp']}-mid`])*_25).toFixed(3));
+      row.push((parseFloat(station[duration][`${options['rp']}-mid`])*mean).toFixed(3));
+      row.push((parseFloat(station[duration][`${options['rp']}-mid`])*_75).toFixed(3));
+      row.push((parseFloat(station[duration][`${options['rp']}-mid`])*_90).toFixed(3));
+      row.push(parseFloat(station[duration][`${options['rp']}-mid`]));
+      row.push(((parseFloat(station[duration][`${options['rp']}-mid`])*mean) - parseFloat(station[duration][`${options['rp']}-mid`])).toFixed(3));
+      return row;
+    });
+
+    var csvData = headers.concat(dataArr);
+
+    // Building the CSV from the Data two-dimensional array
+    var csvContent = '';
+    csvData.forEach(function(infoArray, index) {
+      let dataString = infoArray.join(',');
+      csvContent += index < csvData.length ? dataString + '\n' : dataString;
+    });
+
+    // The download function takes a CSV string, the filename and mimeType as parameters
+    // Scroll/look down at the bottom of this snippet to see how download is called
+    var download = function(content, fileName, mimeType) {
+      var a = document.createElement('a');
+      mimeType = mimeType || 'application/octet-stream';
+
+      if (navigator.msSaveBlob) { // IE10
+        navigator.msSaveBlob(new Blob([content], {
+          type: mimeType
+        }), fileName);
+      } else if (URL && 'download' in a) { //html5 A[download]
+        a.href = URL.createObjectURL(new Blob([content], {
+          type: mimeType
+        }));
+        a.setAttribute('download', fileName);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        // eslint-disable-next-line no-restricted-globals
+        location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+      }
+    }
+
+    download(csvContent, `${stations[current]["station_name"].split(' ')[0]}-${options['rp']}-${options['emission']}-${options['tp']}.csv`, 'text/csv;encoding:utf-8');
   }
 
   return (
@@ -207,11 +312,21 @@ function Chart() {
         >
           <Tab label="Chart"/>
           <Tab label="Table"/>
+          <Tab label="Comparison"/>
+          {chart && current && mode === 1 && 
+            <Button
+              id="download-csv"
+              aria-label="download selected data"
+              onClick={handleDownload}
+            >
+              Download CSV
+            </Button>}
         </Tabs>
       </div>
       <div id="tab-panel" ref={tabPanel}>
         {chart && current && mode === 0 && renderChart()}
         {chart && current && mode === 1 && renderTable()}
+        {chart && current && mode === 2 && renderComparisonTable()}
       </div>
     </div>
   )

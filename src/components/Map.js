@@ -31,8 +31,8 @@ function Map() {
   let max = Math.ceil(currentData.max*10)/10
   let min = Math.floor(currentData.min*10)/10
 
-  max = 1+Math.max(max-1, 1-min)
-  min = 1-Math.max(max-1, 1-min)
+  max = Math.round((1+Math.max(max-1, 1-min))*10)/10;
+  min = Math.round((1-Math.max(max-1, 1-min))*10)/10;
 
   // const calcS = (mean) => {
   //   let result = ((mean - min) / (max - min) * 25);

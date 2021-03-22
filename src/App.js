@@ -125,3 +125,16 @@ function App() {
 }
 
 export default App;
+
+
+
+// TODO:
+
+// Create a new tab for a table comparing the Project Intensity Mean to the Observed Intensity Mean
+// Alter the color scheme to make values closer to 1.0 whiter and try to break the transition up a little more to make the incremental changes more apparent
+// Add a toggle to the chart to add in and filter out the CIs for Atlas-14
+// Highlight the borders of the states that intersect the watershed
+// Add an indication that the yellow line is the watershed boundary
+// Add something to the chart to let the user know that they can zoom in
+// Find a way to incorporate the adjustment factors into the table
+// table that has all of the county adjustments in alphabetical order by county, and when you click on the county it opens that table and scrolls to it / highlights it
