@@ -58,15 +58,26 @@ function Map() {
     //   color = `hsla(100, 0%, 40%, 1)`
     // }
 
-    if(mean > 1) {
+    // if(mean > 1) {
+    //   color = `hsla(110, ${(mean-1) / (max-1) * 25 + 75}%, ${50 - (mean-1) / (max-1) * 50}%, 1)`
+    // } else if (mean<1) {
+    //   color = `hsla(40, ${(mean-1) / (min-1) * 25 + 75}%, ${(mean-1) / (min-1) * 20 + 50}%, 1)`
+    // } else {
+    //   color = `hsla(110, 75%, 50%, 1)`
+    // }
+
+    if(mean > (1 + (max -1) * 2/5)) {
       color = `hsla(110, ${(mean-1) / (max-1) * 25 + 75}%, ${50 - (mean-1) / (max-1) * 50}%, 1)`
+    } else if (mean > 1) {
+      color = `hsla(110, ${(mean-1) / (max-1) * 25 + 50}%, ${50 - (mean-1) / (max-1) * 40}%, 1)`
     } else if (mean<1) {
       color = `hsla(40, ${(mean-1) / (min-1) * 25 + 75}%, ${(mean-1) / (min-1) * 20 + 50}%, 1)`
     } else {
-      color = `hsla(110, 75%, 50%, 1)`
+      color = `hsla(110,50%,90%,1)`
     }
 
-    // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1), hsla(40, 100%, 70%, 1))`
+    // backgroundImage: `linear-gradient(270deg,hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1) 40%, hsla(110,50%,90%,1) 50%, hsla(40, 100%, 70%, 1))`
+              // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1), hsla(40, 100%, 70%, 1))`
     // color = `hsla(110, ${calcS(mean) + 75}%, ${50 - calcL(mean)}%, 1)`
 
     colorExpression.push(id, color)
@@ -77,7 +88,8 @@ function Map() {
   const countyLayer = {
     id: "county-join",
     type: "fill",
-    'source-layer': 'historical_pres_elections_county',
+    'source-layer': 'USA_Counties-5nz3u8',
+    // 'source-layer': 'historical_pres_elections_county',
     // 'source-layer': "cf_rcp45_2020-2070_median_2-8ekv7r",
     paint: {
       "fill-color": colorExpression,
@@ -90,7 +102,9 @@ function Map() {
   const countyNameLayer = {
     id: "county-join-names",
     type: "symbol",
-    'source-layer': "historical_pres_elections_county_points",
+    'source-layer': 'counties-dasd61',
+
+    // 'source-layer': "historical_pres_elections_county_points",
     layout: {
       'text-field': ['get', 'name'],
       'text-size': 12, 
@@ -111,9 +125,15 @@ function Map() {
 
   const handleHover = (event) => {
     let feature = event.features && event.features[0]
-    if(feature && (feature.layer.id === "county-join" || feature.layer.id === "county-join-names")) {
+    if(feature && feature.layer.id === "county-join") {
       setTooltip({
         id: feature.properties.FIPS,
+        longitude: event.lngLat[0],
+        latitude: event.lngLat[1]
+      })
+    } else if (feature && feature.layer.id === "county-join-names") {
+      setTooltip({
+        id: feature.properties.geoid,
         longitude: event.lngLat[0],
         latitude: event.lngLat[1]
       })
@@ -233,15 +253,25 @@ function Map() {
         // Only needed if we decide to so something when clicking on counties
         // onClick={handleClick}
       >
-        <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county" >
-          {/* <Layer beforeId='watershed-boundary' {...countyLayer} /> */}
+    {/*  */}
+        {/* <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county" >
+          // <Layer beforeId='watershed-boundary' {...countyLayer} />
+          <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
+        </Source> */}
+
+        <Source type = "vector" url = "mapbox://beneck.4k8cfuie" >
           <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
         </Source>
 
-        <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county-points" >
-          <Layer {...countyNameLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
-          {/* <Layer {...countyNameLayer} /> */}
+        <Source type = "vector" url = "mapbox://beneck.5cjncwf0" >
+          <Layer {...countyNameLayer} filter={["in", ["to-string", ["get", "geoid"]], ["literal", countyFilter]]}/>
         </Source>
+
+    {/*  */}
+        {/* <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county-points" >
+          <Layer {...countyNameLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
+          <Layer {...countyNameLayer} />
+        </Source> */}
 
         {/* <Source type = "vector" url = "mapbox://adrienzheng.604t4hsd">
           <Layer beforeId="waterway-label" {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", counties]]}/>
@@ -262,7 +292,8 @@ function Map() {
         <div className="legend-controls-container">
           <div id="legend">
             <div id="legend-color" style={{
-              backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1), hsla(40, 100%, 70%, 1))`
+              backgroundImage: `linear-gradient(270deg,hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1) 40%, hsla(110,50%,90%,1) 50%, hsla(40, 100%, 70%, 1))`
+              // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1), hsla(40, 100%, 70%, 1))`
               // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1))`
               // backgroundImage: `linear-gradient(270deg, hsla(160, 100%, 70%, 1), hsla(100, 0%, 40%, 1), hsla(40, 100%, 70%, 1))`
             }}>

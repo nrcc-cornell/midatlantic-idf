@@ -1,4 +1,4 @@
-import {useContext, useState, useRef, useCallback} from 'react'
+import {useContext, useState, useEffect, useRef, useCallback} from 'react'
 
 import '../styles/Chart.scss'
 
@@ -10,8 +10,10 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Button
+  Button,
+  Switch
 } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles';
 
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -25,215 +27,53 @@ import {data} from '../data'
 
 highchartsMore(Highcharts)
 
+
+const DataSwitch1 = withStyles({
+  switchBase: {
+    transition: 'all .5s',
+    color: '#16bcfe',
+    '&$checked': {
+      color: '#16bcfe',
+    },
+    '&$checked + $track': {
+      backgroundColor: '#16bcfe',
+    },
+  },
+  checked: {},
+  track: {backgroundColor: '#16bcfe'},
+})(Switch);
+
+const DataSwitch2 = withStyles({
+  switchBase: {
+    transition: 'all .5s',
+    color: '#ff6969',
+    '&$checked': {
+      color: '#ff6969',
+    },
+    '&$checked + $track': {
+      backgroundColor: '#ff6969',
+    },
+  },
+  checked: {},
+  track: {backgroundColor: '#ff6969'},
+})(Switch);
+
 function Chart() {
   const {chart} = useContext(ChartContext) // context that turns chart panel on/off
   const {current} = useContext(CurrentContext) // context that keeps track of the current station
   const {options} = useContext(OptionsContext) // context that keeps track of the chart options
-  const [mode, setMode] = useState(0) // state that toggle between chart and table, 0 for chart, 1 for table
+  const [mode, setMode] = useState(0) // state that toggle between chart and tables, 0 for chart, 1 for table, 2 for comparison table
+  const [showCIs, setShowCIs] = useState({ "projectedCIs": true, "observedCIs": true }); // state that toggles the CIs on the chart
   const tabPanel = useRef()
 
-  const renderChart = useCallback(() => {
-    let station = stations[current]
-    let fips = station.fips
-    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
-    let _10 = data[options['emission']][options['tp']][options['rp']][fips]['10%']
-    let _90 = data[options['emission']][options['tp']][options['rp']][fips]['90%']
-    let _25 = data[options['emission']][options['tp']][options['rp']][fips]['25%']
-    let _75 = data[options['emission']][options['tp']][options['rp']][fips]['75%']
-    
-    let observed = []
-    let projectedInterval90 = []
-    let projectedInterval75 = []
-    let projection = []
-    let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr"]
-    let xValues = [1/12, 1/6, 1/4, 1/2, 1, 2, 3, 6, 12, 24, 48, 72, 96, 168]
-    let xLabels = {}
-    xValues.forEach((val, index) => xLabels[val] = categories[index])
-    
-    categories.forEach((duration, index) => {
-      let mid = parseFloat(station[duration][`${options['rp']}-mid`])
-      observed.push([xValues[index], mid])
-      projectedInterval90.push([xValues[index], parseFloat((mid*_10).toFixed(3)), parseFloat((mid*_90).toFixed(3))])
-      projectedInterval75.push([xValues[index], parseFloat((mid*_25).toFixed(3)), parseFloat((mid*_75).toFixed(3))])
-      projection.push([xValues[index], parseFloat((mid*mean).toFixed(3))])
-    })
+  const handleToggle = (ciName) => {
+    console.log("Toggling...")
+    console.log(showCIs);
 
-
-    let chartOptions = {
-      chart: {
-        zoomType: 'x',
-        height: tabPanel.current.offsetHeight
-      },
-
-      title: {
-        text: `<div>Intensity Duration Frequency Curves: ${options['rp']}-Year Return duration</div>
-        <div>RCP ${options['emission']} Observed Atlas 14 Value vs. Projection (${options['tp']})</div>`,
-        // useHTML: true
-        useHTML: false
-      },
-
-      xAxis: {
-        title: {
-          text: 'Duration'
-        },
-        tickPositions: [xValues[0], ...xValues.slice(6)],
-        labels: {
-          enabled: true,
-          formatter: function() {
-            return xLabels[this.value]
-          }
-        }
-      },
-
-      yAxis: {
-        title: {
-          text: "Intensity(inches)"
-        },
-        minorTicks: true,
-        endOnTick: false,
-        gridLineWidth: 2
-      },
-
-      tooltip: {
-        formatter: function () {
-          return this.points.reduce(function (s, point) {
-            if (s.includes('min') && !s.includes('minutes')) {
-              s = `${s.match(/\d+/)} minutes`;
-            } else if (s.includes('hr')) {
-              s = `${s.match(/\d+/)} hours`;
-            }
-
-            return `<b>${s}</b><br/>${point.series.name}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y}</b> inches`
-          }, '<b>' + xLabels[this.x] + '</b>');
-        },
-        backgroundColor: "#FFFFFF",
-        shared: true,
-        useHTML: true,
-        outside: true
-      },
-
-      series: [
-        {
-          name: `Projected 90% Confidence Interval ${options['tp']}`,
-          type: "arearange",
-          color: "#d6f3ff",
-          data: projectedInterval90
-        },{
-          name: `Projected 75% Confidence Interval ${options['tp']}`,
-          type: "arearange",
-          color: "#91dfff",
-          data: projectedInterval75
-        },{
-          name: `Projected ${options['tp']}`,
-          type: "line",
-          color: "#00b7ff",
-          data: projection
-        },{
-          name: `Observed Atlas 14 Value`,
-          type: "line",
-          color: "#ff6969",
-          data: observed
-        }
-      ],
-
-      legend: {
-        floating: true,
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'bottom',
-        y: -50,
-        backgroundColor: '#FFFFFF',
-        shadow: true,
-        borderRadius: 5
-        // Getting closer. Fiddle with positoining of the legend and start/stop of yAxis
-        // Then reduce space taken from top by the title and tab nav
-      }
-
-    }
-    return (
-      <HighchartsReact highcharts={Highcharts} options={chartOptions}/>
-    )
-  }, [current, options])
-
-  const renderTable = () => {
-    let station = stations[current]
-    let fips = station.fips
-    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
-    let _10 = data[options['emission']][options['tp']][options['rp']][fips]['10%']
-    let _90 = data[options['emission']][options['tp']][options['rp']][fips]['90%']
-    let _25 = data[options['emission']][options['tp']][options['rp']][fips]['25%']
-    let _75 = data[options['emission']][options['tp']][options['rp']][fips]['75%']
-    let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr", "2day", "3day", "4day", "7day"]
-    return (
-      <Table stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell colSpan={5} align="center" >Projected {options['tp']} Intensity</TableCell>
-            <TableCell colSpan={1} align="center" >Observed Atlas-14 Intensity 1970-1999</TableCell>
-          </TableRow>
-          <TableRow className="sticky-row">
-            <TableCell>Duration</TableCell>
-            <TableCell align="center">10th</TableCell>
-            <TableCell align="center">25th</TableCell>
-            <TableCell align="center">Mean</TableCell>
-            <TableCell align="center">75th</TableCell>
-            <TableCell align="center">90th</TableCell>
-            <TableCell align="center">Mean</TableCell>   
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {categories.map(duration => 
-            <TableRow key={duration}>
-              <TableCell>{duration}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_10).toFixed(3)}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_25).toFixed(3)}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*mean).toFixed(3)}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_75).toFixed(3)}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_90).toFixed(3)}</TableCell>
-              <TableCell className="col-shaded" align="center">{parseFloat(station[duration][`${options['rp']}-mid`])}</TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    )
-  }
-
-  const renderComparisonTable = () => {
-    let station = stations[current]
-    let fips = station.fips
-    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
-    let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr", "2day", "3day", "4day", "7day"]
-    
-
-    return (
-      <Table stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell>Duration</TableCell>
-            <TableCell align="center">Observed Atlas-14 Mean Intensity 1970-1999</TableCell>
-            <TableCell align="center">Projected {options['tp']} Mean Intensity</TableCell>
-            <TableCell align="center">Change</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {categories.map((duration) => {
-            let change = ((parseFloat(station[duration][`${options['rp']}-mid`])*mean) - parseFloat(station[duration][`${options['rp']}-mid`])).toFixed(3);
-            let sign = change<=0?"":"+";
-
-            return (
-              <TableRow key={duration}>
-                <TableCell>{duration}</TableCell>
-                <TableCell align="center">{parseFloat(station[duration][`${options['rp']}-mid`])}</TableCell>
-                <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*mean).toFixed(3)}</TableCell>
-                <TableCell align="center">{`${sign}${change}`}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    )
-  }
+    let newState = {...showCIs};
+    newState[ciName] = newState[ciName] ? false : true;
+    setShowCIs(newState);
+  };
 
   const handleDownload = () => {
     var headers = [
@@ -302,6 +142,236 @@ function Chart() {
     download(csvContent, `${stations[current]["station_name"].split(' ')[0]}-${options['rp']}-${options['emission']}-${options['tp']}.csv`, 'text/csv;encoding:utf-8');
   }
 
+  const renderChart = useCallback(() => {
+    let station = stations[current]
+    let fips = station.fips
+    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
+    let _10 = data[options['emission']][options['tp']][options['rp']][fips]['10%']
+    let _90 = data[options['emission']][options['tp']][options['rp']][fips]['90%']
+    let _25 = data[options['emission']][options['tp']][options['rp']][fips]['25%']
+    let _75 = data[options['emission']][options['tp']][options['rp']][fips]['75%']
+    
+    let observed = []
+    let observedInterval = []
+    let projectedInterval90 = []
+    let projectedInterval75 = []
+    let projection = []
+    let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr"]
+    let xValues = [1/12, 1/6, 1/4, 1/2, 1, 2, 3, 6, 12, 24, 48, 72, 96, 168]
+    let xLabels = {}
+    xValues.forEach((val, index) => xLabels[val] = categories[index])
+    
+    categories.forEach((duration, index) => {
+      let mid = parseFloat(station[duration][`${options['rp']}-mid`])
+      observed.push([xValues[index], mid])
+      observedInterval.push([xValues[index], parseFloat(parseFloat(station[duration][`${options['rp']}-bound`][0]).toFixed(3)), parseFloat(parseFloat(station[duration][`${options['rp']}-bound`][1]).toFixed(3))])
+      projectedInterval90.push([xValues[index], parseFloat((mid*_10).toFixed(3)), parseFloat((mid*_90).toFixed(3))])
+      projectedInterval75.push([xValues[index], parseFloat((mid*_25).toFixed(3)), parseFloat((mid*_75).toFixed(3))])
+      projection.push([xValues[index], parseFloat((mid*mean).toFixed(3))])
+    })
+
+
+    let chartOptions = {
+      chart: {
+        zoomType: 'x',
+        height: tabPanel.current.offsetHeight
+      },
+
+      title: {
+        text: `<div>Intensity Duration Frequency Curves: ${options['rp']}-Year Return duration</div>
+        <div>RCP ${options['emission']} Observed Atlas 14 Value vs. Projection (${options['tp']})</div>`,
+        // useHTML: true
+        useHTML: false
+      },
+
+      xAxis: {
+        title: {
+          text: 'Duration'
+        },
+        tickPositions: [xValues[0], ...xValues.slice(6)],
+        labels: {
+          enabled: true,
+          formatter: function() {
+            return xLabels[this.value]
+          }
+        }
+      },
+
+      yAxis: {
+        title: {
+          text: "Intensity(inches)"
+        },
+        minorTicks: true,
+        endOnTick: false,
+        gridLineWidth: 2
+      },
+
+      tooltip: {
+        formatter: function () {
+          return this.points.reduce(function (s, point) {
+            if (s.includes('min') && !s.includes('minutes')) {
+              s = `${s.match(/\d+/)} minutes`;
+            } else if (s.includes('hr')) {
+              s = `${s.match(/\d+/)} hours`;
+            }
+
+            return `<b>${s}</b><br/>${point.series.name}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y}</b> inches`
+          }, '<b>' + xLabels[this.x] + '</b>');
+        },
+        backgroundColor: "#FFFFFF",
+        shared: true,
+        useHTML: true,
+        outside: true
+      },
+
+      legend: {
+        floating: true,
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'bottom',
+        y: -50,
+        backgroundColor: '#FFFFFF',
+        shadow: true,
+        borderRadius: 5
+      },
+
+      series: []
+    }
+
+    if (showCIs.observedCIs) {
+      chartOptions.series = [
+        ...chartOptions.series,
+        {
+          name: 'Observed Confidence Interval',
+          type: "arearange",
+          color: "#ffa8a8",
+          data: observedInterval,
+          legendIndex: 4
+        }
+      ]
+    }
+
+    if (showCIs.projectedCIs) {
+      chartOptions.series = [
+        ...chartOptions.series,
+        {
+          name: `Projected 90% Confidence Interval ${options['tp']}`,
+          type: "arearange",
+          color: "#d6f3ff",
+          data: projectedInterval90,
+          legendIndex: 2
+        },{
+          name: `Projected 75% Confidence Interval ${options['tp']}`,
+          type: "arearange",
+          color: "#91dfff",
+          data: projectedInterval75,
+          legendIndex: 1
+        }
+      ]
+    }
+
+    chartOptions.series = [
+      ...chartOptions.series,
+      {
+        name: `Observed Atlas 14 Value`,
+        type: "line",
+        color: "#ff6969",
+        data: observed,
+        legendIndex: 3
+      },{
+        name: `Projected ${options['tp']}`,
+        type: "line",
+        color: "#00b7ff",
+        data: projection,
+        legendIndex: 0
+      }
+    ]
+
+
+    return (
+      <HighchartsReact highcharts={Highcharts} options={chartOptions}/>
+    )
+  }, [current, options, showCIs])
+
+  const renderTable = () => {
+    let station = stations[current]
+    let fips = station.fips
+    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
+    let _10 = data[options['emission']][options['tp']][options['rp']][fips]['10%']
+    let _90 = data[options['emission']][options['tp']][options['rp']][fips]['90%']
+    let _25 = data[options['emission']][options['tp']][options['rp']][fips]['25%']
+    let _75 = data[options['emission']][options['tp']][options['rp']][fips]['75%']
+    let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr", "2day", "3day", "4day", "7day"]
+    return (
+      <Table stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell colSpan={5} align="center" >Projected {options['tp']} Intensity</TableCell>
+            <TableCell colSpan={1} align="center" >Observed Atlas-14 Intensity 1970-1999</TableCell>
+          </TableRow>
+          <TableRow className="sticky-row">
+            <TableCell>Duration</TableCell>
+            <TableCell align="center">10th</TableCell>
+            <TableCell align="center">25th</TableCell>
+            <TableCell align="center">Mean</TableCell>
+            <TableCell align="center">75th</TableCell>
+            <TableCell align="center">90th</TableCell>
+            <TableCell align="center">Mean</TableCell>   
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {categories.map(duration => 
+            <TableRow key={duration}>
+              <TableCell>{duration}</TableCell>
+              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_10).toFixed(3)}</TableCell>
+              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_25).toFixed(3)}</TableCell>
+              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*mean).toFixed(3)}</TableCell>
+              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_75).toFixed(3)}</TableCell>
+              <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*_90).toFixed(3)}</TableCell>
+              <TableCell className="col-shaded" align="center">{parseFloat(station[duration][`${options['rp']}-mid`])}</TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    )
+  }
+
+  const renderComparisonTable = () => {
+    let station = stations[current]
+    let fips = station.fips
+    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
+    let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr", "2day", "3day", "4day", "7day"]
+
+    return (
+      <Table stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell>Duration</TableCell>
+            <TableCell align="center">Observed Atlas-14 Mean Intensity 1970-1999</TableCell>
+            <TableCell align="center">Projected {options['tp']} Mean Intensity</TableCell>
+            <TableCell align="center">Change</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {categories.map((duration) => {
+            let change = ((parseFloat(station[duration][`${options['rp']}-mid`])*mean) - parseFloat(station[duration][`${options['rp']}-mid`])).toFixed(3);
+            let sign = change<=0?"":"+";
+
+            return (
+              <TableRow key={duration}>
+                <TableCell>{duration}</TableCell>
+                <TableCell align="center">{parseFloat(station[duration][`${options['rp']}-mid`])}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options['rp']}-mid`])*mean).toFixed(3)}</TableCell>
+                <TableCell align="center">{`${sign}${change}`}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    )
+  }
+
   return (
     <div id="chart-cont" className={`card ${!chart && 'hidden'}`}>
       <div className="station-name">{chart && current && stations[current]["station_name"]}</div>
@@ -313,15 +383,24 @@ function Chart() {
           <Tab label="Chart"/>
           <Tab label="Table"/>
           <Tab label="Comparison"/>
-          {chart && current && mode === 1 && 
-            <Button
-              id="download-csv"
-              aria-label="download selected data"
-              onClick={handleDownload}
-            >
-              Download CSV
-            </Button>}
         </Tabs>
+        {chart && current && mode === 1 && 
+          <Button
+            id="download-csv"
+            aria-label="download selected data"
+            onClick={handleDownload}
+          >
+            Download CSV
+          </Button>
+        }
+        {chart && current && mode === 0 && <div className="ci-toggles">
+            <div className="toggle-label">Toggle Confidence Areas</div>
+            <div className="toggle-container">
+              <DataSwitch1 checked={showCIs.projectedCIs} onChange={() => handleToggle("projectedCIs")} name="pciFilter" />
+              <DataSwitch2 checked={showCIs.observedCIs} onChange={() => handleToggle("observedCIs")} name="ociFilter" />
+            </div>
+          </div>
+        }
       </div>
       <div id="tab-panel" ref={tabPanel}>
         {chart && current && mode === 0 && renderChart()}
