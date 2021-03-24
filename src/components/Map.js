@@ -45,7 +45,7 @@ function Map() {
   // };
 
 
-  let colorExpression = ['match', ['get', 'FIPS']]
+  let colorExpression = ['match', ['get', 'GEOID']]
   Object.entries(currentData).forEach(([id, {name, mean}]) => {
     let color
 
@@ -88,7 +88,8 @@ function Map() {
   const countyLayer = {
     id: "county-join",
     type: "fill",
-    'source-layer': 'USA_Counties-5nz3u8',
+    'source-layer': 'cb_2018_us_county_500k-bbf38a',
+    // 'source-layer': 'USA_Counties-5nz3u8',
     // 'source-layer': 'historical_pres_elections_county',
     // 'source-layer': "cf_rcp45_2020-2070_median_2-8ekv7r",
     paint: {
@@ -99,11 +100,26 @@ function Map() {
     }
   }
 
+  const countyLines = {
+    id: "county-join-line",
+    type: "line",
+    'source-layer': 'cb_2018_us_county_500k-bbf38a',
+    // 'source-layer': 'USA_Counties-5nz3u8',
+    // 'source-layer': 'historical_pres_elections_county',
+    // 'source-layer': "cf_rcp45_2020-2070_median_2-8ekv7r",
+    paint: {
+      "line-color": "rgba(100,100,100,1)",
+      "line-width": 1
+      // "fill-color": "rgba(0, 0, 0, 1)",
+      // "fill-outline-color": "rgba(255,255,255,1)"
+    }
+  }
+
   const countyNameLayer = {
     id: "county-join-names",
     type: "symbol",
     'source-layer': 'counties-dasd61',
-
+    
     // 'source-layer': "historical_pres_elections_county_points",
     layout: {
       'text-field': ['get', 'name'],
@@ -127,7 +143,7 @@ function Map() {
     let feature = event.features && event.features[0]
     if(feature && feature.layer.id === "county-join") {
       setTooltip({
-        id: feature.properties.FIPS,
+        id: feature.properties.GEOID,
         longitude: event.lngLat[0],
         latitude: event.lngLat[1]
       })
@@ -172,7 +188,7 @@ function Map() {
         long = -78.4
       }
 
-    } else {
+    } else if (area === 'virginia') {
       lat = 37.2;
       long = -79.7;
       zoom = 6.5;
@@ -191,6 +207,37 @@ function Map() {
         zoom = 5.3;
         long = -80.2;
       }
+    } else {
+      lat = 39.0;
+      long = -79.1;
+      zoom = 6.0;
+  
+      if (viewWidth <= 1800 && viewWidth > 1570) {
+        zoom = 5.8;
+      } else if (viewWidth <= 1570 && viewWidth > 1255) {
+        long = -79.8;
+        zoom = 5.6;
+      } else if (viewWidth <= 1255 && viewWidth > 1200) {
+        lat = 38.5;
+        long = -80.5;
+        zoom = 5.5;
+      } else if (viewWidth <= 1200 && viewWidth > 1090) {
+        lat = 38.5;
+        long = -79.7;
+        zoom = 5.3;
+      } else if (viewWidth <= 1090) {
+        lat = 38.5;
+        long = -80.0;
+        zoom = 5.1;
+      }
+
+      if (viewHeight <= 950 && viewHeight > 820 && zoom >= 5.9) {
+        zoom = 5.9;
+      } else if (viewHeight <= 820 && viewHeight > 785 && zoom >= 5.7) {
+        zoom = 5.7;
+      } else if (viewHeight <= 785 && zoom >= 5.5) {
+        zoom = 5.5;
+      }
     }
 
     return {
@@ -202,10 +249,12 @@ function Map() {
   };
 
   useEffect(() => {
-    if (area === 'virginia') {
+    if (area === 'bay') {
+      setCountyFilter(counties);
+    } else if (area === 'virginia') {
       setCountyFilter(virginiaCounties);
     } else {
-      setCountyFilter(counties);
+      setCountyFilter(counties.concat(virginiaCounties));
     }
 
     var viewSetting = getViewSettings();
@@ -259,8 +308,13 @@ function Map() {
           <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
         </Source> */}
 
-        <Source type = "vector" url = "mapbox://beneck.4k8cfuie" >
-          <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
+        <Source type = "vector" url = "mapbox://beneck.3at6c9tb" >
+        {/* <Source type = "vector" url = "mapbox://beneck.4k8cfuie" > */}
+          <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
+        </Source>
+
+        <Source type = "vector" url = "mapbox://beneck.3at6c9tb" >
+          <Layer beforeId='watershed-boundary' {...countyLines} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
         </Source>
 
         <Source type = "vector" url = "mapbox://beneck.5cjncwf0" >
@@ -357,7 +411,7 @@ const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave, scope}) => {
 
   return <>
     {Object.entries(stations).map(([id, {fips, latitude, longitude}]) => {
-      if ((scope === 'bay' && counties.includes(fips)) || (scope === 'virginia' && virginiaCounties.includes(fips))) {
+      if ((scope === 'both' && (counties.includes(fips) || virginiaCounties.includes(fips))) || (scope === 'bay' && counties.includes(fips)) || (scope === 'virginia' && virginiaCounties.includes(fips))) {
         return (
           <Marker
             latitude={parseFloat(latitude)}

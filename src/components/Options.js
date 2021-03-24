@@ -118,6 +118,7 @@ function Options() {
             value={options['area']}
             onChange={event => handleChange(event, "area")}
           >
+            <MenuItem value={"both"}>Both</MenuItem>
             <MenuItem value={"bay"}>Chesapeake Bay Watershed</MenuItem>
             <MenuItem value={"virginia"}>Virginia</MenuItem>
           </Select>
