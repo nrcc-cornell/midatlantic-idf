@@ -10,7 +10,7 @@
 
 #search-result {
   grid-column: 21/25;
-  grid-row: 3/15;
+  grid-row: 3/14;
   
   #srw {
     height: fit-content;
@@ -32,12 +32,22 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1316px) {
   #search-cont {
     grid-column: 20/25;
   }
 
   #search-result {
     grid-column: 20/25;
+  }  
+}
+
+@media (max-width: 1055px) {
+  #search-cont {
+    grid-column: 19/25;
+  }
+
+  #search-result {
+    grid-column: 19/25;
   }  
 }

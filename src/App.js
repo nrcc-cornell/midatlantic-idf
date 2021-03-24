@@ -13,6 +13,7 @@ import Options from './components/Options'
 import Search from './components/Search'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import Legend from './components/Legend'
 
 import {stations, counties} from './data'
 
@@ -90,6 +91,7 @@ function App() {
             <Options />
             <Search />
             <Chart />
+            <Legend />
           </div>
           
             {/* <Switch>
@@ -137,4 +139,5 @@ export default App;
 
 // Check tabs layout on chart overlay on small screensize. it will most likely be bad (use Martinsburg Airport for long name)
 // Add a way to favorite currently selected
+// Move legend to grid
 // table that has all of the county adjustments in alphabetical order by county, and when you click on the county it opens that table and scrolls to it / highlights it

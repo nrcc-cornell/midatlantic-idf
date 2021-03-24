@@ -170,11 +170,12 @@ function Chart() {
       projection.push([xValues[index], parseFloat((mid*mean).toFixed(3))])
     })
 
+    console.log(tabPanel);
 
     let chartOptions = {
       chart: {
         zoomType: 'x',
-        height: tabPanel.current.offsetHeight
+        height: (tabPanel.current.offsetHeight - 10)
       },
 
       title: {
@@ -372,9 +373,19 @@ function Chart() {
     )
   }
 
+  const stationName = () => {
+    let nameArr = stations[current]["station_name"].split('');
+
+    if (nameArr.length > 35) {
+      return nameArr.slice(0,35).join('') + '...';
+    } else {
+      return stations[current]["station_name"];
+    }
+  }
+
   return (
     <div id="chart-cont" className={`card ${!chart && 'hidden'}`}>
-      <div className="station-name">{chart && current && stations[current]["station_name"]}</div>
+      <div className="station-name"><div>{chart && current && stationName()}</div></div>
       <div id="chart-control">
         <Tabs
           value={mode}

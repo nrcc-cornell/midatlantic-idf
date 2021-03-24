@@ -7,11 +7,18 @@
   // padding-top: 5px !important;
   padding-bottom: 5px !important;
   position: relative;
+  z-index: 2;
 
   .station-name {
     position: absolute;
-    top: 17px;
+    top: 8px;
     right: 17px;
+    width: 200px;
+    height: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    text-align: center;
   }
 
   #chart-control {
@@ -27,8 +34,8 @@
       background-color: #f50057;
       color: white;
       margin-top: 4px;
-      margin-left: 10px;
       height: 40px;
+      font-size: 13px;
     }
   }
 
@@ -71,6 +78,16 @@
 @media (max-width: 1255px) {
   #chart-cont {
     grid-column: 7/25;
+  }
+}
+
+@media (max-width: 1170px) {
+  #chart-cont {
+    .station-name {
+      font-size: 10px;
+      width: 80px;
+      right: 5px;
+    }
   }
 }
 

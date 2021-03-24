@@ -148,6 +148,25 @@ function Search() {
     }
   }
 
+  const renderSelected = () => {
+    let name = stations[current]["station_name"];
+    
+    return (
+    <div id="current-station">
+      <Chip 
+        label={limitLabelLength(name)}
+        icon={(favorite && favorite[current]) ? (
+          <StarIcon onClick={(event) => toggleFavorite(current, name, event)}/>
+        ): (
+          <StarBorderIcon onClick={(event) => toggleFavorite(current, name, event)}/>
+        )}
+        color="secondary"
+        clickable
+        onClick = {() => handleChipClick(current)}
+      />
+    </div>)
+  }
+
   useEffect(() => { // get a list of locations when the search term changes
     setLoading(true)
     setResults({})
@@ -184,6 +203,10 @@ function Search() {
           {terms.trim().length>0 && <div id="result-wrapper">
             <Typography style = {{flexBasis: "100%"}} variant="caption">Search Results</Typography>
             {renderResults()}
+          </div>}
+          {current && <div id="current-wrapper">
+            <Typography style = {{flexBasis: "100%"}} variant="caption">Currently Selected</Typography>
+            {renderSelected()}
           </div>}
           <div id="favorite-wrapper">
             <Typography style = {{flexBasis: "100%"}} variant="caption">My Favorite Stations</Typography>

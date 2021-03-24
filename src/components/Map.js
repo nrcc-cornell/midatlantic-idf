@@ -8,16 +8,16 @@ import {ChartContext} from '../contexts/ChartContext'
 import {CurrentContext} from '../contexts/CurrentContext'
 
 function Map() {
-  const [viewport, setViewport] = useState({
-    // width: "100%",
-    // height: "100%",
-    latitude: 39.25,
-    longitude: -76.25,
-    zoom: 5,
-    minZoom: 5.8,
-    bearing: -10,
-    pitch: 40,
-  });
+  // const [viewport, setViewport] = useState({
+  //   // width: "100%",
+  //   // height: "100%",
+  //   latitude: 39.25,
+  //   longitude: -76.25,
+  //   zoom: 5,
+  //   minZoom: 5.8,
+  //   bearing: -10,
+  //   pitch: 40,
+  // });
 
   
   const [popup, setPopup] = useState(null)
@@ -43,6 +43,105 @@ function Map() {
   //   let result = ((mean - min) / (max - min) * 50);
   //   return result
   // };
+  const getViewSettings = () => {
+    let viewWidth = document.querySelector('html').clientWidth;
+    let viewHeight = document.querySelector('html').clientHeight;
+    let lat, long, zoom;
+
+    if (area === 'bay') {
+      lat = 39.25;
+      long = -78.1;
+      zoom = 6.0;
+  
+      if (viewHeight <= 950 && viewHeight > 850) {
+        zoom = 5.8;
+      } else if (viewHeight <= 850) {
+        zoom = 5.6;
+      }
+  
+      if (viewWidth <= 1310 && viewWidth > 1150 && zoom > 5.8) {
+        zoom = 5.8
+      } else if (viewWidth <= 1160 && viewWidth > 1055 && zoom > 5.6) {
+        zoom = 5.5
+      } else if (viewWidth <= 1055 && zoom > 5.5) {
+        zoom = 5.3
+        long = -78.4
+      }
+
+    } else if (area === 'virginia') {
+      lat = 37.2;
+      long = -79.7;
+      zoom = 6.5;
+  
+      if (viewWidth <= 1800 && viewWidth > 1570) {
+        zoom = 6.3;
+      } else if (viewWidth <= 1570 && viewWidth > 1375) {
+        zoom = 6.1;
+      } else if (viewWidth <= 1375 && viewWidth > 1315) {
+        zoom = 5.9;
+      } else if (viewWidth <= 1315 && viewWidth > 1260) {
+        long = -79.5;
+        zoom = 5.9;
+      } else if (viewWidth <= 1260 && viewWidth > 1185) {
+        long = -79.8;
+        zoom = 5.7;
+      } else if (viewWidth <= 1185 && viewWidth > 1060) {
+        zoom = 5.5;
+      } else if (viewWidth <= 1060) {
+        zoom = 5.2;
+        long = -79.9;
+      }
+    } else {
+      lat = 39.0;
+      long = -79.1;
+      zoom = 6.0;
+  
+      if (viewWidth <= 1800 && viewWidth > 1570) {
+        zoom = 5.8;
+      } else if (viewWidth <= 1570 && viewWidth > 1255) {
+        long = -79.4;
+        zoom = 5.6;
+      } else if (viewWidth <= 1255 && viewWidth > 1140) {
+        lat = 38.5;
+        long = -79.6;
+        zoom = 5.4;
+      } else if (viewWidth <= 1140 && viewWidth > 1090) {
+        lat = 38.5;
+        long = -79.7;
+        zoom = 5.3;
+      } else if (viewWidth <= 1090 && viewWidth > 1055) {
+        lat = 38.5;
+        long = -79.6;
+        zoom = 5.3;
+      } else if (viewWidth <= 1055 && viewWidth > 1050) {
+        lat = 38.5;
+        long = -79.2;
+        zoom = 5.1;
+      } else if (viewWidth <= 1050) {
+        lat = 38.5;
+        long = -79.5;
+        zoom = 5.0;
+      }
+
+      if (viewHeight <= 950 && viewHeight > 820 && zoom > 5.9) {
+        zoom = 5.9;
+      } else if (viewHeight <= 820 && viewHeight > 785 && zoom > 5.7) {
+        zoom = 5.7;
+      } else if (viewHeight <= 785 && zoom > 5.5) {
+        zoom = 5.5;
+      }
+    }
+
+    return {
+      latitude: lat,
+      longitude: long,
+      zoom: zoom,
+      minZoom: zoom
+    }
+  };
+
+  
+  const [viewport, setViewport] = useState(getViewSettings());
 
 
   let colorExpression = ['match', ['get', 'GEOID']]
@@ -163,90 +262,7 @@ function Map() {
   //   console.log(event);
   // };
 
-  const getViewSettings = () => {
-    let viewWidth = document.querySelector('html').clientWidth;
-    let viewHeight = document.querySelector('html').clientHeight;
-    let lat, long, zoom;
 
-    if (area === 'bay') {
-      lat = 39.25;
-      long = -78.1;
-      zoom = 6.0;
-  
-      if (viewHeight <= 950 && viewHeight > 850) {
-        zoom = 5.8;
-      } else if (viewHeight <= 850) {
-        zoom = 5.6;
-      }
-  
-      if (viewWidth <= 1255 && viewWidth > 1150 && zoom >= 6.0) {
-        zoom = 5.8
-      } else if (viewWidth <= 1150 && viewWidth > 1055 && zoom >= 5.8) {
-        zoom = 5.6
-      } else if (viewWidth <= 1055 && zoom >= 5.6) {
-        zoom = 5.5
-        long = -78.4
-      }
-
-    } else if (area === 'virginia') {
-      lat = 37.2;
-      long = -79.7;
-      zoom = 6.5;
-  
-      if (viewWidth <= 1800 && viewWidth > 1570) {
-        zoom = 6.3;
-      } else if (viewWidth <= 1570 && viewWidth > 1375) {
-        zoom = 6.1;
-      } else if (viewWidth <= 1375 && viewWidth > 1260) {
-        zoom = 5.9;
-      } else if (viewWidth <= 1260 && viewWidth > 1185) {
-        zoom = 5.7;
-      } else if (viewWidth <= 1185 && viewWidth > 1060) {
-        zoom = 5.5;
-      } else if (viewWidth <= 1060) {
-        zoom = 5.3;
-        long = -80.2;
-      }
-    } else {
-      lat = 39.0;
-      long = -79.1;
-      zoom = 6.0;
-  
-      if (viewWidth <= 1800 && viewWidth > 1570) {
-        zoom = 5.8;
-      } else if (viewWidth <= 1570 && viewWidth > 1255) {
-        long = -79.8;
-        zoom = 5.6;
-      } else if (viewWidth <= 1255 && viewWidth > 1200) {
-        lat = 38.5;
-        long = -80.5;
-        zoom = 5.5;
-      } else if (viewWidth <= 1200 && viewWidth > 1090) {
-        lat = 38.5;
-        long = -79.7;
-        zoom = 5.3;
-      } else if (viewWidth <= 1090) {
-        lat = 38.5;
-        long = -80.0;
-        zoom = 5.1;
-      }
-
-      if (viewHeight <= 950 && viewHeight > 820 && zoom >= 5.9) {
-        zoom = 5.9;
-      } else if (viewHeight <= 820 && viewHeight > 785 && zoom >= 5.7) {
-        zoom = 5.7;
-      } else if (viewHeight <= 785 && zoom >= 5.5) {
-        zoom = 5.5;
-      }
-    }
-
-    return {
-      latitude: lat,
-      longitude: long,
-      zoom: zoom,
-      minZoom: zoom
-    }
-  };
 
   useEffect(() => {
     if (area === 'bay') {
@@ -310,11 +326,11 @@ function Map() {
 
         <Source type = "vector" url = "mapbox://beneck.3at6c9tb" >
         {/* <Source type = "vector" url = "mapbox://beneck.4k8cfuie" > */}
-          <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
+          <Layer beforeId='states-filtered' {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
         </Source>
 
         <Source type = "vector" url = "mapbox://beneck.3at6c9tb" >
-          <Layer beforeId='watershed-boundary' {...countyLines} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
+          <Layer beforeId='states-filtered' {...countyLines} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
         </Source>
 
         <Source type = "vector" url = "mapbox://beneck.5cjncwf0" >
@@ -343,21 +359,7 @@ function Map() {
           // scope={props.scope}
         />
 
-        <div className="legend-controls-container">
-          <div id="legend">
-            <div id="legend-color" style={{
-              backgroundImage: `linear-gradient(270deg,hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1) 40%, hsla(110,50%,90%,1) 50%, hsla(40, 100%, 70%, 1))`
-              // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1), hsla(40, 100%, 70%, 1))`
-              // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1))`
-              // backgroundImage: `linear-gradient(270deg, hsla(160, 100%, 70%, 1), hsla(100, 0%, 40%, 1), hsla(40, 100%, 70%, 1))`
-            }}>
-              <div className="legend-text">{min}</div>
-              <div className="legend-text">1.0</div>
-              <div className="legend-text">{max}</div>
-            </div>
-          </div>
-          <NavigationControl className="map-nav" showCompass={false} />
-        </div>
+
         {popup && <Popup
           tipSize={5}
           anchor="top"
