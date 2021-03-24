@@ -1,4 +1,6 @@
 import {useContext, useState, useEffect, useRef, useCallback} from 'react'
+import { Popper, Fade } from "@material-ui/core";
+import store from "store";
 
 import '../styles/Chart.scss'
 
@@ -13,7 +15,7 @@ import {
   Button,
   Switch
 } from '@material-ui/core'
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -27,6 +29,15 @@ import {data} from '../data'
 
 highchartsMore(Highcharts)
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    border: '1px solid rgb(210,210,210)',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    boxShadow: '3px 3px 3px rgba(210,210,210,0.7)',
+    padding: '10px',
+  },
+}));
 
 const DataSwitch1 = withStyles({
   switchBase: {
@@ -64,7 +75,10 @@ function Chart() {
   const {options} = useContext(OptionsContext) // context that keeps track of the chart options
   const [mode, setMode] = useState(0) // state that toggle between chart and tables, 0 for chart, 1 for table, 2 for comparison table
   const [showCIs, setShowCIs] = useState({ "projectedCIs": true, "observedCIs": true }); // state that toggles the CIs on the chart
-  const tabPanel = useRef()
+  const [chartTips, setChartTips] = useState(store.get("chartTips"));
+  const [popperAnchor, setPopperAnchor] = useState(false);
+  const tabPanel = useRef();
+  const classes = useStyles();
 
   const handleToggle = (ciName) => {
     console.log("Toggling...")
@@ -150,7 +164,7 @@ function Chart() {
     let _90 = data[options['emission']][options['tp']][options['rp']][fips]['90%']
     let _25 = data[options['emission']][options['tp']][options['rp']][fips]['25%']
     let _75 = data[options['emission']][options['tp']][options['rp']][fips]['75%']
-    
+
     let observed = []
     let observedInterval = []
     let projectedInterval90 = []
@@ -169,8 +183,6 @@ function Chart() {
       projectedInterval75.push([xValues[index], parseFloat((mid*_25).toFixed(3)), parseFloat((mid*_75).toFixed(3))])
       projection.push([xValues[index], parseFloat((mid*mean).toFixed(3))])
     })
-
-    console.log(tabPanel);
 
     let chartOptions = {
       chart: {
@@ -383,6 +395,52 @@ function Chart() {
     }
   }
 
+  const deactivateChartTips = () => {
+    store.set("chartTips", "false");
+    setChartTips("false");
+  };
+
+  const renderChartTips = () => {
+    let toCover = document.querySelector('#tab-panel');
+    let width = toCover.offsetWidth;
+    let height = toCover.offsetHeight;
+
+    return (
+      <div id="chart-tips-wrapper" style={{ width:width, height:height }} onClick={deactivateChartTips}>
+        <div id="chart-tip-zoom">Click and drag on chart to zoom</div>
+        <div id="chart-tip-adj-factors">Hover here to see adjustment factors</div>
+      </div>
+    );
+  };
+
+  const showAdjFactors = () => {
+    let fips = stations[current].fips
+
+    let name = data[options['emission']][options['tp']][options['rp']][fips]['name']
+    let mean = data[options['emission']][options['tp']][options['rp']][fips]['mean']
+    let _10 = data[options['emission']][options['tp']][options['rp']][fips]['10%']
+    let _90 = data[options['emission']][options['tp']][options['rp']][fips]['90%']
+    let _25 = data[options['emission']][options['tp']][options['rp']][fips]['25%']
+    let _75 = data[options['emission']][options['tp']][options['rp']][fips]['75%']
+
+    return (
+      <Popper id="adj-popper" open={popperAnchor ? true : false} anchorEl={popperAnchor} transition disablePortal>
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={300}>
+            <div className={classes.paper}>
+              <div><b>County: {name}</b></div>
+              <div>10th: {_10}</div>
+              <div>25th: {_25}</div>
+              <div>Mean: {mean}</div>
+              <div>75th: {_75}</div>
+              <div>90th: {_90}</div>
+            </div>
+          </Fade>
+        )}
+      </Popper>
+    );
+  };
+
   return (
     <div id="chart-cont" className={`card ${!chart && 'hidden'}`}>
       <div className="station-name"><div>{chart && current && stationName()}</div></div>
@@ -390,16 +448,16 @@ function Chart() {
         <Tabs
           value={mode}
           onChange={(event, newValue) => setMode(newValue)}
-        >
+          >
           <Tab label="Chart"/>
           <Tab label="Table"/>
           <Tab label="Comparison"/>
         </Tabs>
         {chart && current && mode === 1 && 
           <Button
-            id="download-csv"
-            aria-label="download selected data"
-            onClick={handleDownload}
+          id="download-csv"
+          aria-label="download selected data"
+          onClick={handleDownload}
           >
             Download CSV
           </Button>
@@ -413,7 +471,18 @@ function Chart() {
           </div>
         }
       </div>
+
+      {chart && !chartTips && renderChartTips()}
+      
       <div id="tab-panel" ref={tabPanel}>
+        {chart && current && mode === 0 && 
+          <div id="adj-factors" 
+              onMouseEnter={(event) => setPopperAnchor(event.currentTarget)} 
+              onMouseLeave={() => setPopperAnchor(null)} 
+              >
+            ?
+          </div>}
+        {chart && current && mode === 0 && showAdjFactors()}
         {chart && current && mode === 0 && renderChart()}
         {chart && current && mode === 1 && renderTable()}
         {chart && current && mode === 2 && renderComparisonTable()}
