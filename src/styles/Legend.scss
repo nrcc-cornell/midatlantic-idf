@@ -49,23 +49,46 @@
   }
 
   #legend-lines {
+    // background-color: rgba(214,243,255, 0.9);
     background-color: rgba(255,255,255,0.9);
     border-radius: 7px;
     padding: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding-bottom: 0px;
     margin-right: 10px;
+    width: 110px;
+    
+    .legend-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
 
-    #line-cbw {
-      height: 3px;
-      width: 30px;
-      background-color: rgb(255,255,0);
-    }
+      .line-wrapper {
+        height: 20px;
+        min-width: 20px;
+        background-color: rgb(40,150,20);
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
 
-    #line-label {
-      font-size: 12px;
-      text-align: center;
+        #line-cbw {
+          height: 3px;
+          min-width: 20px;
+          background-color: rgb(255,255,0);
+        }
+    
+        #line-state {
+          height: 1px;
+          min-width: 20px;
+          background-color: rgb(0, 0, 0);
+        }
+      }
+  
+      #line-label {
+        font-size: 12px;
+        text-align: center;
+        margin-left: 10px;
+      }
     }
   }
 }

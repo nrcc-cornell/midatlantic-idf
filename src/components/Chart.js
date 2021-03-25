@@ -81,9 +81,6 @@ function Chart() {
   const classes = useStyles();
 
   const handleToggle = (ciName) => {
-    console.log("Toggling...")
-    console.log(showCIs);
-
     let newState = {...showCIs};
     newState[ciName] = newState[ciName] ? false : true;
     setShowCIs(newState);
