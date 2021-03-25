@@ -393,7 +393,7 @@ function Chart() {
   }
 
   const deactivateChartTips = () => {
-    store.set("chartTips", "false");
+    // store.set("chartTips", "false");
     setChartTips("false");
   };
 
