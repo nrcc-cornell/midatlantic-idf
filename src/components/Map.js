@@ -49,88 +49,170 @@ function Map() {
     let lat, long, zoom;
 
     if (area === 'bay') {
-      lat = 39.25;
+      lat = 40.3;
       long = -78.1;
-      zoom = 6.0;
+      zoom = 5.6;
   
-      if (viewHeight <= 950 && viewHeight > 850) {
-        zoom = 5.8;
-      } else if (viewHeight <= 850) {
-        zoom = 5.6;
+      if (viewWidth <= 1060) {
+        zoom = 5.5;
+        long = -78.0;
       }
-  
-      if (viewWidth <= 1310 && viewWidth > 1150 && zoom > 5.8) {
-        zoom = 5.8
-      } else if (viewWidth <= 1160 && viewWidth > 1055 && zoom > 5.6) {
-        zoom = 5.5
-      } else if (viewWidth <= 1055 && zoom > 5.5) {
-        zoom = 5.3
-        long = -78.4
+      
+      if (viewHeight <= 890 && viewHeight > 830 && zoom > 5.4) {
+        zoom = 5.4;
+      } else if (viewHeight <= 830 && viewHeight > 790 && zoom > 5.3) {
+        zoom = 5.3;
+      } else if (viewHeight <= 790 && zoom > 5.2) {
+        zoom = 5.2;
       }
 
     } else if (area === 'virginia') {
-      lat = 37.2;
-      long = -79.7;
-      zoom = 6.5;
+      lat = 37.8;
+      long = -79.4;
+      zoom = 6.6;
   
-      if (viewWidth <= 1800 && viewWidth > 1570) {
-        zoom = 6.3;
-      } else if (viewWidth <= 1570 && viewWidth > 1375) {
+      if (viewWidth <= 1800 && viewWidth > 1665) {
+        zoom = 6.5;
+      } else if (viewWidth <= 1665 && viewWidth > 1566) {
+        zoom = 6.4;
+      } else if (viewWidth <= 1566 && viewWidth > 1435) {
+        long = -79.7;
+        zoom = 6.2;
+      } else if (viewWidth <= 1435 && viewWidth > 1340) {
+        long = -79.7;
         zoom = 6.1;
-      } else if (viewWidth <= 1375 && viewWidth > 1315) {
-        zoom = 5.9;
-      } else if (viewWidth <= 1315 && viewWidth > 1260) {
+      } else if (viewWidth <= 1340 && viewWidth > 1256) {
         long = -79.5;
         zoom = 5.9;
-      } else if (viewWidth <= 1260 && viewWidth > 1185) {
-        long = -79.8;
+      } else if (viewWidth <= 1256 && viewWidth > 1186) {
+        long = -79.7;
         zoom = 5.7;
-      } else if (viewWidth <= 1185 && viewWidth > 1060) {
+      } else if (viewWidth <= 1186 && viewWidth > 1060) {
+        long = -79.7;
         zoom = 5.5;
       } else if (viewWidth <= 1060) {
-        zoom = 5.2;
         long = -79.9;
+        zoom = 5.2;
       }
     } else {
-      lat = 39.0;
+      lat = 40.3;
       long = -79.1;
-      zoom = 6.0;
+      zoom = 5.6;
   
-      if (viewWidth <= 1800 && viewWidth > 1570) {
-        zoom = 5.8;
-      } else if (viewWidth <= 1570 && viewWidth > 1255) {
-        long = -79.4;
-        zoom = 5.6;
-      } else if (viewWidth <= 1255 && viewWidth > 1140) {
-        lat = 38.5;
-        long = -79.6;
+      if (viewWidth <= 1255 && viewWidth > 1140) {
+        // lat = 38.5;
+        long = -79.3;
         zoom = 5.4;
-      } else if (viewWidth <= 1140 && viewWidth > 1090) {
-        lat = 38.5;
-        long = -79.7;
-        zoom = 5.3;
-      } else if (viewWidth <= 1090 && viewWidth > 1055) {
-        lat = 38.5;
-        long = -79.6;
+      } else if (viewWidth <= 1140 && viewWidth > 1055) {
+        // lat = 38.5;
+        long = -79.2;
         zoom = 5.3;
       } else if (viewWidth <= 1055 && viewWidth > 1050) {
-        lat = 38.5;
-        long = -79.2;
+        // lat = 38.5;
+        long = -79.0;
         zoom = 5.1;
       } else if (viewWidth <= 1050) {
-        lat = 38.5;
+        // lat = 38.5;
         long = -79.5;
         zoom = 5.0;
       }
 
-      if (viewHeight <= 950 && viewHeight > 820 && zoom > 5.9) {
-        zoom = 5.9;
-      } else if (viewHeight <= 820 && viewHeight > 785 && zoom > 5.7) {
-        zoom = 5.7;
-      } else if (viewHeight <= 785 && zoom > 5.5) {
+      if (viewHeight <= 980 && viewHeight > 920 && zoom > 5.5) {
         zoom = 5.5;
+      } else if (viewHeight <= 920 && viewHeight > 876 && zoom > 5.4) {
+        zoom = 5.4;
+      } else if (viewHeight <= 876 && viewHeight > 837 && zoom > 5.3) {
+        zoom = 5.3;
+      } else if (viewHeight <= 837 && viewHeight > 800 && zoom > 5.2) {
+        zoom = 5.2;
+      } else if (viewHeight <= 800 && zoom > 5.1) {
+        zoom = 5.1;
       }
     }
+
+    // if (area === 'bay') {
+    //   lat = 39.25;
+    //   long = -78.1;
+    //   zoom = 6.0;
+  
+    //   if (viewHeight <= 950 && viewHeight > 850) {
+    //     zoom = 5.8;
+    //   } else if (viewHeight <= 850) {
+    //     zoom = 5.6;
+    //   }
+  
+    //   if (viewWidth <= 1310 && viewWidth > 1150 && zoom > 5.8) {
+    //     zoom = 5.8
+    //   } else if (viewWidth <= 1160 && viewWidth > 1055 && zoom > 5.6) {
+    //     zoom = 5.5
+    //   } else if (viewWidth <= 1055 && zoom > 5.5) {
+    //     zoom = 5.3
+    //     long = -78.4
+    //   }
+
+    // } else if (area === 'virginia') {
+    //   lat = 37.2;
+    //   long = -79.7;
+    //   zoom = 6.5;
+  
+    //   if (viewWidth <= 1800 && viewWidth > 1570) {
+    //     zoom = 6.3;
+    //   } else if (viewWidth <= 1570 && viewWidth > 1375) {
+    //     zoom = 6.1;
+    //   } else if (viewWidth <= 1375 && viewWidth > 1315) {
+    //     zoom = 5.9;
+    //   } else if (viewWidth <= 1315 && viewWidth > 1260) {
+    //     long = -79.5;
+    //     zoom = 5.9;
+    //   } else if (viewWidth <= 1260 && viewWidth > 1185) {
+    //     long = -79.8;
+    //     zoom = 5.7;
+    //   } else if (viewWidth <= 1185 && viewWidth > 1060) {
+    //     zoom = 5.5;
+    //   } else if (viewWidth <= 1060) {
+    //     zoom = 5.2;
+    //     long = -79.9;
+    //   }
+    // } else {
+    //   lat = 39.0;
+    //   long = -79.1;
+    //   zoom = 6.0;
+  
+    //   if (viewWidth <= 1800 && viewWidth > 1570) {
+    //     zoom = 5.8;
+    //   } else if (viewWidth <= 1570 && viewWidth > 1255) {
+    //     long = -79.4;
+    //     zoom = 5.6;
+    //   } else if (viewWidth <= 1255 && viewWidth > 1140) {
+    //     lat = 38.5;
+    //     long = -79.6;
+    //     zoom = 5.4;
+    //   } else if (viewWidth <= 1140 && viewWidth > 1090) {
+    //     lat = 38.5;
+    //     long = -79.7;
+    //     zoom = 5.3;
+    //   } else if (viewWidth <= 1090 && viewWidth > 1055) {
+    //     lat = 38.5;
+    //     long = -79.6;
+    //     zoom = 5.3;
+    //   } else if (viewWidth <= 1055 && viewWidth > 1050) {
+    //     lat = 38.5;
+    //     long = -79.2;
+    //     zoom = 5.1;
+    //   } else if (viewWidth <= 1050) {
+    //     lat = 38.5;
+    //     long = -79.5;
+    //     zoom = 5.0;
+    //   }
+
+    //   if (viewHeight <= 950 && viewHeight > 820 && zoom > 5.9) {
+    //     zoom = 5.9;
+    //   } else if (viewHeight <= 820 && viewHeight > 785 && zoom > 5.7) {
+    //     zoom = 5.7;
+    //   } else if (viewHeight <= 785 && zoom > 5.5) {
+    //     zoom = 5.5;
+    //   }
+    // }
 
     return {
       latitude: lat,
@@ -276,8 +358,8 @@ function Map() {
     var viewSetting = getViewSettings();
     setViewport({
       ...viewSetting,
-      bearing: -10,
-      pitch: 40,
+      // bearing: -10,
+      // pitch: 40,
       transitionDuration: 1000,
       transitionInterpolator: new FlyToInterpolator(),
     })

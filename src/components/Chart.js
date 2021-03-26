@@ -93,7 +93,7 @@ function Chart() {
       ['Emission Scenario:', `RCP ${options['emission']}`, '', '', '', '', '',''],
       ['Time Period:', options['tp'], '', '', '', '', ''],
       ['', '', '', '', '', '', '', ''],
-      ['', '', '', `Projected ${options['tp']} Intensity`, '', '', 'Observed 1970-1999 Intensity', 'Projected Mean Change'],
+      ['', '', '', `Projected ${options['tp']} Intensity`, '', '', 'Observed Atlas-14 Intensity', 'Projected Mean Change'],
       ['Duration', '10th', '25th', 'Mean', '75th', '90th', 'Mean', 'Difference']
     ];
     let station = stations[current]
@@ -189,7 +189,7 @@ function Chart() {
 
       title: {
         text: `<div>Intensity Duration Frequency Curves: ${options['rp']}-Year Return duration</div>
-        <div>RCP ${options['emission']} Observed Atlas 14 Value vs. Projection (${options['tp']})</div>`,
+        <div>RCP ${options['emission']} Observed Atlas-14 Value vs. Projection (${options['tp']})</div>`,
         // useHTML: true
         useHTML: false
       },
@@ -283,7 +283,7 @@ function Chart() {
     chartOptions.series = [
       ...chartOptions.series,
       {
-        name: `Observed Atlas 14 Value`,
+        name: `Observed Atlas-14 Intensity`,
         type: "line",
         color: "#ff6969",
         data: observed,
@@ -318,16 +318,33 @@ function Chart() {
           <TableRow>
             <TableCell />
             <TableCell colSpan={5} align="center" >Projected {options['tp']} Intensity</TableCell>
-            <TableCell colSpan={1} align="center" >Observed Atlas-14 Intensity 1970-1999</TableCell>
+            <TableCell colSpan={1} align="center" >Observed Atlas-14 Intensity</TableCell>
           </TableRow>
           <TableRow className="sticky-row">
-            <TableCell>Duration</TableCell>
-            <TableCell align="center">10th</TableCell>
-            <TableCell align="center">25th</TableCell>
-            <TableCell align="center">Mean</TableCell>
-            <TableCell align="center">75th</TableCell>
-            <TableCell align="center">90th</TableCell>
-            <TableCell align="center">Mean</TableCell>   
+            <TableCell colSpan={1}>Duration</TableCell>
+            {/* <TableCell colSpan={5} align="center">
+              <Table
+                classes={{
+                  root: 
+                }}
+              >
+                <TableRow>
+                  <TableCell align="center">10th</TableCell>
+                  <TableCell align="center">25th</TableCell>
+                  <TableCell align="center">Mean</TableCell>
+                  <TableCell align="center">75th</TableCell>
+                  <TableCell align="center">90th</TableCell>
+                </TableRow>
+                <TableRow> */}
+                  <TableCell align="center">10th</TableCell>
+                  <TableCell align="center">25th</TableCell>
+                  <TableCell align="center">Mean</TableCell>
+                  <TableCell align="center">75th</TableCell>
+                  <TableCell align="center">90th</TableCell>
+                {/* </TableRow>
+              </Table>
+            </TableCell> */}
+            <TableCell colSpan={1} align="center">Mean</TableCell>   
           </TableRow>
         </TableHead>
         <TableBody>
@@ -358,7 +375,7 @@ function Chart() {
         <TableHead>
           <TableRow>
             <TableCell>Duration</TableCell>
-            <TableCell align="center">Observed Atlas-14 Mean Intensity 1970-1999</TableCell>
+            <TableCell align="center">Observed Atlas-14 Mean Intensity</TableCell>
             <TableCell align="center">Projected {options['tp']} Mean Intensity</TableCell>
             <TableCell align="center">Change</TableCell>
           </TableRow>

@@ -49,8 +49,8 @@
   }
 
   #legend-lines {
-    // background-color: rgba(214,243,255, 0.9);
-    background-color: rgba(255,255,255,0.9);
+    background-color: rgba(214,243,255, 0.9);
+    // background-color: rgba(255,255,255,0.9);
     border-radius: 7px;
     padding: 5px;
     padding-bottom: 0px;
@@ -66,7 +66,7 @@
       .line-wrapper {
         height: 20px;
         min-width: 20px;
-        background-color: rgb(40,150,20);
+        // background-color: rgb(40,150,20);
         display: flex;
         align-items: center;
         border-radius: 4px;

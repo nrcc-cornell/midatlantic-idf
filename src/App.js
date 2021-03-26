@@ -23,7 +23,7 @@ import {CurrentContext} from './contexts/CurrentContext'
 
 import './styles/Map.scss'
 function App() {
-  const [options, setOptions] = useState({"emission": "4.5", "tp": "2020-2070", "rp": "2", "area": "both"})
+  const [options, setOptions] = useState({"emission": "4.5", "tp": "2020-2070", "rp": "2", "area": "virginia"})
   const [chart, setChart] = useState(false)
   const [current, setCurrent] = useState(null)
 
@@ -132,12 +132,7 @@ export default App;
 
 // TODO:
 
-// Add an indication that the yellow line is the watershed boundary
-// Add something to the chart to let the user know that they can zoom in
-// Find a way to incorporate the adjustment factors into the table
-
-
-// Check tabs layout on chart overlay on small screensize. it will most likely be bad (use Martinsburg Airport for long name)
-// Add a way to favorite currently selected
-// Move legend to grid
+// secure api key with .env and url restriction
+// set up mapbox account for app and use it's key for production
+// above means migrating styles and tilesets
 // table that has all of the county adjustments in alphabetical order by county, and when you click on the county it opens that table and scrolls to it / highlights it
