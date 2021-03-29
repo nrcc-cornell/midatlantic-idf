@@ -178,6 +178,7 @@ function Search() {
     <>
       <div id="search-cont" className="card">
         <TextField
+          id="search-field"
           label="Search"
           placeholder="Enter zip code or county name"
           // helperText="Type in zip codes or names to find stations"

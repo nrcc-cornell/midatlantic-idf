@@ -9,7 +9,9 @@ import {
   MenuItem,
   Select,
   // Switch,
-  Typography
+  Typography,
+  Input,
+  FormHelperText
 } from '@material-ui/core'
 
 // import { withStyles } from '@material-ui/core/styles';
@@ -67,10 +69,11 @@ function Options() {
       </Typography>
       <FormGroup id="input-cont">
         <FormControl>
-          <InputLabel>
+          <InputLabel id="rp">
             Return Period
           </InputLabel>
           <Select
+            labelId="rp"
             displayEmpty
             value={options['rp']}
             onChange={event => handleChange(event, "rp")}
@@ -84,10 +87,11 @@ function Options() {
           </Select>
         </FormControl>
         <FormControl>
-          <InputLabel shrink>
+          <InputLabel id="es" shrink>
             Emission Scenario
           </InputLabel>
           <Select
+            labelId="es"
             displayEmpty
             value={options['emission']}
             onChange={event => handleChange(event, "emission")}
@@ -97,10 +101,11 @@ function Options() {
           </Select>
         </FormControl>
         <FormControl>
-          <InputLabel>
+          <InputLabel id="tp">
             Time Period
           </InputLabel>
           <Select
+            labelId="tp"
             displayEmpty
             value={options['tp']}
             onChange={event => handleChange(event, "tp")}
@@ -110,10 +115,11 @@ function Options() {
           </Select>
         </FormControl>
         <FormControl>
-          <InputLabel>
+          <InputLabel id="aoc">
             Area of Concern
           </InputLabel>
           <Select
+            labelId="aoc"
             displayEmpty
             value={options['area']}
             onChange={event => handleChange(event, "area")}

@@ -471,6 +471,7 @@ function Map() {
           onClose={() => setPopup(null)}
         >
           <div className="popup-text">
+            <div className="popup-title">County: {tooltip.id}</div>
             <div className="popup-title">County: {data[emission][tp][rp][tooltip.id]["name"]}</div>
             <div className="popup-num">10th: {data[emission][tp][rp][tooltip.id]["10%"]}</div>
             <div className="popup-num">25th: {data[emission][tp][rp][tooltip.id]["25%"]}</div>

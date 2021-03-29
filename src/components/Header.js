@@ -33,7 +33,7 @@ const Header = () => {
     <header className="header">
       <div className="org-logo"></div>
       <div className="site-info">
-        <div className="site-org">Organization Name</div>
+        <h1 className="site-org">Organization Name</h1>
         <div className="site-description">a service of the Some-team-or-another</div>
       </div>
       <nav className="nav">
