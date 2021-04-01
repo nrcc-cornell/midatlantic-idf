@@ -28,16 +28,18 @@ export default function CustomModal() {
   const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
+  const [content, setContent] = useState(<div></div>);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const body = (
+  const tdBody = (
+    <div style={modalStyle} className={classes.paper}>
+      <h2 id="custom-modal-title">Technical Details</h2>
+      <p id="custom-modal-description">
+        Under construction.
+      </p>
+    </div>
+  );
+  
+  const htuBody = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="custom-modal-title">How to Use</h2>
       <p id="custom-modal-description">
@@ -45,17 +47,27 @@ export default function CustomModal() {
       </p>
     </div>
   );
+  
+  const handleOpen = (contentType) => {
+    setOpen(true);
+    contentType === "td" ? setContent(tdBody) : setContent(htuBody);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div>
-      <div className="link" onClick={handleOpen}>How to Use</div>
+    <div id="link-container">
+      <div className="link" onClick={() => handleOpen("td")}>Technical Details</div>
+      <div className="link" onClick={() => handleOpen("htu")}>How to Use</div>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="custom-modal-title"
         aria-describedby="custom-modal-description"
       >
-        {body}
+        {content}
       </Modal>
     </div>
   );

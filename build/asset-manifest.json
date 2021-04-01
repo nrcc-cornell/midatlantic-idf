@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/be99/Chesapeake/static/css/main.b94ae118.chunk.css",
+    "main.js": "/be99/Chesapeake/static/js/main.7e92e426.chunk.js",
+    "main.js.map": "/be99/Chesapeake/static/js/main.7e92e426.chunk.js.map",
+    "runtime-main.js": "/be99/Chesapeake/static/js/runtime-main.72bf8cf6.js",
+    "runtime-main.js.map": "/be99/Chesapeake/static/js/runtime-main.72bf8cf6.js.map",
+    "static/js/2.bc2b366b.chunk.js": "/be99/Chesapeake/static/js/2.bc2b366b.chunk.js",
+    "static/js/2.bc2b366b.chunk.js.map": "/be99/Chesapeake/static/js/2.bc2b366b.chunk.js.map",
+    "static/js/3.99a8e135.chunk.js": "/be99/Chesapeake/static/js/3.99a8e135.chunk.js",
+    "static/js/3.99a8e135.chunk.js.map": "/be99/Chesapeake/static/js/3.99a8e135.chunk.js.map",
+    "index.html": "/be99/Chesapeake/index.html",
+    "static/css/main.b94ae118.chunk.css.map": "/be99/Chesapeake/static/css/main.b94ae118.chunk.css.map",
+    "static/js/2.bc2b366b.chunk.js.LICENSE.txt": "/be99/Chesapeake/static/js/2.bc2b366b.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.72bf8cf6.js",
+    "static/js/2.bc2b366b.chunk.js",
+    "static/css/main.b94ae118.chunk.css",
+    "static/js/main.7e92e426.chunk.js"
+  ]
+}

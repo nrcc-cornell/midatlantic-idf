@@ -1,16 +1,11 @@
 import {useState, useContext, useEffect} from 'react'
 import './styles/App.scss';
 
-// import {
-//   BrowserRouter as Router,
-//   Switch,
-//   Route
-// } from "react-router-dom";
-
 import Chart from './components/Chart'
 import Map from './components/Map'
 import Options from './components/Options'
-import Search from './components/Search'
+// import Search from './components/Search'
+import Favorites from './components/Favorites'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Legend from './components/Legend'
@@ -77,11 +72,20 @@ function App() {
   //   processJson()
   // }, [])
 
-  return (
-    // <Router>
-      <div className="App">
-        <Header />
-        <div className="content">
+  const checkForIE = () => {
+    if (window.document.documentMode) {
+      return (
+        <div id="no-support-container">
+          <div id="no-support-text">
+            <div>This site does not support Internet Explorer.</div>
+            <div>To view the tool, please use a modern browser such as Chrome, Firefox, or Safari.</div>
+            <div>We apologize for any inconvenience.</div>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="content" id="content">
           <OptionsContext.Provider value={{options, setOptions}}>
           <ChartContext.Provider value={{chart, setChart}}>
           <CurrentContext.Provider value={{current, setCurrent}}>
@@ -89,40 +93,26 @@ function App() {
           <Map />
           <div id="grid">
             <Options />
-            <Search />
+            {/* <Search /> */}
+            <Favorites />
             <Chart />
             <Legend />
           </div>
-          
-            {/* <Switch>
-              <Route path="/be99/Chesapeake/map">
-                <Map />
-                <div id="grid">
-                  <Options />
-                  <Search />
-                  <Chart />
-                </div>
-              </Route>
-              <Route path="/be99/Cheasapeake/usage">
-                <div style={{fontSize: '60px', width: 'fit-content', padding: '60px', margin: '0 auto'}}>Under Construction</div>
-                <div style={{fontSize: '30px', position: 'absolute', right: '230px', top: '150px'}}>Please navigate to a different page</div>
-                <div style={{position: 'absolute', fontSize: '80px', right: '580px', top: '100px', color: 'red'}}>^</div>
-                <div style={{position: 'absolute', fontSize: '80px', right: '340px', top: '100px', color: 'red'}}>^</div>
-              </Route>
-              <Route path="/">
-                <div style={{fontSize: '60px', width: 'fit-content', padding: '60px', margin: '0 auto'}}>Under Construction</div>
-                <div style={{fontSize: '30px', position: 'absolute', right: '40px', top: '150px'}}>Please navigate to a different page</div>
-                <div style={{position: 'absolute', fontSize: '80px', right: '350px', top: '100px', color: 'red'}}>^</div>
-                <div style={{position: 'absolute', fontSize: '80px', right: '80px', top: '100px', color: 'red'}}>^</div>
-              </Route>
-            </Switch> */}
+        
           </CurrentContext.Provider>
           </ChartContext.Provider>
           </OptionsContext.Provider>
         </div>
-        <Footer />
-      </div>
-    // </Router>
+      );
+    }
+  };
+
+  return (
+    <div className="App">
+      <Header />
+      {checkForIE()}
+      <Footer />
+    </div>
   )
 }
 

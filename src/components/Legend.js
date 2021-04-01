@@ -43,7 +43,6 @@ export default function Legend() {
           <div id="line-label">State Border</div>
         </div>
       </div>
-      <NavigationControl className="map-nav" showCompass={false} />
     </div>
   );
 }

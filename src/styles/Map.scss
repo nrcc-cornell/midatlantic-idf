@@ -2,6 +2,12 @@
   width: 100vw;
   height: calc(100vh - 250px);
 
+  .map-nav {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+  }
+
   .marker {
     display: flex;
     justify-content: center;

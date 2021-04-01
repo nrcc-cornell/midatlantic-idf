@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '0px',
   },
   maxedCell: {
-    width: '128px'
+    width: '106px'
   },
   underlined: {
     borderBottomWidth: '1px',
@@ -69,8 +69,8 @@ const useStyles = makeStyles((theme) => ({
     padding: '0px',
     width: '128px'
   },
-  noUnderline: {
-    border: 'none'
+  leftBorder: {
+    borderLeft: '1px solid rgb(220,220,220)'
   },
   innerTable: {
     height: '73px'
@@ -151,10 +151,10 @@ function Chart() {
       ['', '', '', '', '', '', '', ''],
       ['', '', '', '', '', '', '', ''],
       ['', '10th', '25th', 'Mean', '75th', '90th', '', ''],
-      [`Adjustment Factors for ${name} County`, _10, _25, mean, _75, _90],
+      [`Change Factors for ${name} County`, _10, _25, mean, _75, _90],
       ['', '', '', '', '', '', '', ''],
       ['', '', '', '', '', '', '', ''],
-      ['', '', '', `Projected ${options['tp']} Intensity`, '', '', '', 'Atlas-14', '', 'Projected Change'],
+      ['', '', '', `Projected ${options['tp']} Intensity (inches)`, '', '', '', 'Atlas-14 (inches)', '', 'Projected Change (inches)'],
       ['Duration', '10th', '25th', 'Mean', '75th', '90th', 'Lower Bound', 'Observed Intensity', 'Upper Bound', 'Difference']
     ];
     
@@ -252,6 +252,7 @@ function Chart() {
             },
             title: {
               style: {
+                "color": "#000000",
                 "fontSize": "11px"
               }
             },
@@ -265,6 +266,9 @@ function Chart() {
                 },
               },
               tickPositions: [xValues[0], ...xValues.slice(6)],
+              tickColor: '#000000',
+              lineColor: '#000000',
+              lineWidth: 2,
               labels: {
                 enabled: true,
                 style: {
@@ -280,17 +284,16 @@ function Chart() {
       
             yAxis: [{
               title: {
-                text: "Intensity(inches)",
+                text: "Depth(inches)",
                 style: {
                   "fontSize": "10px",
                   "fontWeight": "bold",
                   "color": "#000000",
                 },
               },
-              minorTicks: true,
-              minorGridLineColor: "#9b9b9b",
               endOnTick: false,
-              gridLineWidth: 2,
+              lineWidth: 2,
+              lineColor: "#000000",
               gridLineColor: "#000000",
               labels: {
                 style: {
@@ -306,10 +309,9 @@ function Chart() {
       },
 
       title: {
-        text: `<div>Intensity Duration Frequency Curves: ${options['rp']}-Year Return duration</div>
-        <div>RCP ${options['emission']} Observed Atlas-14 Value vs. Projection (${options['tp']})</div>`,
-        // useHTML: true
-        useHTML: false
+        text: `<div>IDF Curve: ${options['rp']}-Year Return Interval with</div>
+        <div>RCP ${options['emission']} from ${options['tp']}</div>`,
+        style: { "color": "#000000", "fontSize": "18px" }
       },
 
       xAxis: {
@@ -322,6 +324,9 @@ function Chart() {
           },
         },
         tickPositions: [xValues[0], ...xValues.slice(6)],
+        tickColor: '#000000',
+        lineColor: '#000000',
+        lineWidth: 2,
         labels: {
           enabled: true,
           style: {
@@ -337,17 +342,16 @@ function Chart() {
 
       yAxis: {
         title: {
-          text: "Intensity(inches)",
+          text: "Depth (inches)",
           style: {
             "fontSize": "14px",
             "fontWeight": "bold",
             "color": "#000000",
           },
         },
-        minorTicks: true,
-        minorGridLineColor: "#9b9b9b",
         endOnTick: false,
-        gridLineWidth: 2,
+        lineWidth: 2,
+        lineColor: '#000000',
         gridLineColor: "#000000",
         labels: {
           style: {
@@ -363,12 +367,12 @@ function Chart() {
         formatter: function () {
           return this.points.reduce(function (s, point) {
             if (s.includes('min') && !s.includes('minutes')) {
-              s = `${s.match(/\d+/)} minutes`;
+              s = `<b>${s.match(/\d+/)} minutes</b>`;
             } else if (s.includes('hr')) {
-              s = `${s.match(/\d+/)} hours`;
+              s = `<b>${s.match(/\d+/)} hours</b>`;
             }
 
-            return `<b>${s}</b><br/>${point.series.name}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y}</b> inches`
+            return `${s}<br/>${point.series.name}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y}</b> inches`
           }, '<b>' + xLabels[this.x] + '</b>');
         },
         backgroundColor: "#FFFFFF",
@@ -395,7 +399,7 @@ function Chart() {
       chartOptions.series = [
         ...chartOptions.series,
         {
-          name: 'Observed Confidence Interval',
+          name: 'Atlas-14 Bounds',
           type: "arearange",
           color: "#ffa8a8",
           fillOpacity: 0.9,
@@ -409,14 +413,14 @@ function Chart() {
       chartOptions.series = [
         ...chartOptions.series,
         {
-          name: `Projected 90% Confidence Interval ${options['tp']}`,
+          name: `Projected 90% Confidence Interval`,
           type: "arearange",
           color: "#d6f3ff",
           fillOpacity: 0.9,
           data: projectedInterval90,
           legendIndex: 2
         },{
-          name: `Projected 75% Confidence Interval ${options['tp']}`,
+          name: `Projected 75% Confidence Interval`,
           type: "arearange",
           fillOpacity: 0.9,
           color: "#91dfff",
@@ -429,7 +433,7 @@ function Chart() {
     chartOptions.series = [
       ...chartOptions.series,
       {
-        name: `Observed Atlas-14 Intensity`,
+        name: `Atlas-14 Intensity`,
         type: "line",
         color: "#ff6969",
         data: observed,
@@ -462,6 +466,39 @@ function Chart() {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
+            <TableCell className={classes.cell}>Change Factors:</TableCell>   
+            <TableCell className={classes.cell} align="center">{_10}</TableCell>
+            <TableCell className={classes.cell} align="center">{_25}</TableCell>
+            <TableCell className={classes.cell} align="center">{mean}</TableCell>
+            <TableCell className={classes.cell} align="center">{_75}</TableCell>
+            <TableCell className={classes.cell} align="center">{_90}</TableCell>
+            <TableCell />
+          </TableRow>
+          <TableRow className="sticky-row">
+            <TableCell className={classes.containerCell} colSpan={6}>
+              <Table className={classes.innerTable}>
+                <TableBody>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell colSpan={5} align="center" >Projected {options['tp']} Intensity (inches)</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className={classes.bottomCell}>Duration</TableCell>   
+                    <TableCell className={classes.bottomCell} align="center">10th</TableCell>
+                    <TableCell className={classes.bottomCell} align="center">25th</TableCell>
+                    <TableCell className={classes.bottomCell} align="center">Mean</TableCell>
+                    <TableCell className={classes.bottomCell} align="center">75th</TableCell>
+                    <TableCell className={classes.bottomCell} align="center">90th</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableCell>
+
+            <TableCell align="center" className={classes.leftBorder}>Atlas-14 Intensity (inches)</TableCell>
+          </TableRow>
+        </TableHead>
+        {/* <TableHead>
+          <TableRow>
             <TableCell />
             <TableCell colSpan={5} align="center" >Projected {options['tp']} Intensity</TableCell>
             <TableCell colSpan={1} align="center" className={classes.noUnderline}>Atlas-14</TableCell>
@@ -469,7 +506,7 @@ function Chart() {
           <TableRow className="sticky-row">
             <TableCell className={classes.maxedContainer}>
               <TableRow className={classes.underlined}>
-                <TableCell className={classes.cell}>Adjustment Factors:</TableCell>   
+                <TableCell className={classes.cell}>Change Factors:</TableCell>   
               </TableRow>
               <TableRow>
                 <TableCell className={classes.bottomCell}>Duration</TableCell>   
@@ -499,7 +536,7 @@ function Chart() {
 
             <TableCell align="center">Observed Intensity</TableCell>   
           </TableRow>
-        </TableHead>
+        </TableHead> */}
         <TableBody>
           {categories.map(duration => 
             <TableRow key={duration}>
@@ -528,9 +565,9 @@ function Chart() {
         <TableHead>
           <TableRow>
             <TableCell>Duration</TableCell>
-            <TableCell align="center">Observed Atlas-14 Mean Intensity</TableCell>
-            <TableCell align="center">Projected {options['tp']} Mean Intensity</TableCell>
-            <TableCell align="center">Change</TableCell>
+            <TableCell align="center">Atlas-14 Intensity (inches)</TableCell>
+            <TableCell align="center">Projected {options['tp']} Intensity (inches)</TableCell>
+            <TableCell align="center">Change (inches)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -626,7 +663,7 @@ function Chart() {
               </div>
               <div className="toggle-info-bottom">
                 <div className="dot red"></div>
-                <span>: Observed Intensity Lower and Upper Bounds</span>
+                <span>: Atlas-14 Intensity Lower and Upper Bounds</span>
               </div>
             </div>
           </Fade>

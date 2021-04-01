@@ -3,6 +3,31 @@
   height: 100vh;
   overflow: hidden;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  
+  #no-support-container {
+    width: 100%;
+    height: calc(100vh - 250px);
+    border-top: 1px solid rgba(110,110,110,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(248,248,248);
+    
+    #no-support-text {
+      background-color: white;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 5px 5px 5px rgb(110,110,110);
+      border: 1px solid rgb(110,110,110,);
+      border-radius: 7px;
+      padding: 10px;
+
+      & > div {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+    }
+  }
 
   #grid {
     position: absolute;
@@ -36,14 +61,15 @@
   }
 
   .hidden {
-    transform: translate(0, 100%);
+    transform: translate(0, 110%);
     opacity: 0;
   }
 }
 
 @media (max-width: 1400px) {
   .App {
-    #grid {
+    #grid,
+    #no-support-container {
       height: calc(100vh - 200px);
     }
   }

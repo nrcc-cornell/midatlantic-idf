@@ -3,11 +3,12 @@
   // bottom: 35px;
   // right: 17px;
   // width: 430px;
-  grid-column: 18/25;
+  grid-column: 21/25;
   grid-row: 16/18;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-right: 20px;
 
   #legend {
     display: flex;

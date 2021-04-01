@@ -57,6 +57,7 @@ function Search() {
   }
 
   const search = () => {
+    console.log("Searching...");
     fetch(`https://www.mapquestapi.com/geocoding/v1/address?key=m1lsJZVvDgjMwJ4bAmiVTdEqoJ9h2DeA&location=${terms.trim()}`)
       .then(res => {
         if(!res.ok) throw new Error('Failed to fetch stations')
