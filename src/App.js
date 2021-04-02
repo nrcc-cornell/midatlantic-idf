@@ -17,7 +17,7 @@ import {CurrentContext} from './contexts/CurrentContext'
 
 import './styles/Map.scss'
 function App() {
-  const [options, setOptions] = useState({"emission": "4.5", "tp": "2020-2070", "rp": "2", "area": "virginia"})
+  const [options, setOptions] = useState({"emission": "4.5", "tp": "2020-2070", "rp": "2", "area": "both"})
   const [chart, setChart] = useState(false)
   const [current, setCurrent] = useState(null)
 
