@@ -1,13 +1,15 @@
 #selected-cont {
   grid-column: 24;
   grid-row: 2;
-  max-width: 205px;
+  box-sizing: border-box;
+  width: 210px;
 }
 
 #favorites-cont {
   grid-column: 24;
   grid-row: 3/14;
-  max-width: 205px;
+  box-sizing: border-box;
+  width: 210px;
   
   #srw {
     height: fit-content;
@@ -16,6 +18,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+
+    .favorites-placeholder-text {
+      text-align: center;
+    }
   }
 }
 

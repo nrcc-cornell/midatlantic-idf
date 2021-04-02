@@ -6,6 +6,7 @@ import {data, stations, counties, virginiaCounties} from '../data'
 import {OptionsContext} from '../contexts/OptionsContext'
 import {ChartContext} from '../contexts/ChartContext'
 import {CurrentContext} from '../contexts/CurrentContext'
+import Legend from './Legend'
 
 function Map() {
   // const [viewport, setViewport] = useState({
@@ -51,81 +52,115 @@ function Map() {
     if (area === 'bay') {
       lat = 40.3;
       long = -78.1;
-      zoom = 5.6;
-  
-      if (viewWidth <= 1060) {
-        zoom = 5.5;
+      zoom = 5.8;
+      
+      if (viewWidth <= 1400 && viewWidth > 1085) {
+        lat = 40.1;
         long = -78.0;
+      } else if (viewWidth <= 1085) {
+        lat = 40.1;
+        long = -77.95;
+        zoom = 5.7;
       }
       
-      if (viewHeight <= 890 && viewHeight > 830 && zoom > 5.4) {
+      if (viewHeight <= 1070 && viewHeight > 1010 && zoom >= 5.7) {
+        lat = 40.05;
+        zoom = 5.7;
+      } else if (viewHeight <= 1010 && viewHeight > 965 && zoom >= 5.6) {
+        lat = 40.0;
+        zoom = 5.6;
+      } else if (viewHeight <= 965 && viewHeight > 920 && zoom >= 5.5) {
+        lat = 40.0;
+        zoom = 5.5;
+      } else if (viewHeight <= 920 && viewHeight > 880 && zoom >= 5.4) {
+        lat = 40.0;
         zoom = 5.4;
-      } else if (viewHeight <= 830 && viewHeight > 790 && zoom > 5.3) {
+      } else if (viewHeight <= 880 && viewHeight > 835 && zoom >= 5.3) {
+        lat = 39.95;
         zoom = 5.3;
-      } else if (viewHeight <= 790 && zoom > 5.2) {
+      } else if (viewHeight <= 835 && viewHeight > 800 && zoom >= 5.2) {
+        lat = 39.9;
         zoom = 5.2;
+      } else if (viewHeight <= 800 && zoom > 5.1) {
+        lat = 39.9;
+        zoom = 5.1;
       }
 
     } else if (area === 'virginia') {
-      lat = 37.8;
+      lat = 38.0;
       long = -79.4;
-      zoom = 6.6;
-  
-      if (viewWidth <= 1800 && viewWidth > 1665) {
-        zoom = 6.5;
-      } else if (viewWidth <= 1665 && viewWidth > 1566) {
+      zoom = 6.5;
+      
+      if (viewWidth <= 1860 && viewWidth > 1800) {
+        lat = 37.9;
         zoom = 6.4;
-      } else if (viewWidth <= 1566 && viewWidth > 1435) {
+      } else if (viewWidth <= 1800 && viewWidth > 1465) {
+        lat = 37.7;
         long = -79.7;
+        zoom = 6.3;
+      } else if (viewWidth <= 1465 && viewWidth > 1395) {
+        lat = 37.7;
+        long = -79.75;
         zoom = 6.2;
-      } else if (viewWidth <= 1435 && viewWidth > 1340) {
-        long = -79.7;
+      } else if (viewWidth <= 1395 && viewWidth > 1330) {
+        lat = 37.7;
+        long = -79.75;
         zoom = 6.1;
-      } else if (viewWidth <= 1340 && viewWidth > 1256) {
-        long = -79.5;
+      } else if (viewWidth <= 1330 && viewWidth > 1275) {
+        lat = 37.7;
+        long = -79.78;
+        zoom = 6.0;
+      } else if (viewWidth <= 1275 && viewWidth > 1225) {
+        long = -79.78;
         zoom = 5.9;
-      } else if (viewWidth <= 1256 && viewWidth > 1186) {
-        long = -79.7;
+      } else if (viewWidth <= 1225 && viewWidth > 1175) {
+        long = -79.82;
+        zoom = 5.8;
+      } else if (viewWidth <= 1175 && viewWidth > 1125) {
+        long = -79.84;
         zoom = 5.7;
-      } else if (viewWidth <= 1186 && viewWidth > 1060) {
-        long = -79.7;
-        zoom = 5.5;
-      } else if (viewWidth <= 1060) {
+      } else if (viewWidth <= 1125 && viewWidth > 1087) {
+        long = -79.88;
+        zoom = 5.6;
+      } else if (viewWidth <= 1087 && viewWidth > 1050) {
         long = -79.9;
-        zoom = 5.2;
+        zoom = 5.5;
+      } else if (viewWidth <= 1050) {
+        long = -79.9;
+        zoom = 5.4;
       }
     } else {
       lat = 40.3;
       long = -79.1;
       zoom = 5.6;
   
-      if (viewWidth <= 1255 && viewWidth > 1140) {
-        // lat = 38.5;
+      if (viewWidth <= 1420 && viewWidth > 1175) {
+        zoom = 5.5;
+      } else if (viewWidth <= 1175 && viewWidth > 1110) {
         long = -79.3;
         zoom = 5.4;
-      } else if (viewWidth <= 1140 && viewWidth > 1055) {
-        // lat = 38.5;
-        long = -79.2;
+      } else if (viewWidth <= 1110 && viewWidth > 1075) {
+        long = -79.4;
         zoom = 5.3;
-      } else if (viewWidth <= 1055 && viewWidth > 1050) {
-        // lat = 38.5;
-        long = -79.0;
-        zoom = 5.1;
-      } else if (viewWidth <= 1050) {
-        // lat = 38.5;
-        long = -79.5;
-        zoom = 5.0;
+      } else if (viewWidth <= 1075) {
+        long = -79.4;
+        zoom = 5.2;
       }
 
-      if (viewHeight <= 980 && viewHeight > 920 && zoom > 5.5) {
+      if (viewHeight <= 980 && viewHeight > 920 && zoom >= 5.5) {
+        lat = 40.0;
         zoom = 5.5;
-      } else if (viewHeight <= 920 && viewHeight > 876 && zoom > 5.4) {
+      } else if (viewHeight <= 920 && viewHeight > 880 && zoom >= 5.4) {
+        lat = 40.0;
         zoom = 5.4;
-      } else if (viewHeight <= 876 && viewHeight > 837 && zoom > 5.3) {
+      } else if (viewHeight <= 880 && viewHeight > 840 && zoom >= 5.3) {
+        lat = 40.0;
         zoom = 5.3;
-      } else if (viewHeight <= 837 && viewHeight > 800 && zoom > 5.2) {
+      } else if (viewHeight <= 840 && viewHeight > 800 && zoom >= 5.2) {
+        lat = 39.9;
         zoom = 5.2;
-      } else if (viewHeight <= 800 && zoom > 5.1) {
+      } else if (viewHeight <= 800 && zoom >= 5.1) {
+        lat = 39.9;
         zoom = 5.1;
       }
     }
@@ -441,6 +476,7 @@ function Map() {
           // scope={props.scope}
         />
 
+        <Legend />
         <NavigationControl className="map-nav" showCompass={false} />
 
         {popup && <Popup

@@ -8,7 +8,6 @@ import Options from './components/Options'
 import Favorites from './components/Favorites'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import Legend from './components/Legend'
 
 import {stations, counties} from './data'
 
@@ -18,7 +17,7 @@ import {CurrentContext} from './contexts/CurrentContext'
 
 import './styles/Map.scss'
 function App() {
-  const [options, setOptions] = useState({"emission": "4.5", "tp": "2020-2070", "rp": "2", "area": "both"})
+  const [options, setOptions] = useState({"emission": "4.5", "tp": "2020-2070", "rp": "2", "area": "virginia"})
   const [chart, setChart] = useState(false)
   const [current, setCurrent] = useState(null)
 
@@ -96,7 +95,6 @@ function App() {
             {/* <Search /> */}
             <Favorites />
             <Chart />
-            <Legend />
           </div>
         
           </CurrentContext.Provider>

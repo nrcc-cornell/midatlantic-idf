@@ -48,8 +48,10 @@ export default function Favorites() {
   };
 
   const renderFavorite = () => {
-    if(!favorite || Object.keys(favorite).length === 0) {
-      return <div>You haven't added any stations to your favorites yet.</div>
+    if((!favorite || Object.keys(favorite).length === 0) && !current) {
+      return <div className="favorites-placeholder-text">Please select a station to start adding favorites.</div>
+    } else if ((!favorite || Object.keys(favorite).length === 0) && current) {
+      return <div className="favorites-placeholder-text">To add this station to your favorites click the star.</div>
     } else {
       return <>{Object.entries(favorite).map(([id, name]) => <Chip 
         key={`favorite-${id}`}

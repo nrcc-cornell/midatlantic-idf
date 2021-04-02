@@ -1,39 +1,47 @@
 .header {
   display: flex;
-  width: 80vw;
+  width: 95vw;
   min-width: 800px;
   height: 100px;
   box-sizing: border-box;
   padding: 15px 10px;
-  margin: 0 auto;
+  margin: 0 0 0 auto;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  justify-content: space-between;
+  align-items: baseline;
   
-  .site-info {
-    height: fit-content;
-    padding-top: 9px;
+  // .site-info {
+  //   height: fit-content;
+  //   padding-top: 9px;
 
-    .site-org {
-      font-size: 28px;
-      font-weight: 300;
-      margin: 0;
+  //   .site-org {
+  //     font-size: 28px;
+  //     font-weight: 300;
+  //     margin: 0;
       
-      &:hover {
-        cursor: pointer;
-        color: rgb(38, 117, 182);
-      }
-    }
+  //     &:hover {
+  //       cursor: pointer;
+  //       color: rgb(38, 117, 182);
+  //     }
+  //   }
     
-    .site-description {
-      color: rgb(107, 105, 105);
-      font-size: 13px;
-    }
+  //   .site-description {
+  //     color: rgb(107, 105, 105);
+  //     font-size: 13px;
+  //   }
+  // }
+
+  #site-title {
+    font-size: 30px;
+    font-weight: bold;
+    position: relative;
+    top: -24px;
   }
 
   .org-logo {
     height: 70px;
-    width: 70px;
+    width: 290px;
     margin-right: 15px;
-    background-color: rgb(106, 235, 235);
     border-radius: 50%;
 
     &:hover {
@@ -43,9 +51,9 @@
 
   .nav {
     height: fit-content;
-    position: absolute;
-    right: 20px;
-    top: 55px;
+    // position: absolute;
+    // right: 20px;
+    // top: 55px;
 
     #link-container {
       width: 350px;
