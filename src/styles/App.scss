@@ -35,7 +35,7 @@
     display: grid;
     grid-gap: 12px;
     grid-template-columns: repeat(24, 1fr);
-    grid-template-rows: repeat(18, 1fr);
+    grid-template-rows: 1fr 88px repeat(16, 1fr);
     padding-left: 12px;
     padding-right: 12px;
     box-sizing: border-box;

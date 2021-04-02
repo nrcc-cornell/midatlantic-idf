@@ -116,7 +116,7 @@ function Chart() {
   const {options} = useContext(OptionsContext) // context that keeps track of the chart options
   const [mode, setMode] = useState(0) // state that toggle between chart and tables, 0 for chart, 1 for table, 2 for comparison table
   const [showCIs, setShowCIs] = useState({ "projectedCIs": true, "observedCIs": false }); // state that toggles the CIs on the chart
-  const [chartTips, setChartTips] = useState(store.get("chartTips"));
+  // const [chartTips, setChartTips] = useState(store.get("chartTips"));
   const [popperAnchor, setPopperAnchor] = useState(false);
   const tabPanel = useRef();
   const classes = useStyles();
@@ -235,6 +235,9 @@ function Chart() {
       projectedInterval75.push([xValues[index], parseFloat((mid*_25).toFixed(2)), parseFloat((mid*_75).toFixed(2))])
       projection.push([xValues[index], parseFloat((mid*mean).toFixed(2))])
     })
+
+    console.log(tabPanel);
+    console.log(tabPanel.current.offsetHeight);
 
     let chartOptions = {
       chart: {
@@ -599,23 +602,23 @@ function Chart() {
     }
   }
 
-  const deactivateChartTips = () => {
-    // store.set("chartTips", "false");
-    setChartTips("false");
-  };
+  // const deactivateChartTips = () => {
+  //   // store.set("chartTips", "false");
+  //   setChartTips("false");
+  // };
 
-  const renderChartTips = () => {
-    let toCover = document.querySelector('#chart-cont');
-    let width = toCover.offsetWidth;
-    let height = toCover.offsetHeight;
+  // const renderChartTips = () => {
+  //   let toCover = document.querySelector('#chart-cont');
+  //   let width = toCover.offsetWidth;
+  //   let height = toCover.offsetHeight;
 
-    return (
-      <div id="chart-tips-wrapper" style={{ width:width, height:height }} onClick={deactivateChartTips}>
-        <div id="chart-tip-zoom">Click and drag on chart to zoom</div>
-        {/* <div id="chart-tip-adj-factors">Hover here to see adjustment factors</div> */}
-      </div>
-    );
-  };
+  //   return (
+  //     <div id="chart-tips-wrapper" style={{ width:width, height:height }} onClick={deactivateChartTips}>
+  //       <div id="chart-tip-zoom">Click and drag on chart to zoom</div>
+  //       {/* <div id="chart-tip-adj-factors">Hover here to see adjustment factors</div> */}
+  //     </div>
+  //   );
+  // };
 
   // const showAdjFactors = () => {
   //   let fips = stations[current].fips
@@ -675,6 +678,7 @@ function Chart() {
   return (
     <div id="chart-cont" className={`card ${!chart && 'hidden'}`}>
       <div className="station-name"><div>{chart && current && stationName()}</div></div>
+      <div className="zoom-instructions">Click and drag on chart to zoom</div>
       <div className="close-btn"><CloseIcon onClick={() => setChart(!chart)} /></div>
       <div id="chart-control">
         <Tabs
@@ -716,7 +720,7 @@ function Chart() {
         }
       </div>
 
-      {chart && !chartTips && renderChartTips()}
+      {/* {chart && !chartTips && renderChartTips()} */}
       
       <div id="tab-panel" ref={tabPanel}>
         {/* {chart && current && mode === 0 && 

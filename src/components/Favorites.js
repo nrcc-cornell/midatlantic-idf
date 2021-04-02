@@ -69,32 +69,40 @@ export default function Favorites() {
   }
 
   const renderSelected = () => {
-    let name = stations[current]["station_name"];
-    
-    return (
-    <div id="current-station">
-      <Chip 
-        label={limitLabelLength(name)}
-        icon={(favorite && favorite[current]) ? (
-          <StarIcon onClick={(event) => toggleFavorite(current, name, event)}/>
-        ): (
-          <StarBorderIcon onClick={(event) => toggleFavorite(current, name, event)}/>
-        )}
-        color="secondary"
-        clickable
-        onClick = {() => handleChipClick(current)}
-      />
-    </div>)
+    if (current) {
+      let name = stations[current]["station_name"];
+      
+      return (
+      <div id="current-station">
+        <Chip 
+          label={limitLabelLength(name)}
+          icon={(favorite && favorite[current]) ? (
+            <StarIcon onClick={(event) => toggleFavorite(current, name, event)}/>
+          ): (
+            <StarBorderIcon onClick={(event) => toggleFavorite(current, name, event)}/>
+          )}
+          color="secondary"
+          clickable
+          onClick = {() => handleChipClick(current)}
+        />
+      </div>)
+    } else {
+      return (
+        <div id="current-station" style={{paddingTop:"10px"}}>
+          <div> No station selected.</div>
+        </div>
+      );
+    }
   }
 
   return (
     <>
-      {current && <div id="selected-cont" className="card">
+      <div id="selected-cont" className="card">
         <div id="current-wrapper">
           <Typography style = {{flexBasis: "100%"}} variant="caption">Currently Selected</Typography>
           {renderSelected()}
         </div>
-      </div>}
+      </div>
       
       <div id="favorites-cont">
         <div id="srw" className="card">
