@@ -7,6 +7,7 @@ import {OptionsContext} from '../contexts/OptionsContext'
 import {ChartContext} from '../contexts/ChartContext'
 import {CurrentContext} from '../contexts/CurrentContext'
 import Legend from './Legend'
+// import { SignalCellularNullTwoTone } from '@material-ui/icons'
 
 function Map() {
   // const [viewport, setViewport] = useState({
@@ -361,14 +362,16 @@ function Map() {
       setTooltip({
         id: feature.properties.GEOID,
         longitude: event.lngLat[0],
-        latitude: event.lngLat[1]
-      })
+        latitude: event.lngLat[1],
+        stationName: null
+    })
     } else if (feature && feature.layer.id === "county-join-names") {
       setTooltip({
         id: feature.properties.geoid,
         longitude: event.lngLat[0],
-        latitude: event.lngLat[1]
-      })
+        latitude: event.lngLat[1],
+        stationName: null
+    })
     } else {
       setTooltip(null)
     }
@@ -419,6 +422,10 @@ function Map() {
 
     setViewport(nextView);
   };
+
+  if (tooltip && tooltip.stationName) {
+    console.log(tooltip.stationName)
+  }
 
   return (
     <div id="map-cont">
@@ -489,14 +496,15 @@ function Map() {
           onClose={() => setPopup(null)}
         >
           <div className="popup-text">
-            <div className="popup-title">Station: {popup.station_name}, {popup.state}</div>
+            <div className="popup-title">{popup.station_name}</div>
+            <hr/>
+            <div className="popup-title">Atlas-14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} County:</div>
             <div className="popup-num">10th: {data[emission][tp][rp][popup.fips]["10%"]}</div>
             <div className="popup-num">25th: {data[emission][tp][rp][popup.fips]["25%"]}</div>
             <div className="popup-num">Mean: {data[emission][tp][rp][popup.fips].mean}</div>
             <div className="popup-num">75th: {data[emission][tp][rp][popup.fips]["75%"]}</div>
             <div className="popup-num">90th: {data[emission][tp][rp][popup.fips]["90%"]}</div>
           </div>
-          
         </Popup>}
         {!popup && tooltip && <Popup
           tipSize={5}
@@ -508,7 +516,7 @@ function Map() {
           onClose={() => setPopup(null)}
         >
           <div className="popup-text">
-            <div className="popup-title">County: {data[emission][tp][rp][tooltip.id]["name"]}</div>
+            <div className="popup-title">Atlas-14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} County:</div>
             <div className="popup-num">10th: {data[emission][tp][rp][tooltip.id]["10%"]}</div>
             <div className="popup-num">25th: {data[emission][tp][rp][tooltip.id]["25%"]}</div>
             <div className="popup-num">Mean: {data[emission][tp][rp][tooltip.id].mean}</div>
