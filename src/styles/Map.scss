@@ -54,7 +54,11 @@
       font-weight: 600;
     }
     .popup-num {
-      margin-left: 12px;
+      // margin-left: 12px;
+      display: flex;
+      justify-content: space-between;
+      padding-left: 12px;
+      padding-right: 20px;
     }
     .popup-footnote {
       font-size: 10px;

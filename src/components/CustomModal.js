@@ -1,43 +1,44 @@
-import React, { useState } from 'react';
-import { Modal } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
+import React, { useState } from "react";
+import { Modal } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import CloseIcon from "@material-ui/icons/Close";
 
 function getModalStyle() {
   return {
-    top: '50vh',
-    left: '50vw',
-    transform: 'translate(-50%, -50%)',
+    top: "50vh",
+    left: "50vw",
+    transform: "translate(-50%, -50%)",
   };
 }
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    position: 'fixed',
-    width: '575px',
-    height: 'fit-content',
+    position: "fixed",
+    width: "575px",
+    height: "fit-content",
     backgroundColor: theme.palette.background.paper,
-    border: 'none',
-    borderRadius: '20px',
+    border: "none",
+    borderRadius: "20px",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2,4,3),
-    outline: 'none',
+    outline: "none",
   },
 }));
 
 export default function CustomModal() {
-  const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState(<div></div>);
   
+  const classes = useStyles();
+  
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleOpen = (contentType) => {
     setOpen(true);
     contentType === "tr" ? setContent(trBody) : (contentType === "utt" ? setContent(uttBody) : setContent(utdBody));
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const trBody = (
@@ -146,7 +147,6 @@ export default function CustomModal() {
         aria-describedby="custom-modal-description"
       >
         {content}
-
       </Modal>
     </div>
   );

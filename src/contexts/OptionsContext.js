@@ -1,2 +1,3 @@
-import {createContext} from 'react'
-export const OptionsContext = createContext(null)
+import { createContext } from "react";
+
+export const OptionsContext = createContext(null);

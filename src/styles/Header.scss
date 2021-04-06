@@ -63,61 +63,6 @@
   }
 }
 
-
-// .header {
-//   display: flex;
-//   height: 100px;
-//   padding: 0px 10px;
-//   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-//   justify-content: space-between;
-//   align-items: center;
-
-//   #site-title {
-//     font-size: 20px;
-//     font-weight: bold;
-//     text-align: center;
-//     max-width: 625px;
-//   }
-
-//   .org-logo {
-//     height: 70px;
-//     min-width: 290px;
-//     border-radius: 50%;
-
-//     &:hover {
-//       cursor: pointer;
-//     }
-//   }
-
-//   .nav {
-//     height: fit-content;
-//     position:relative;
-//     top: 28px;
-
-//     #link-container {
-//       width: 530px;
-//       font-size: 17px;
-//       display: flex;
-//       justify-content: space-between;
-
-//       .link {
-//         box-sizing: border-box;
-//         padding: 10px;
-//         transition: all .2s;
-        
-//         &:hover {
-//           transform: scale(1.1);
-//           cursor: pointer;
-//           background-color: rgba(210,210,210,0.5);
-//           border-top-left-radius: 5px;
-//           border-top-right-radius: 5px;
-//         }
-//       }
-
-//     }
-//   }
-// }
-
 .close-modal {
   position: absolute;
   top: 7px;

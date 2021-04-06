@@ -16,8 +16,6 @@
     padding: 2px;
     margin-right: 10px;
     width: 100%;
-    // width: 20vw;
-    // height: 5vh;
     border-radius: 100px;
     overflow: hidden;
     background-color: rgba(255,255,255,0.70);
@@ -49,7 +47,6 @@
 
   #legend-lines {
     background-color: rgba(214,243,255, 0.9);
-    // background-color: rgba(255,255,255,0.9);
     border-radius: 7px;
     padding: 5px;
     padding-bottom: 0px;
@@ -65,7 +62,6 @@
       .line-wrapper {
         height: 20px;
         min-width: 20px;
-        // background-color: rgb(40,150,20);
         display: flex;
         align-items: center;
         border-radius: 4px;
@@ -91,21 +87,3 @@
     }
   }
 }
-
-// @media (max-width: 1400px) {
-//   #map-cont {
-//     height: calc(100vh - 200px);
-    
-//     .legend-controls-container {
-//       width: 330px;
-//     }
-//   }
-// }
-
-// @media (max-width: 1200px) {
-//   #map-cont {
-//     .legend-controls-container {
-//       width: 250px;
-//     }
-//   }
-// }

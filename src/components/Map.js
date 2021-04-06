@@ -1,56 +1,50 @@
-import {useState, useEffect, useContext} from 'react'
-import ReactMapGL, {NavigationControl, Source, Layer, Marker, Popup, FlyToInterpolator} from 'react-map-gl'
+import React, { useState, useEffect, useContext } from "react";
+import ReactMapGL, { NavigationControl,
+  Source,
+  Layer,
+  Marker,
+  Popup,
+  FlyToInterpolator
+} from "react-map-gl";
+import PropTypes from "prop-types";
 
-import '../styles/Map.scss'
-import {data, stations, counties, virginiaCounties} from '../data'
-import {OptionsContext} from '../contexts/OptionsContext'
-import {ChartContext} from '../contexts/ChartContext'
-import {CurrentContext} from '../contexts/CurrentContext'
-import Legend from './Legend'
-// import { SignalCellularNullTwoTone } from '@material-ui/icons'
+import "../styles/Map.scss";
+
+import {data, stations, counties, virginiaCounties} from "../data";
+
+import { OptionsContext } from "../contexts/OptionsContext";
+import { ChartContext } from "../contexts/ChartContext";
+import { CurrentContext } from "../contexts/CurrentContext";
+import Legend from "./Legend";
 
 function Map() {
-  // const [viewport, setViewport] = useState({
-  //   // width: "100%",
-  //   // height: "100%",
-  //   latitude: 39.25,
-  //   longitude: -76.25,
-  //   zoom: 5,
-  //   minZoom: 5.8,
-  //   bearing: -10,
-  //   pitch: 40,
-  // });
+  const { options: { emission, rp, tp, area } } = useContext(OptionsContext);
 
-  
-  const [popup, setPopup] = useState(null)
-  const [tooltip, setTooltip] = useState(null)
-  const [countyFilter, setCountyFilter] = useState(counties)
-  
-  const {options: {emission, rp, tp, area}} = useContext(OptionsContext)
+  const [popup, setPopup] = useState(null);
+  const [tooltip, setTooltip] = useState(null);
+  const [countyFilter, setCountyFilter] = useState(counties);
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(0);
+  const [currentData, setCurrentData] = useState(null);
+  const [colorExpression, setColorExpression] = useState(null);
  
-  const currentData = data[emission][tp][rp]
+  useEffect(() => {
+    const newCurrentData = data[emission][tp][rp];
   
-  let max = Math.ceil(currentData.max*10)/10
-  let min = Math.floor(currentData.min*10)/10
+    let tempMax = Math.ceil(newCurrentData.max*10)/10;
+    let tempMin = Math.floor(newCurrentData.min*10)/10;
+  
+    setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*10)/10);
+    setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*10)/10);
+    setCurrentData(newCurrentData);
+  }, [emission, tp, rp]);
 
-  max = Math.round((1+Math.max(max-1, 1-min))*10)/10;
-  min = Math.round((1-Math.max(max-1, 1-min))*10)/10;
-
-  // const calcS = (mean) => {
-  //   let result = ((mean - min) / (max - min) * 25);
-  //   return result
-  // };
-
-  // const calcL = (mean) => {
-  //   let result = ((mean - min) / (max - min) * 50);
-  //   return result
-  // };
   const getViewSettings = () => {
-    let viewWidth = document.querySelector('html').clientWidth;
-    let viewHeight = document.querySelector('html').clientHeight;
+    let viewWidth = document.querySelector("html").clientWidth;
+    let viewHeight = document.querySelector("html").clientHeight;
     let lat, long, zoom;
 
-    if (area === 'bay') {
+    if (area === "bay") {
       lat = 40.3;
       long = -78.1;
       zoom = 5.8;
@@ -87,7 +81,7 @@ function Map() {
         zoom = 5.1;
       }
 
-    } else if (area === 'virginia') {
+    } else if (area === "virginia") {
       lat = 38.0;
       long = -79.4;
       zoom = 6.5;
@@ -166,228 +160,107 @@ function Map() {
       }
     }
 
-    // if (area === 'bay') {
-    //   lat = 39.25;
-    //   long = -78.1;
-    //   zoom = 6.0;
-  
-    //   if (viewHeight <= 950 && viewHeight > 850) {
-    //     zoom = 5.8;
-    //   } else if (viewHeight <= 850) {
-    //     zoom = 5.6;
-    //   }
-  
-    //   if (viewWidth <= 1310 && viewWidth > 1150 && zoom > 5.8) {
-    //     zoom = 5.8
-    //   } else if (viewWidth <= 1160 && viewWidth > 1055 && zoom > 5.6) {
-    //     zoom = 5.5
-    //   } else if (viewWidth <= 1055 && zoom > 5.5) {
-    //     zoom = 5.3
-    //     long = -78.4
-    //   }
-
-    // } else if (area === 'virginia') {
-    //   lat = 37.2;
-    //   long = -79.7;
-    //   zoom = 6.5;
-  
-    //   if (viewWidth <= 1800 && viewWidth > 1570) {
-    //     zoom = 6.3;
-    //   } else if (viewWidth <= 1570 && viewWidth > 1375) {
-    //     zoom = 6.1;
-    //   } else if (viewWidth <= 1375 && viewWidth > 1315) {
-    //     zoom = 5.9;
-    //   } else if (viewWidth <= 1315 && viewWidth > 1260) {
-    //     long = -79.5;
-    //     zoom = 5.9;
-    //   } else if (viewWidth <= 1260 && viewWidth > 1185) {
-    //     long = -79.8;
-    //     zoom = 5.7;
-    //   } else if (viewWidth <= 1185 && viewWidth > 1060) {
-    //     zoom = 5.5;
-    //   } else if (viewWidth <= 1060) {
-    //     zoom = 5.2;
-    //     long = -79.9;
-    //   }
-    // } else {
-    //   lat = 39.0;
-    //   long = -79.1;
-    //   zoom = 6.0;
-  
-    //   if (viewWidth <= 1800 && viewWidth > 1570) {
-    //     zoom = 5.8;
-    //   } else if (viewWidth <= 1570 && viewWidth > 1255) {
-    //     long = -79.4;
-    //     zoom = 5.6;
-    //   } else if (viewWidth <= 1255 && viewWidth > 1140) {
-    //     lat = 38.5;
-    //     long = -79.6;
-    //     zoom = 5.4;
-    //   } else if (viewWidth <= 1140 && viewWidth > 1090) {
-    //     lat = 38.5;
-    //     long = -79.7;
-    //     zoom = 5.3;
-    //   } else if (viewWidth <= 1090 && viewWidth > 1055) {
-    //     lat = 38.5;
-    //     long = -79.6;
-    //     zoom = 5.3;
-    //   } else if (viewWidth <= 1055 && viewWidth > 1050) {
-    //     lat = 38.5;
-    //     long = -79.2;
-    //     zoom = 5.1;
-    //   } else if (viewWidth <= 1050) {
-    //     lat = 38.5;
-    //     long = -79.5;
-    //     zoom = 5.0;
-    //   }
-
-    //   if (viewHeight <= 950 && viewHeight > 820 && zoom > 5.9) {
-    //     zoom = 5.9;
-    //   } else if (viewHeight <= 820 && viewHeight > 785 && zoom > 5.7) {
-    //     zoom = 5.7;
-    //   } else if (viewHeight <= 785 && zoom > 5.5) {
-    //     zoom = 5.5;
-    //   }
-    // }
-
     return {
       latitude: lat,
       longitude: long,
       zoom: zoom,
       minZoom: zoom
-    }
+    };
   };
 
-  
   const [viewport, setViewport] = useState(getViewSettings());
 
-
-  let colorExpression = ['match', ['get', 'GEOID']]
-  Object.entries(currentData).forEach(([id, {name, mean}]) => {
-    let color
-
-
-    // if(mean > 1) {
-    //   color = `hsla(160, ${(mean-1)/(max-1)*100}%, ${(mean-1)/(max-1)*70}%, 1)`
-    // } else if (mean<1) {
-    //   color = `hsla(40, ${(mean-1)/(min-1)*100}%, ${(mean-1)/(min-1)*70}%, 1)`
-    // } else {
-    //   color = `hsla(100, 0%, 40%, 1)`
-    // }
-
-    // if(mean > 1) {
-    //   color = `hsla(110, ${(mean-1) / (max-1) * 25 + 75}%, ${50 - (mean-1) / (max-1) * 50}%, 1)`
-    // } else if (mean<1) {
-    //   color = `hsla(40, ${(mean-1) / (min-1) * 25 + 75}%, ${(mean-1) / (min-1) * 20 + 50}%, 1)`
-    // } else {
-    //   color = `hsla(110, 75%, 50%, 1)`
-    // }
-
-    if(mean > (1 + (max -1) * 2/5)) {
-      color = `hsla(110, ${(mean-1) / (max-1) * 25 + 75}%, ${50 - (mean-1) / (max-1) * 50}%, 1)`
-    } else if (mean > 1) {
-      color = `hsla(110, ${(mean-1) / (max-1) * 25 + 50}%, ${50 - (mean-1) / (max-1) * 40}%, 1)`
-    } else if (mean<1) {
-      color = `hsla(40, ${(mean-1) / (min-1) * 25 + 75}%, ${(mean-1) / (min-1) * 20 + 50}%, 1)`
-    } else {
-      color = `hsla(110,50%,90%,1)`
+  useEffect(() => {
+    if (currentData) {
+      let newColorExpression = ["match", ["get", "GEOID"]];
+      Object.entries(currentData).forEach(([id, { mean }]) => {
+        let color;
+        
+        if(mean > (1 + (max -1) * 2/5)) {
+          color = `hsla(110, ${(mean-1) / (max-1) * 25 + 75}%, ${50 - (mean-1) / (max-1) * 50}%, 1)`;
+        } else if (mean > 1) {
+          color = `hsla(110, ${(mean-1) / (max-1) * 25 + 50}%, ${50 - (mean-1) / (max-1) * 40}%, 1)`;
+        } else if (mean<1) {
+          color = `hsla(40, ${(mean-1) / (min-1) * 25 + 75}%, ${(mean-1) / (min-1) * 20 + 50}%, 1)`;
+        } else {
+          color = "hsla(110,50%,90%,1)";
+        }
+        
+        newColorExpression.push(id, color);
+      });
+      
+      newColorExpression.push("rgba(0, 0, 0, 0)");
+      
+      setColorExpression(newColorExpression);
     }
-
-    // backgroundImage: `linear-gradient(270deg,hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1) 40%, hsla(110,50%,90%,1) 50%, hsla(40, 100%, 70%, 1))`
-              // backgroundImage: `linear-gradient(270deg, hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1), hsla(40, 100%, 70%, 1))`
-    // color = `hsla(110, ${calcS(mean) + 75}%, ${50 - calcL(mean)}%, 1)`
-
-    colorExpression.push(id, color)
-  })
-
-  colorExpression.push("rgba(0, 0, 0, 0)")
+  }, [currentData]);
 
   const countyLayer = {
     id: "county-join",
     type: "fill",
-    'source-layer': 'cb_2018_us_county_500k-bbf38a',
-    // 'source-layer': 'USA_Counties-5nz3u8',
-    // 'source-layer': 'historical_pres_elections_county',
-    // 'source-layer': "cf_rcp45_2020-2070_median_2-8ekv7r",
+    "source-layer": "cb_2018_us_county_500k-bbf38a",
     paint: {
       "fill-color": colorExpression,
       "fill-outline-color": "rgba(100,100,100,1)"
-      // "fill-color": "rgba(0, 0, 0, 1)",
-      // "fill-outline-color": "rgba(255,255,255,1)"
     }
-  }
+  };
 
   const countyLines = {
     id: "county-join-line",
     type: "line",
-    'source-layer': 'cb_2018_us_county_500k-bbf38a',
-    // 'source-layer': 'USA_Counties-5nz3u8',
-    // 'source-layer': 'historical_pres_elections_county',
-    // 'source-layer': "cf_rcp45_2020-2070_median_2-8ekv7r",
+    "source-layer": "cb_2018_us_county_500k-bbf38a",
     paint: {
       "line-color": "rgba(100,100,100,1)",
       "line-width": 1
-      // "fill-color": "rgba(0, 0, 0, 1)",
-      // "fill-outline-color": "rgba(255,255,255,1)"
     }
-  }
+  };
 
   const countyNameLayer = {
     id: "county-join-names",
     type: "symbol",
-    'source-layer': 'counties-dasd61',
-    
-    // 'source-layer': "historical_pres_elections_county_points",
+    "source-layer": "counties-dasd61",
     layout: {
-      'text-field': ['get', 'name'],
-      'text-size': 12, 
+      "text-field": ["get", "name"],
+      "text-size": 12, 
     },
     paint: {
-      'text-color': "#dddddd"
+      "text-color": "#dddddd"
     }
-  }
+  };
 
   const handleMarkerMouseEnter = (id) => {
-    setPopup(stations[id])
-    // setTooltip(null)
-  }
+    setPopup(stations[id]);
+  };
 
   const handleMarkerMouseLeave = () => {
-    setPopup(null)
-  }
+    setPopup(null);
+  };
 
   const handleHover = (event) => {
-    let feature = event.features && event.features[0]
+    let feature = event.features && event.features[0];
     if(feature && feature.layer.id === "county-join") {
       setTooltip({
         id: feature.properties.GEOID,
         longitude: event.lngLat[0],
         latitude: event.lngLat[1],
         stationName: null
-    })
+      });
     } else if (feature && feature.layer.id === "county-join-names") {
       setTooltip({
         id: feature.properties.geoid,
         longitude: event.lngLat[0],
         latitude: event.lngLat[1],
         stationName: null
-    })
+      });
     } else {
-      setTooltip(null)
+      setTooltip(null);
     }
   };
 
-  // Only needed if we decide to do something when clicking the counties
-  // const handleClick = (event) => {
-  //   console.log(event);
-  // };
-
-
-
   useEffect(() => {
-    if (area === 'bay') {
+    if (area === "bay") {
       setCountyFilter(counties);
-    } else if (area === 'virginia') {
+    } else if (area === "virginia") {
       setCountyFilter(virginiaCounties);
     } else {
       setCountyFilter(counties.concat(virginiaCounties));
@@ -396,18 +269,10 @@ function Map() {
     var viewSetting = getViewSettings();
     setViewport({
       ...viewSetting,
-      // bearing: -10,
-      // pitch: 40,
       transitionDuration: 1000,
       transitionInterpolator: new FlyToInterpolator(),
-    })
+    });
   }, [area]);
-
-  // if (props.scope === 'virginia') {
-  //   var countyFilter = virginiaCounties;
-  // } else {
-  //   var countyFilter = counties;
-  // }
 
   const handlePanning = (view) => {
     let nextView = view;
@@ -423,10 +288,6 @@ function Map() {
     setViewport(nextView);
   };
 
-  if (tooltip && tooltip.stationName) {
-    console.log(tooltip.stationName)
-  }
-
   return (
     <div id="map-cont">
       <ReactMapGL
@@ -434,22 +295,11 @@ function Map() {
         width= "100%"
         height= "100%"
         onViewportChange={nextViewport => handlePanning(nextViewport)}
-        // mapboxApiAccessToken="pk.eyJ1IjoiYWRyaWVuemhlbmciLCJhIjoiY2tkamI5am9iMDN6NjJxbW8xZmY4d2puYiJ9.nQG7j4_lTdRg0jdfZMTWlw"
-        // mapStyle="mapbox://styles/adrienzheng/ckidysz96357819k58txti52f"
         mapboxApiAccessToken="pk.eyJ1IjoiYmVuZWNrIiwiYSI6ImNrbTBvNWNtdTB1eXUyb21yeWhpbWZrYWMifQ.rSYtPIiS9ZbnnCdSbtm4wQ"
         mapStyle="mapbox://styles/beneck/ckm0vcgpk82b117nlfwc1ixt8"
         onHover={handleHover}
-        // Only needed if we decide to so something when clicking on counties
-        // onClick={handleClick}
       >
-    {/*  */}
-        {/* <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county" >
-          // <Layer beforeId='watershed-boundary' {...countyLayer} />
-          <Layer beforeId='watershed-boundary' {...countyLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
-        </Source> */}
-
         <Source type = "vector" url = "mapbox://beneck.3at6c9tb" >
-        {/* <Source type = "vector" url = "mapbox://beneck.4k8cfuie" > */}
           <Layer beforeId='states-filtered' {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
         </Source>
 
@@ -460,27 +310,11 @@ function Map() {
         <Source type = "vector" url = "mapbox://beneck.5cjncwf0" >
           <Layer {...countyNameLayer} filter={["in", ["to-string", ["get", "geoid"]], ["literal", countyFilter]]}/>
         </Source>
-
-    {/*  */}
-        {/* <Source type = "vector" url = "mapbox://mapbox.hist-pres-election-county-points" >
-          <Layer {...countyNameLayer} filter={["in", ["get", "FIPS"], ["literal", countyFilter]]}/>
-          <Layer {...countyNameLayer} />
-        </Source> */}
-
-        {/* <Source type = "vector" url = "mapbox://adrienzheng.604t4hsd">
-          <Layer beforeId="waterway-label" {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", counties]]}/>
-          </Source>
-          
-          <Source type = "vector" url = "mapbox://adrienzheng.604t4hsd">
-          <Layer beforeId="waterway-label" {...countyNameLayer} filter={["in", ["get", "GEOID"], ["literal", counties]]}/>
-        </Source> */}
-        
         
         <Markers
           onMarkerMouseEnter={handleMarkerMouseEnter}
           onMarkerMouseLeave={handleMarkerMouseLeave}
           scope={area}
-          // scope={props.scope}
         />
 
         <Legend />
@@ -499,13 +333,13 @@ function Map() {
             <div className="popup-title">{popup.station_name}</div>
             <hr/>
             <div className="popup-title">Atlas-14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} County:</div>
-            <div className="popup-num">10th: {data[emission][tp][rp][popup.fips]["10%"]}</div>
-            <div className="popup-num">25th: {data[emission][tp][rp][popup.fips]["25%"]}</div>
-            <div className="popup-num">Mean: {data[emission][tp][rp][popup.fips].mean}</div>
-            <div className="popup-num">75th: {data[emission][tp][rp][popup.fips]["75%"]}</div>
-            <div className="popup-num">90th: {data[emission][tp][rp][popup.fips]["90%"]}</div>
+            <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["10%"].toFixed(2)}</div></div>
+            <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["25%"].toFixed(2)}</div></div>
+            <div className="popup-num"><div>Mean:</div> <div>{data[emission][tp][rp][popup.fips].mean.toFixed(2)}</div></div>
+            <div className="popup-num"><div>75th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["75%"].toFixed(2)}</div></div>
+            <div className="popup-num"><div>90th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["90%"].toFixed(2)}</div></div>
             <hr/>
-            <div className="popup-footnote"><i>See "Using the Data" above for correct and incorrect application of these change factors.</i></div>
+            <div className="popup-footnote"><i>{"See \"Using the Data\" above for correct and incorrect application of these change factors."}</i></div>
           </div>
         </Popup>}
         {!popup && tooltip && <Popup
@@ -519,13 +353,13 @@ function Map() {
         >
           <div className="popup-text">
             <div className="popup-title">Atlas-14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} County:</div>
-            <div className="popup-num">10th: {data[emission][tp][rp][tooltip.id]["10%"]}</div>
-            <div className="popup-num">25th: {data[emission][tp][rp][tooltip.id]["25%"]}</div>
-            <div className="popup-num">Mean: {data[emission][tp][rp][tooltip.id].mean}</div>
-            <div className="popup-num">75th: {data[emission][tp][rp][tooltip.id]["75%"]}</div>
-            <div className="popup-num">90th: {data[emission][tp][rp][tooltip.id]["90%"]}</div>
+            <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["10%"].toFixed(2)}</div></div>
+            <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["25%"].toFixed(2)}</div></div>
+            <div className="popup-num"><div>Mean:</div> <div>{data[emission][tp][rp][tooltip.id].mean.toFixed(2)}</div></div>
+            <div className="popup-num"><div>75th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["75%"].toFixed(2)}</div></div>
+            <div className="popup-num"><div>90th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["90%"].toFixed(2)}</div></div>
             <hr/>
-            <div className="popup-footnote"><i>See "Using the Data" above for correct and incorrect application of these change factors.</i></div>
+            <div className="popup-footnote"><i>{"See \"Using the Data\" above for correct and incorrect application of these change factors."}</i></div>
           </div>
         </Popup>}
       </ReactMapGL>
@@ -534,22 +368,22 @@ function Map() {
 }
 
 const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave, scope}) => {
-  const {current, setCurrent} = useContext(CurrentContext)
-  const {chart, setChart} = useContext(ChartContext)
+  const { current, setCurrent } = useContext(CurrentContext);
+  const { setChart } = useContext(ChartContext);
 
   const handleClick = (id) => {
-    setCurrent(id)
-    setChart(true)
-  }
+    setCurrent(id);
+    setChart(true);
+  };
 
   return <>
     {Object.entries(stations).map(([id, {fips, latitude, longitude}]) => {
-      if ((scope === 'both' && (counties.includes(fips) || virginiaCounties.includes(fips))) || (scope === 'bay' && counties.includes(fips)) || (scope === 'virginia' && virginiaCounties.includes(fips))) {
+      if ((scope === "both" && (counties.includes(fips) || virginiaCounties.includes(fips))) || (scope === "bay" && counties.includes(fips)) || (scope === "virginia" && virginiaCounties.includes(fips))) {
         return (
           <Marker
             latitude={parseFloat(latitude)}
             longitude={parseFloat(longitude)}
-            key={'marker-'+id}
+            key={"marker-"+id}
           >
             <div
               className={`marker ${current===id && "current"}`}
@@ -562,10 +396,16 @@ const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave, scope}) => {
           </Marker>
         );
       } else {
-        return '';
+        return "";
       }
     })}
-  </>
-}
+  </>;
+};
 
-export default Map
+Markers.propTypes = {
+  onMarkerMouseEnter: PropTypes.func.isRequired,
+  onMarkerMouseLeave: PropTypes.func.isRequired,
+  scope: PropTypes.string.isRequired,
+};
+
+export default Map;

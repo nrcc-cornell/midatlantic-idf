@@ -1,72 +1,39 @@
-import {useContext, useState} from 'react'
-
+import React, { useContext } from "react";
 import {
   Button,
   FormControl,
-  // FormControlLabel,
   FormGroup,
   InputLabel,
   MenuItem,
   Select,
-  // Switch,
-  Typography,
-  Input,
-  FormHelperText
-} from '@material-ui/core'
+  Typography
+} from "@material-ui/core";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
-// import { withStyles } from '@material-ui/core/styles';
-// import { green } from '@material-ui/core/colors';
-// import Grid from '@material-ui/core/Grid';
+import "../styles/Options.scss";
 
-
-import VisibilityIcon from '@material-ui/icons/Visibility'
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
-
-import {OptionsContext} from '../contexts/OptionsContext'
-import {ChartContext} from '../contexts/ChartContext'
-import {CurrentContext} from '../contexts/CurrentContext'
-
-import '../styles/Options.scss'
-
-// const DataSwitch = withStyles({
-//   switchBase: {
-//     transition: 'all .5s',
-//     color: green[500],
-//     '&$checked': {
-//       color: green[500],
-//     },
-//     '&$checked + $track': {
-//       backgroundColor: green[500],
-//     },
-//   },
-//   checked: {},
-//   track: {backgroundColor: green[500]},
-// })(Switch);
+import {OptionsContext} from "../contexts/OptionsContext";
+import {ChartContext} from "../contexts/ChartContext";
+import {CurrentContext} from "../contexts/CurrentContext";
 
 function Options() {
-  // const [vaScope, setVAScope] = useState(false);
+  const {options, setOptions} = useContext(OptionsContext);
+  const {chart, setChart} = useContext(ChartContext);
+  const {current} = useContext(CurrentContext);
 
-  const {options, setOptions} = useContext(OptionsContext)
-  const {chart, setChart} = useContext(ChartContext)
-  const {current} = useContext(CurrentContext)
-
-  
   const handleChange = (event, field) => {
-    let newOptions = {...options}
-    newOptions[field] = event.target.value
-    setOptions(newOptions)
-  }
-
-  // const handleToggle = (event) => {
-  //   // Also fly to new viewport and filter down data
-  //   setVAScope(event.target.checked);
-  // };
+    let newOptions = {...options};
+    newOptions[field] = event.target.value;
+    setOptions(newOptions);
+  };
 
   return (
     <div id="options-cont" className="card">
       <Typography variant="h5" component = "h2">
         Selection Panel
       </Typography>
+
       <FormGroup id="input-cont">
         <FormControl>
           <InputLabel id="rp">
@@ -75,7 +42,7 @@ function Options() {
           <Select
             labelId="rp"
             displayEmpty
-            value={options['rp']}
+            value={options["rp"]}
             onChange={event => handleChange(event, "rp")}
           >
             <MenuItem value={2}>2-year</MenuItem>
@@ -86,6 +53,7 @@ function Options() {
             <MenuItem value={100}>100-year</MenuItem>
           </Select>
         </FormControl>
+
         <FormControl>
           <InputLabel id="es" shrink>
             Emission Scenario
@@ -93,13 +61,14 @@ function Options() {
           <Select
             labelId="es"
             displayEmpty
-            value={options['emission']}
+            value={options["emission"]}
             onChange={event => handleChange(event, "emission")}
           >
             <MenuItem value={8.5}>High RCP 8.5</MenuItem>
             <MenuItem value={4.5}>Low RCP 4.5</MenuItem>
           </Select>
         </FormControl>
+
         <FormControl>
           <InputLabel id="tp">
             Time Period
@@ -107,13 +76,14 @@ function Options() {
           <Select
             labelId="tp"
             displayEmpty
-            value={options['tp']}
+            value={options["tp"]}
             onChange={event => handleChange(event, "tp")}
           >
             <MenuItem value={"2020-2070"}>2020-2070</MenuItem>
             <MenuItem value={"2050-2100"}>2050-2100</MenuItem>
           </Select>
         </FormControl>
+
         <FormControl>
           <InputLabel id="aoc">
             Area of Concern
@@ -121,7 +91,7 @@ function Options() {
           <Select
             labelId="aoc"
             displayEmpty
-            value={options['area']}
+            value={options["area"]}
             onChange={event => handleChange(event, "area")}
           >
             <MenuItem value={"both"}>Both</MenuItem>
@@ -129,30 +99,8 @@ function Options() {
             <MenuItem value={"virginia"}>Virginia</MenuItem>
           </Select>
         </FormControl>
-        
-        {/* <div id="switch-container"> */}
-          {/* <div className="switch-label">Chesapeake Bay</div>
-          <FormControlLabel
-            control={
-              <Switch
-              checked={vaScope}
-              onChange={handleToggle}
-              name="scopeFilter"
-              color="rgb(255, 0, 0)"
-              />
-            }
-          />
-          <div className="switch-label">Virginia</div> */}
-
-          {/* <Grid component="label" container alignItems="center" spacing={1}>
-            <Grid item><div className="switch-label">Chesapeake Bay</div></Grid>
-            <Grid item>
-              <DataSwitch checked={vaScope} onChange={handleToggle} name="ScopeFilter" />
-            </Grid>
-            <Grid item><div className="switch-label">Virginia</div></Grid>
-          </Grid> */}
-        {/* </div> */}
       </FormGroup>
+
       <Button
         id="chart-toggle"
         aria-label="toggle chart visibility"
@@ -160,10 +108,10 @@ function Options() {
         onClick={() => setChart(!chart)}
         endIcon= {chart ? <VisibilityOffIcon/> : <VisibilityIcon/>}
       >
-        {`Chart ${chart ? 'Off' : 'On'}`}
+        {`Chart ${chart ? "Off" : "On"}`}
       </Button>
     </div>
-  )
+  );
 }
 
-export default Options
+export default Options;
