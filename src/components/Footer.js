@@ -9,9 +9,8 @@ const Footer = () => {
         <div className="big-red">C</div>
       </div>
       <div className="footer-text">
-        <p>Blurb about the funding for the project and partnerships with the logos to the left.</p>
-        <p>Any kind of legal disclaimers or copyright information that needs to be addressed. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pulvinar efficitur dolor sit amet tristique. Pellentesque convallis risus ante, ut fermentum ipsum tempor non. Aliquam vehicula erat urna, ut pulvinar quam fermentum nec. Curabitur viverra ipsum ipsum, id pharetra sapien molestie a. Cras efficitur ut magna sed tincidunt. Nunc id bibendum dolor, in ullamcorper libero. Donec lobortis erat ex, ac sodales orci commodo at. Sed sit amet leo ac erat pharetra cursus vitae a felis. Quisque semper nibh ac eleifend tincidunt. Vestibulum vel metus ipsum. </p>
-        <p>&#169; XXXX-XXXX Cornell University</p>
+        <p>This project was carried out by researchers at <a href="https://www.cmu.edu/">Carnegie Mellon University (CMU)</a>, the <a href="https://www.nrcc.cornell.edu/">Northeast Regional Climate Center (NRCC)</a> at Cornell University and the <a href="https://www.rand.org/">RAND Corporation (RAND)</a>. The project team members from RAND and NRCC are also a part of the <a href="https://www.midatlanticrisa.org/">Mid-Atlantic Regional Integrated Sciences and Assessments (MARISA) Program</a>.</p>
+        <p>The project was funded by the <a href="https://cbtrust.org/">Chesapeake Bay Trust</a> and in partnership with the U.S. Environmental Protection Agency under the <a href="https://www.chesapeakebay.net/">Chesapeake Bay Program</a>’s Goal Implementation Team. NRCC and CMU also received funding from the <a href="http://vtrc.virginiadot.org/">Virginia Transportation Research Council (VTRC)</a> and the <a href="https://www.floodingresiliency.org/">Commonwealth Center for Recurrent Flooding Resiliency (CCRFR)</a> to extend the study boundaries to include the full state of Virginia.</p>
       </div>
     </footer>
   );

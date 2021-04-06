@@ -1,79 +1,149 @@
 .header {
   display: flex;
-  width: 95vw;
-  min-width: 800px;
   height: 100px;
-  box-sizing: border-box;
-  padding: 15px 10px;
-  margin: 0 0 0 auto;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  justify-content: space-between;
-  align-items: baseline;
-  
-  // .site-info {
-  //   height: fit-content;
-  //   padding-top: 9px;
-
-  //   .site-org {
-  //     font-size: 28px;
-  //     font-weight: 300;
-  //     margin: 0;
-      
-  //     &:hover {
-  //       cursor: pointer;
-  //       color: rgb(38, 117, 182);
-  //     }
-  //   }
-    
-  //   .site-description {
-  //     color: rgb(107, 105, 105);
-  //     font-size: 13px;
-  //   }
-  // }
-
-  #site-title {
-    font-size: 30px;
-    font-weight: bold;
-    position: relative;
-    top: -24px;
-  }
 
   .org-logo {
-    height: 70px;
-    width: 290px;
-    margin-right: 15px;
+    box-sizing: border-box;
+    height: 100px;
+    padding: 15px 10px;
+    width: 300px;
     border-radius: 50%;
-
+    
     &:hover {
       cursor: pointer;
     }
   }
+  
+  .header-right {
+    width: calc(100vw - 300px);
+    box-sizing: border-box;
+    padding: 10px;
+    position: relative;
 
-  .nav {
-    height: fit-content;
-    // position: absolute;
-    // right: 20px;
-    // top: 55px;
-
-    #link-container {
-      width: 350px;
+    #site-title {
       font-size: 20px;
-      display: flex;
-      justify-content: space-between;
-
-      .link {
-        box-sizing: border-box;
-        padding: 10px;
-        transition: all .2s;
-        
-        &:hover {
-          transform: scale(1.1);
-          cursor: pointer;
-          background-color: rgba(210,210,210,0.5);
+      font-weight: bold;
+      text-align: center;
+      max-width: 705px;
+    }
+  
+    .nav {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+  
+      #link-container {
+        font-size: 17px;
+        display: flex;
+        justify-content: flex-end;
+  
+        .link {
+          box-sizing: border-box;
+          margin-right: 20px;
+          padding: 10px;
+          transition: all .2s;
+          border-color: rgba(210,210,210,0.5);
+          border-style: solid;
+          border-width: 1px 1px 0px 1px;
           border-top-left-radius: 5px;
           border-top-right-radius: 5px;
+          
+          &:hover {
+            transform: scale(1.1);
+            cursor: pointer;
+            background-color: rgba(210,210,210,0.5);
+          }
         }
+  
       }
     }
+  }
+}
+
+
+// .header {
+//   display: flex;
+//   height: 100px;
+//   padding: 0px 10px;
+//   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+//   justify-content: space-between;
+//   align-items: center;
+
+//   #site-title {
+//     font-size: 20px;
+//     font-weight: bold;
+//     text-align: center;
+//     max-width: 625px;
+//   }
+
+//   .org-logo {
+//     height: 70px;
+//     min-width: 290px;
+//     border-radius: 50%;
+
+//     &:hover {
+//       cursor: pointer;
+//     }
+//   }
+
+//   .nav {
+//     height: fit-content;
+//     position:relative;
+//     top: 28px;
+
+//     #link-container {
+//       width: 530px;
+//       font-size: 17px;
+//       display: flex;
+//       justify-content: space-between;
+
+//       .link {
+//         box-sizing: border-box;
+//         padding: 10px;
+//         transition: all .2s;
+        
+//         &:hover {
+//           transform: scale(1.1);
+//           cursor: pointer;
+//           background-color: rgba(210,210,210,0.5);
+//           border-top-left-radius: 5px;
+//           border-top-right-radius: 5px;
+//         }
+//       }
+
+//     }
+//   }
+// }
+
+.close-modal {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+#custom-modal-title {
+  font-size: 32px;
+  margin-top: 0;
+}
+
+#custom-modal-description {
+
+  .list-title {
+    font-weight: bold;
+  }
+
+  .modal-footnote {
+    margin-top: 20px;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  ul {
+    margin-top: 6px;
   }
 }

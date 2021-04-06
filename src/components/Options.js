@@ -65,7 +65,7 @@ function Options() {
   return (
     <div id="options-cont" className="card">
       <Typography variant="h5" component = "h2">
-        Options
+        Selection Panel
       </Typography>
       <FormGroup id="input-cont">
         <FormControl>

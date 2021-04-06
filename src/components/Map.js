@@ -504,6 +504,8 @@ function Map() {
             <div className="popup-num">Mean: {data[emission][tp][rp][popup.fips].mean}</div>
             <div className="popup-num">75th: {data[emission][tp][rp][popup.fips]["75%"]}</div>
             <div className="popup-num">90th: {data[emission][tp][rp][popup.fips]["90%"]}</div>
+            <hr/>
+            <div className="popup-footnote"><i>See "Using the Data" above for correct and incorrect application of these change factors.</i></div>
           </div>
         </Popup>}
         {!popup && tooltip && <Popup
@@ -522,6 +524,8 @@ function Map() {
             <div className="popup-num">Mean: {data[emission][tp][rp][tooltip.id].mean}</div>
             <div className="popup-num">75th: {data[emission][tp][rp][tooltip.id]["75%"]}</div>
             <div className="popup-num">90th: {data[emission][tp][rp][tooltip.id]["90%"]}</div>
+            <hr/>
+            <div className="popup-footnote"><i>See "Using the Data" above for correct and incorrect application of these change factors.</i></div>
           </div>
         </Popup>}
       </ReactMapGL>
