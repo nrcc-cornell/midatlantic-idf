@@ -200,6 +200,14 @@
   }
 }
 
+.logo-overlay {
+  position: absolute;
+  height: 32px;
+  bottom: 10px;
+  right: 20px;
+  z-index: 1;
+}
+
 @media (max-width: 1100px) {
   #chart-cont {
     .station-name {

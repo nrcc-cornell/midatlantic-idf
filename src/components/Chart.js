@@ -232,8 +232,21 @@ function Chart() {
         height: (tabPanel.current.offsetHeight - 10)
       },
 
+      credits: {
+        enabled: false
+      },
+
       exporting: {
+        sourceWidth: 900,
+        sourceHeight: 450,
         chartOptions: {
+          chart : {
+            events: {
+              load: function() {
+                this.renderer.image((process.env.PUBLIC_URL + "/logos/PoweredbyACIS_NRCC.jpg"),830,420,70,30).add();
+              }
+            }
+          },
           legend: {
             itemStyle: {
               "fontSize": "8px",
@@ -613,6 +626,7 @@ function Chart() {
           </div>
         </div>
         }
+        {chart && current && mode === 0 && <img src={process.env.PUBLIC_URL + "/logos/PoweredbyACIS_NRCC.jpg"} alt="NRCC logo" className="logo-overlay"></img>}
       </div>
 
       <div id="tab-panel" ref={tabPanel}>

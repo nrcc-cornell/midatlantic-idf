@@ -1,6 +1,6 @@
 #map-cont {
   width: 100vw;
-  height: calc(100vh - 250px);
+  height: calc(100vh - 200px);
 
   .map-nav {
     position: absolute;
@@ -54,7 +54,6 @@
       font-weight: 600;
     }
     .popup-num {
-      // margin-left: 12px;
       display: flex;
       justify-content: space-between;
       padding-left: 12px;
@@ -69,11 +68,5 @@
       width: 220px;
       margin: 0px;
     }
-  }
-}
-
-@media (max-width: 1400px) {
-  #map-cont {
-    height: calc(100vh - 200px);
   }
 }
