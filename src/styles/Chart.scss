@@ -149,7 +149,7 @@
 }
 
 .sticky-row > .MuiTableCell-stickyHeader {
-  top: 37px;
+  top: 61px;
 }
 
 .col-shaded {
@@ -169,6 +169,7 @@
     display: flex;
     justify-content: space-between;
     position: relative;
+    padding: 0px 12px;
 
     #toggle-popper {
       z-index: 5;

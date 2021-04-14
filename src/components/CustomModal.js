@@ -94,7 +94,7 @@ export default function CustomModal() {
         <div className="list-title">Incorrect application of the data tool:</div>
         <ul>
           <li>Do not apply change factors directly to Atlas 14 values that have a different time period than that in the tool (1950-2000).</li>
-          <li>Do not apply change factors to IDF curves not available from Atlas-14.</li>
+          <li>Do not apply change factors to IDF curves not available from Atlas 14.</li>
         </ul>
       </div>
     </div>
@@ -119,7 +119,7 @@ export default function CustomModal() {
         <div className="list-title">Selection Panel:</div>
         <ul>
           <li>Users can select the return period, future time period of interest and future emissions scenario in the drop-down menu.</li>
-          <li>Area of Concern allows users to select the Chesapeake Bay Watershed, Virginia or Both.</li>
+          <li>Area of Interest allows users to select the Chesapeake Bay Watershed, Virginia or Both.</li>
         </ul>
         <div className="list-title">Downloading Data:</div>
         <ul>
@@ -127,7 +127,7 @@ export default function CustomModal() {
           <li>A .csv file of station-based projected IDF curve values can be downloaded by selecting “Download CSV” from the Table tab for a given station.</li>
           <li>All data can be downloaded by [TBD].</li>
         </ul>
-        <div className="list-title">Supported browsers:</div>
+        <div className="list-title">Supported Browsers:</div>
         <ul>
           <li>This tool is available on Firefox, Safari, Google Chrome, and Microsoft Edge. It is not supported on Internet Explorer.</li>
         </ul>

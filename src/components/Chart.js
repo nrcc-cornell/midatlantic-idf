@@ -134,7 +134,7 @@ function Chart() {
       ["Station:", stations[current]["station_name"], "", "", "", "", "",""],
       ["County:", name, "", "", "", "", "",""],
       ["Return Period:", `${options["rp"]}-year`, "", "", "", "", "",""],
-      ["Emission Scenario:", `RCP ${options["emission"]}`, "", "", "", "", "",""],
+      ["Emissions Scenario:", `RCP ${options["emission"]}`, "", "", "", "", "",""],
       ["Time Period:", options["tp"], "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
@@ -142,12 +142,14 @@ function Chart() {
       [`Change Factors for ${name} County`, _10, _25, mean, _75, _90],
       ["", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
-      ["", "", "", `Projected ${options["tp"]} Intensity (inches)`, "", "", "", "Atlas-14 (inches)", "", "Projected Change (inches)"],
-      ["Duration", "10th", "25th", "Mean", "75th", "90th", "Lower Bound", "Observed Intensity", "Upper Bound", "Difference"]
+      ["", "", "", `Projected ${options["tp"]} Depth (inches)`, "", "", "", "Atlas 14 (inches)", "", "Projected Change (inches)"],
+      ["Duration", "10th", "25th", "Mean", "75th", "90th", "Lower Bound", "Observed Depth", "Upper Bound", "Difference"]
     ];
     
     let dataArr = categories.map((duration) => {
-      let row = [duration];  
+      let dur = duration;
+      dur = dur.replace("min", " min").replace("hr", " hr").replace("day", " day");
+      let row = [dur];  
       row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*_10).toFixed(2));
       row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*_25).toFixed(2));
       row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*mean).toFixed(2));
@@ -309,8 +311,8 @@ function Chart() {
       },
 
       title: {
-        text: `<div>IDF Curve: ${options["rp"]}-Year Return Interval with</div>
-        <div>RCP ${options["emission"]} from ${options["tp"]}</div>`,
+        text: `<div>IDF Curve: ${options["rp"]}-Year Return Period Under</div>
+        <div>RCP ${options["emission"]} From ${options["tp"]}</div>`,
         style: { "color": "#000000", "fontSize": "18px" }
       },
 
@@ -364,12 +366,12 @@ function Chart() {
         formatter: function () {
           return this.points.reduce(function (s, point) {
             if (s.includes("min") && !s.includes("minutes")) {
-              s = `<b>${s.match(/\d+/)} minutes</b>`;
+              s = `Duration: <b>${s.match(/\d+/)} minutes</b>`;
             } else if (s.includes("hr")) {
-              s = `<b>${s.match(/\d+/)} hours</b>`;
+              s = `Duration: <b>${s.match(/\d+/)} hours</b>`;
             }
 
-            return `${s}<br/>${point.series.name}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y}</b> inches`;
+            return `${s}<br/>${point.series.name.replace("IDF Curve", `${options["tp"]} Depth`)}: <b>${(point.point.high&&point.point.low) ? `${point.point.low}-${point.point.high}` : point.y} inches</b>`;
           }, "<b>" + xLabels[this.x] + "</b>");
         },
         backgroundColor: "#FFFFFF",
@@ -396,7 +398,7 @@ function Chart() {
       chartOptions.series = [
         ...chartOptions.series,
         {
-          name: "Atlas-14 Bounds",
+          name: "Atlas 14 Confidence Interval",
           type: "arearange",
           color: "#ffa8a8",
           fillOpacity: 0.9,
@@ -430,13 +432,13 @@ function Chart() {
     chartOptions.series = [
       ...chartOptions.series,
       {
-        name: "Atlas-14 Intensity",
+        name: "Atlas 14 IDF Curve",
         type: "line",
         color: "#ff6969",
         data: observed,
         legendIndex: 3
       },{
-        name: `Projected ${options["tp"]}`,
+        name: "Projected IDF Curve",
         type: "line",
         color: "#00b7ff",
         data: projection,
@@ -461,8 +463,8 @@ function Chart() {
         <TableHead>
           <TableRow>
             <TableCell>Duration</TableCell>
-            <TableCell align="center">Atlas-14 Intensity (inches)</TableCell>
-            <TableCell align="center">Projected {options["tp"]} Intensity (inches)</TableCell>
+            <TableCell align="center">Atlas 14 Depth (inches)</TableCell>
+            <TableCell align="center">Projected {options["tp"]} Depth (inches)</TableCell>
             <TableCell align="center">Change (inches)</TableCell>
           </TableRow>
         </TableHead>
@@ -470,10 +472,12 @@ function Chart() {
           {categories.map((duration) => {
             let change = ((parseFloat(station[duration][`${options["rp"]}-mid`])*mean) - parseFloat(station[duration][`${options["rp"]}-mid`])).toFixed(2);
             let sign = change<=0?"":"+";
+            let dur = duration;
+            dur = dur.replace("min", " min").replace("hr", " hr").replace("day", " day");
 
             return (
               <TableRow key={duration}>
-                <TableCell>{duration}</TableCell>
+                <TableCell>{dur}</TableCell>
                 <TableCell align="center">{parseFloat(station[duration][`${options["rp"]}-mid`])}</TableCell>
                 <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*mean).toFixed(2)}</TableCell>
                 <TableCell align="center">{`${sign}${change}`}</TableCell>
@@ -498,7 +502,7 @@ function Chart() {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell className={classes.cell}>Change Factors:</TableCell>   
+            <TableCell className={classes.cell} style={{textAlign: "center"}}>County Change Factors:</TableCell>   
             <TableCell className={classes.cell} align="center">{_10}</TableCell>
             <TableCell className={classes.cell} align="center">{_25}</TableCell>
             <TableCell className={classes.cell} align="center">{mean}</TableCell>
@@ -512,7 +516,7 @@ function Chart() {
                 <TableBody>
                   <TableRow>
                     <TableCell />
-                    <TableCell colSpan={5} align="center" >Projected {options["tp"]} Intensity (inches)</TableCell>
+                    <TableCell colSpan={5} align="center" >Projected {options["tp"]} Depth (inches)</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className={classes.bottomCell}>Duration</TableCell>   
@@ -526,22 +530,27 @@ function Chart() {
               </Table>
             </TableCell>
 
-            <TableCell align="center" className={classes.leftBorder}>Atlas-14 Intensity (inches)</TableCell>
+            <TableCell align="center" className={classes.leftBorder}>Atlas 14 Depth (inches)</TableCell>
           </TableRow>
         </TableHead>
         
         <TableBody>
-          {categories.map(duration => 
-            <TableRow key={duration}>
-              <TableCell className={classes.maxedCell}>{duration}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_10).toFixed(2)}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_25).toFixed(2)}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*mean).toFixed(2)}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_75).toFixed(2)}</TableCell>
-              <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_90).toFixed(2)}</TableCell>
-              <TableCell className="col-shaded" align="center">{parseFloat(station[duration][`${options["rp"]}-mid`])}</TableCell>
-            </TableRow>
-          )}
+          {categories.map((duration) => {
+            let dur = duration;
+            dur = dur.replace("min", " min").replace("hr", " hr").replace("day", " day");
+            
+            return (
+              <TableRow key={duration}>
+                <TableCell className={classes.maxedCell}>{dur}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_10).toFixed(2)}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_25).toFixed(2)}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*mean).toFixed(2)}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_75).toFixed(2)}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_90).toFixed(2)}</TableCell>
+                <TableCell className="col-shaded" align="center">{parseFloat(station[duration][`${options["rp"]}-mid`])}</TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     );
@@ -564,7 +573,7 @@ function Chart() {
               </div>
               <div className="toggle-info-bottom">
                 <div className="dot red"></div>
-                <span>: Atlas-14 Intensity Lower and Upper Bounds</span>
+                <span>: Atlas 14 Confidence Intervals</span>
               </div>
             </div>
           </Fade>
@@ -607,7 +616,7 @@ function Chart() {
           </Button>
         }
         {chart && current && mode === 0 && <div className="ci-toggles">
-          <div className="toggle-label">Toggle Areas</div>
+          <div className="toggle-label">Toggle Confidence Intervals</div>
           <div className="toggle-container"
             onMouseEnter={(event) => setPopperAnchor(event.currentTarget)} 
             onMouseLeave={() => setPopperAnchor(null)} 

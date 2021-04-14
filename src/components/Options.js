@@ -56,7 +56,7 @@ function Options() {
 
         <FormControl>
           <InputLabel id="es" shrink>
-            Emission Scenario
+            Emissions Scenario
           </InputLabel>
           <Select
             labelId="es"
@@ -86,7 +86,7 @@ function Options() {
 
         <FormControl>
           <InputLabel id="aoc">
-            Area of Concern
+            Area of Interest
           </InputLabel>
           <Select
             labelId="aoc"

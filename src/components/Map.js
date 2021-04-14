@@ -332,7 +332,7 @@ function Map() {
           <div className="popup-text">
             <div className="popup-title">{popup.station_name}</div>
             <hr/>
-            <div className="popup-title">Atlas-14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} County:</div>
+            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} County:</div>
             <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["10%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["25%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>Mean:</div> <div>{data[emission][tp][rp][popup.fips].mean.toFixed(2)}</div></div>
@@ -352,7 +352,7 @@ function Map() {
           onClose={() => setPopup(null)}
         >
           <div className="popup-text">
-            <div className="popup-title">Atlas-14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} County:</div>
+            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} County:</div>
             <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["10%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["25%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>Mean:</div> <div>{data[emission][tp][rp][tooltip.id].mean.toFixed(2)}</div></div>
