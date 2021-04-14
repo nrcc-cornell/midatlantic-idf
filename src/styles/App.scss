@@ -19,6 +19,33 @@
     overflow: hidden;
     pointer-events: none;
 
+    #screen-warning {
+      grid-column: 2/24;
+      grid-row: 2/6;
+      height: fit-content;
+      background-color: rgb(255, 0, 0);
+      border: 1px solid rgb(179, 0, 0);
+      color: white;
+      border-radius: 12px;
+      padding: 8px 4px 4px 4px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: bold;
+      text-align: center;
+
+      #warning {
+        font-size: 24px; 
+        margin-bottom: 10px;
+      }
+
+      #warning-text {
+        color: black;
+        background-color: white;
+        padding: 14px;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+    }
+
     .card {
       padding: 18px;
       background-color: rgba(255,255,255,0.70);
