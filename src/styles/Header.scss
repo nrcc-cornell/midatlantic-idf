@@ -74,38 +74,6 @@
   }
 }
 
-.close-modal {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-#custom-modal-title {
-  font-size: 32px;
-  margin-top: 0;
-}
-
-#custom-modal-description {
-
-  .list-title {
-    font-weight: bold;
-  }
-
-  .modal-footnote {
-    margin-top: 20px;
-    font-size: 15px;
-    text-align: center;
-  }
-
-  ul {
-    margin-top: 6px;
-  }
-}
-
 @media (max-width: 988px) {
   #site-title {
     font-size: 19px !important;

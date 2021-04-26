@@ -51,6 +51,12 @@ const useStyles = makeStyles(() => ({
     paddingTop: "6px",
     paddingBottom: "6px"
   },
+  bottomMaxed: {
+    border: "none",
+    paddingTop: "6px",
+    paddingBottom: "6px",
+    width: "106px"
+  },
   containerCell: {
     padding: "0px",
   },
@@ -123,7 +129,7 @@ function Chart() {
     let station = stations[current];
     let fips = station.fips;
     let name = data[options["emission"]][options["tp"]][options["rp"]][fips]["name"];
-    let mean = data[options["emission"]][options["tp"]][options["rp"]][fips]["mean"];
+    let median = data[options["emission"]][options["tp"]][options["rp"]][fips]["median"];
     let _10 = data[options["emission"]][options["tp"]][options["rp"]][fips]["10%"];
     let _90 = data[options["emission"]][options["tp"]][options["rp"]][fips]["90%"];
     let _25 = data[options["emission"]][options["tp"]][options["rp"]][fips]["25%"];
@@ -138,12 +144,12 @@ function Chart() {
       ["Time Period:", options["tp"], "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
-      ["", "10th", "25th", "Mean", "75th", "90th", "", ""],
-      [`Change Factors for ${name} County`, _10, _25, mean, _75, _90],
+      ["", "10th", "25th", "Median", "75th", "90th", "", ""],
+      [`Change Factors for ${name} County`, _10, _25, median, _75, _90],
       ["", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
       ["", "", "", `Projected ${options["tp"]} Depth (inches)`, "", "", "", "Atlas 14 (inches)", "", "Projected Change (inches)"],
-      ["Duration", "10th", "25th", "Mean", "75th", "90th", "Lower Bound", "Observed Depth", "Upper Bound", "Difference"]
+      ["Duration", "10th", "25th", "Median", "75th", "90th", "Lower Bound", "Observed Depth", "Upper Bound", "Difference"]
     ];
     
     let dataArr = categories.map((duration) => {
@@ -152,13 +158,13 @@ function Chart() {
       let row = [dur];  
       row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*_10).toFixed(2));
       row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*_25).toFixed(2));
-      row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*mean).toFixed(2));
+      row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*median).toFixed(2));
       row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*_75).toFixed(2));
       row.push((parseFloat(station[duration][`${options["rp"]}-mid`])*_90).toFixed(2));
       row.push(parseFloat(station[duration][`${options["rp"]}-bound`][0]));
       row.push(parseFloat(station[duration][`${options["rp"]}-mid`]));
       row.push(parseFloat(station[duration][`${options["rp"]}-bound`][1]));
-      row.push(((parseFloat(station[duration][`${options["rp"]}-mid`])*mean) - parseFloat(station[duration][`${options["rp"]}-mid`])).toFixed(2));
+      row.push(((parseFloat(station[duration][`${options["rp"]}-mid`])*median) - parseFloat(station[duration][`${options["rp"]}-mid`])).toFixed(2));
       return row;
     });
 
@@ -203,7 +209,7 @@ function Chart() {
   const renderChart = useCallback(() => {
     let station = stations[current];
     let fips = station.fips;
-    let mean = data[options["emission"]][options["tp"]][options["rp"]][fips]["mean"];
+    let median = data[options["emission"]][options["tp"]][options["rp"]][fips]["median"];
     let _10 = data[options["emission"]][options["tp"]][options["rp"]][fips]["10%"];
     let _90 = data[options["emission"]][options["tp"]][options["rp"]][fips]["90%"];
     let _25 = data[options["emission"]][options["tp"]][options["rp"]][fips]["25%"];
@@ -225,7 +231,7 @@ function Chart() {
       observedInterval.push([xValues[index], parseFloat(parseFloat(station[duration][`${options["rp"]}-bound`][0]).toFixed(2)), parseFloat(parseFloat(station[duration][`${options["rp"]}-bound`][1]).toFixed(3))]);
       projectedInterval90.push([xValues[index], parseFloat((mid*_10).toFixed(2)), parseFloat((mid*_90).toFixed(2))]);
       projectedInterval75.push([xValues[index], parseFloat((mid*_25).toFixed(2)), parseFloat((mid*_75).toFixed(2))]);
-      projection.push([xValues[index], parseFloat((mid*mean).toFixed(2))]);
+      projection.push([xValues[index], parseFloat((mid*median).toFixed(2))]);
     });
 
     let chartOptions = {
@@ -455,7 +461,7 @@ function Chart() {
   const renderComparisonTable = () => {
     let station = stations[current];
     let fips = station.fips;
-    let mean = data[options["emission"]][options["tp"]][options["rp"]][fips]["mean"];
+    let median = data[options["emission"]][options["tp"]][options["rp"]][fips]["median"];
     let categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr", "2day", "3day", "4day", "7day"];
 
     return (
@@ -470,7 +476,7 @@ function Chart() {
         </TableHead>
         <TableBody>
           {categories.map((duration) => {
-            let change = ((parseFloat(station[duration][`${options["rp"]}-mid`])*mean) - parseFloat(station[duration][`${options["rp"]}-mid`])).toFixed(2);
+            let change = ((parseFloat(station[duration][`${options["rp"]}-mid`])*median) - parseFloat(station[duration][`${options["rp"]}-mid`])).toFixed(2);
             let sign = change<=0?"":"+";
             let dur = duration;
             dur = dur.replace("min", " min").replace("hr", " hr").replace("day", " day");
@@ -479,7 +485,7 @@ function Chart() {
               <TableRow key={duration}>
                 <TableCell>{dur}</TableCell>
                 <TableCell align="center">{parseFloat(station[duration][`${options["rp"]}-mid`])}</TableCell>
-                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*mean).toFixed(2)}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*median).toFixed(2)}</TableCell>
                 <TableCell align="center">{`${sign}${change}`}</TableCell>
               </TableRow>
             );
@@ -492,7 +498,7 @@ function Chart() {
   const renderTable = () => {
     let station = stations[current];
     let fips = station.fips;
-    let mean = data[options["emission"]][options["tp"]][options["rp"]][fips]["mean"];
+    let median = data[options["emission"]][options["tp"]][options["rp"]][fips]["median"];
     let _10 = data[options["emission"]][options["tp"]][options["rp"]][fips]["10%"];
     let _90 = data[options["emission"]][options["tp"]][options["rp"]][fips]["90%"];
     let _25 = data[options["emission"]][options["tp"]][options["rp"]][fips]["25%"];
@@ -505,7 +511,7 @@ function Chart() {
             <TableCell className={classes.cell} style={{textAlign: "center"}}>County Change Factors:</TableCell>   
             <TableCell className={classes.cell} align="center">{_10}</TableCell>
             <TableCell className={classes.cell} align="center">{_25}</TableCell>
-            <TableCell className={classes.cell} align="center">{mean}</TableCell>
+            <TableCell className={classes.cell} align="center">{median}</TableCell>
             <TableCell className={classes.cell} align="center">{_75}</TableCell>
             <TableCell className={classes.cell} align="center">{_90}</TableCell>
             <TableCell />
@@ -519,10 +525,10 @@ function Chart() {
                     <TableCell colSpan={5} align="center" >Projected {options["tp"]} Depth (inches)</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className={classes.bottomCell}>Duration</TableCell>   
+                    <TableCell className={classes.bottomMaxed}>Duration</TableCell>   
                     <TableCell className={classes.bottomCell} align="center">10th</TableCell>
                     <TableCell className={classes.bottomCell} align="center">25th</TableCell>
-                    <TableCell className={classes.bottomCell} align="center">Mean</TableCell>
+                    <TableCell className={classes.bottomCell} align="center">Median</TableCell>
                     <TableCell className={classes.bottomCell} align="center">75th</TableCell>
                     <TableCell className={classes.bottomCell} align="center">90th</TableCell>
                   </TableRow>
@@ -544,7 +550,7 @@ function Chart() {
                 <TableCell className={classes.maxedCell}>{dur}</TableCell>
                 <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_10).toFixed(2)}</TableCell>
                 <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_25).toFixed(2)}</TableCell>
-                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*mean).toFixed(2)}</TableCell>
+                <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*median).toFixed(2)}</TableCell>
                 <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_75).toFixed(2)}</TableCell>
                 <TableCell align="center">{(parseFloat(station[duration][`${options["rp"]}-mid`])*_90).toFixed(2)}</TableCell>
                 <TableCell className="col-shaded" align="center">{parseFloat(station[duration][`${options["rp"]}-mid`])}</TableCell>

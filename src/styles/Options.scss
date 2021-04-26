@@ -6,6 +6,7 @@
   overflow: hidden;
   width: 231px;
   overflow-y: auto;
+  z-index: 2;
 
   #input-cont {
     display: flex;
@@ -17,5 +18,11 @@
   #chart-toggle {
     margin-top: auto;
     align-self: flex-end;
+  }
+}
+
+@media (max-height: 750px) {
+  #options-cont {
+    grid-row: 2/18;
   }
 }

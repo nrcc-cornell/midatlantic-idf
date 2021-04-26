@@ -1,0 +1,40 @@
+.close-modal {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+#custom-modal-title {
+  font-size: 32px;
+  margin-top: 0;
+}
+
+#custom-modal-description {
+
+  .list-title {
+    font-weight: bold;
+  }
+
+  .modal-footnote {
+    margin-top: 20px;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  #download-all {
+    background-color: #f50057;
+    color: white;
+    margin-top: 4px;
+    height: 40px;
+    font-size: 13px;
+    margin: 0 calc(50% - 84px);
+  }
+
+  ul {
+    margin-top: 6px;
+  }
+}

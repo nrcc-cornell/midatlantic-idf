@@ -154,9 +154,18 @@ function Map() {
       } else if (viewHeight <= 840 && viewHeight > 800 && zoom >= 5.2) {
         lat = 39.9;
         zoom = 5.2;
-      } else if (viewHeight <= 800 && zoom >= 5.1) {
+      } else if (viewHeight <= 800 && viewHeight > 760 && zoom >= 5.1) {
         lat = 39.9;
         zoom = 5.1;
+      } else if (viewHeight <= 760 && viewHeight > 720 && zoom >= 5.0) {
+        lat = 39.9;
+        zoom = 5.0;
+      } else if (viewHeight <= 720 && viewHeight > 680 && zoom >= 4.9) {
+        lat = 39.9;
+        zoom = 4.9;
+      } else if (viewHeight <= 680 && zoom >= 4.8) {
+        lat = 39.9;
+        zoom = 4.8;
       }
     }
 
@@ -173,15 +182,15 @@ function Map() {
   useEffect(() => {
     if (currentData) {
       let newColorExpression = ["match", ["get", "GEOID"]];
-      Object.entries(currentData).forEach(([id, { mean }]) => {
+      Object.entries(currentData).forEach(([id, { median }]) => {
         let color;
         
-        if(mean > (1 + (max -1) * 2/5)) {
-          color = `hsla(110, ${(mean-1) / (max-1) * 25 + 75}%, ${50 - (mean-1) / (max-1) * 50}%, 1)`;
-        } else if (mean > 1) {
-          color = `hsla(110, ${(mean-1) / (max-1) * 25 + 50}%, ${50 - (mean-1) / (max-1) * 40}%, 1)`;
-        } else if (mean<1) {
-          color = `hsla(40, ${(mean-1) / (min-1) * 25 + 75}%, ${(mean-1) / (min-1) * 20 + 50}%, 1)`;
+        if(median > (1 + (max -1) * 2/5)) {
+          color = `hsla(110, ${(median-1) / (max-1) * 25 + 75}%, ${50 - (median-1) / (max-1) * 50}%, 1)`;
+        } else if (median > 1) {
+          color = `hsla(110, ${(median-1) / (max-1) * 25 + 50}%, ${50 - (median-1) / (max-1) * 40}%, 1)`;
+        } else if (median<1) {
+          color = `hsla(40, ${(median-1) / (min-1) * 25 + 75}%, ${(median-1) / (min-1) * 20 + 50}%, 1)`;
         } else {
           color = "hsla(110,50%,90%,1)";
         }
@@ -335,7 +344,7 @@ function Map() {
             <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} County:</div>
             <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["10%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["25%"].toFixed(2)}</div></div>
-            <div className="popup-num"><div>Mean:</div> <div>{data[emission][tp][rp][popup.fips].mean.toFixed(2)}</div></div>
+            <div className="popup-num"><div>Median:</div> <div>{data[emission][tp][rp][popup.fips].median.toFixed(2)}</div></div>
             <div className="popup-num"><div>75th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["75%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>90th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["90%"].toFixed(2)}</div></div>
             <hr/>
@@ -355,7 +364,7 @@ function Map() {
             <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} County:</div>
             <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["10%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["25%"].toFixed(2)}</div></div>
-            <div className="popup-num"><div>Mean:</div> <div>{data[emission][tp][rp][tooltip.id].mean.toFixed(2)}</div></div>
+            <div className="popup-num"><div>Median:</div> <div>{data[emission][tp][rp][tooltip.id].median.toFixed(2)}</div></div>
             <div className="popup-num"><div>75th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["75%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>90th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["90%"].toFixed(2)}</div></div>
             <hr/>

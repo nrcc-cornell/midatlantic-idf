@@ -24,15 +24,21 @@ export default function Legend() {
   
   return (
     <div className="legend-controls-container">
-      <div id="legend">
-        <div id="legend-color" style={{
-          backgroundImage: "linear-gradient(270deg,hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1) 40%, hsla(110,50%,90%,1) 50%, hsla(40, 100%, 70%, 1))"
-        }}>
+      <div id="legend-wrapper">
+        <div id="legend">
+          <div id="legend-color" style={{
+            backgroundImage: "linear-gradient(270deg,hsla(110, 100%, 0%, 1), hsla(110, 75%, 50%, 1) 40%, hsla(110,50%,90%,1) 50%, hsla(40, 100%, 70%, 1))"
+          }}>
+          </div>
+        </div>
+        <div id="legend-units">
+          <div id="legend-title">Median County Change Factor</div>
           <div className="legend-text">{min}</div>
           <div className="legend-text">1.0</div>
           <div className="legend-text">{max}</div>
         </div>
       </div>
+      
       <div id="legend-lines">
         <div className="legend-item">
           <div className="line-wrapper">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import CloseIcon from "@material-ui/icons/Close";
 
 import "./styles/App.scss";
 
@@ -20,12 +21,13 @@ function App() {
   const [chart, setChart] = useState(false);
   const [current, setCurrent] = useState(null);
   const [windowSize, setWindowSize] = useState({height: true, width: true});
+  const [warning, setWarning] = useState(true);
 
   let width = useCurrentWidth();
   let height = useCurrentHeight();
 
   useEffect(() => {
-    setWindowSize({height: (height > 767), width: (width > 1023)});
+    setWindowSize({height: (height > 650), width: (width > 1000)});
   }, [height, width]);
 
   return (
@@ -38,9 +40,10 @@ function App() {
         
               <Map />
               <div id="grid">
-                {(!windowSize.height || !windowSize.width) && <div id="screen-warning">
+                {warning && (!windowSize.height || !windowSize.width) && <div id="screen-warning">
                   <div id="warning">Warning</div>
-                  <div id="warning-text">This app was designed for use with desktop displays. For a better user experience, please increase the size of your browser window or view on a larger screen.</div>
+                  <div id="warning-text">This app was designed for use with desktop displays. For a better user experience, please increase the {windowSize.height ? "width" : (windowSize.width ? "height" : "height and width")} of your browser window or view on a larger screen.</div>
+                  <div id="warning-close"><CloseIcon onClick={() => setWarning(!warning)} /></div>
                 </div>}
                 <Options />
                 <Favorites />

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Modal } from "@material-ui/core";
+import { Modal, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
+
+import "../styles/CustomModal.scss";
 
 function getModalStyle() {
   return {
@@ -41,6 +43,13 @@ export default function CustomModal() {
     contentType === "tr" ? setContent(trBody) : (contentType === "utt" ? setContent(uttBody) : setContent(utdBody));
   };
 
+  const handleDownload = () => {
+    var a = document.createElement("a");
+    a.href = process.env.PUBLIC_URL + "/fullData/IDF_Curve_Data.zip";
+    a.setAttribute("download", "IDF_Curve_Data.zip");
+    a.click();
+  };
+
   const trBody = (
     <div style={modalStyle} className={classes.paper}>
       <div className="close-modal"><CloseIcon onClick={handleClose} /></div>
@@ -69,9 +78,9 @@ export default function CustomModal() {
           <li>Michelle E. Miro (Principal Investigator), RAND Corporation</li>
           <li>Arthur T. DeGaetano (Cornell Co-Principal Investigator), Northeast Regional Climate Center</li>
           <li>Constantine Samaras (CMU Co-Principal Investigator), Carnegie Mellon University</li>
+          <li>Krista Romita Grocholski, (RAND Co-Principal Investigator), RAND Corporation</li>
           <li>Tania López-Cantú, Carnegie Mellon University</li>
           <li>Marissa Webber, Carnegie Mellon University</li>
-          <li>Krista Romita Grocholski, RAND Corporation</li>
         </ul>
         <div className="modal-footnote"><i>For questions on the study please reach out to Michelle Miro at <a href="mailto: michelle_miro@rand.org">michelle_miro@rand.org</a></i></div>
       </div>
@@ -96,6 +105,14 @@ export default function CustomModal() {
           <li>Do not apply change factors directly to Atlas 14 values that have a different time period than that in the tool (1950-2000).</li>
           <li>Do not apply change factors to IDF curves not available from Atlas 14.</li>
         </ul>
+        <Button
+          id="download-all"
+          aria-label="download all data"
+          backgroundColor="secondary"
+          onClick={handleDownload}
+        >
+          Download All Data
+        </Button>
       </div>
     </div>
   );
@@ -125,7 +142,7 @@ export default function CustomModal() {
         <ul>
           <li>Images of station-based projected IDF curve charts can be downloaded by selecting the three horizontal lines in the upper right corner of the Charts tab for a given station.</li>
           <li>A .csv file of station-based projected IDF curve values can be downloaded by selecting “Download CSV” from the Table tab for a given station.</li>
-          <li>All data can be downloaded by [TBD].</li>
+          <li>All data can be downloaded from the &quot;Using the Data&quot; tab.</li>
         </ul>
         <div className="list-title">Supported Browsers:</div>
         <ul>
@@ -147,6 +164,7 @@ export default function CustomModal() {
         aria-describedby="custom-modal-description"
       >
         {content}
+          
       </Modal>
     </div>
   );
