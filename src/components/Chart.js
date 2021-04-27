@@ -41,27 +41,15 @@ const useStyles = makeStyles(() => ({
     padding: "15px",
     width: "350px"
   },
-  cell: {
-    paddingTop: "6px",
-    paddingBottom: "6px",
-    backgroundColor: "#FFFFFF"
-  },
-  bottomCell: {
-    border: "none",
-    paddingTop: "6px",
-    paddingBottom: "6px"
-  },
-  bottomMaxed: {
-    border: "none",
-    paddingTop: "6px",
-    paddingBottom: "6px",
-    width: "106px"
-  },
   containerCell: {
     padding: "0px",
   },
   maxedCell: {
     width: "106px"
+  },
+  maxedCellHead: {
+    width: "106px",
+    textAlign: "left !important"
   },
   underlined: {
     borderBottomWidth: "1px",
@@ -79,6 +67,15 @@ const useStyles = makeStyles(() => ({
   },
   small_tabs: {
     minWidth: "100px"
+  },
+  short_cell: {
+    paddingTop: "5px",
+    paddingBottom: "5px",
+    borderBottom: "none"
+  },
+  short_cell_bordered: {
+    paddingTop: "5px",
+    paddingBottom: "5px",
   }
 }));
 
@@ -508,12 +505,12 @@ function Chart() {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell className={classes.cell} style={{textAlign: "center"}}>County Change Factors:</TableCell>   
-            <TableCell className={classes.cell} align="center">{_10}</TableCell>
-            <TableCell className={classes.cell} align="center">{_25}</TableCell>
-            <TableCell className={classes.cell} align="center">{median}</TableCell>
-            <TableCell className={classes.cell} align="center">{_75}</TableCell>
-            <TableCell className={classes.cell} align="center">{_90}</TableCell>
+            <TableCell className={classes.short_cell_bordered}>Percentile</TableCell>
+            <TableCell className={classes.short_cell_bordered} align="center">10th</TableCell>
+            <TableCell className={classes.short_cell_bordered} align="center">25th</TableCell>
+            <TableCell className={classes.short_cell_bordered} align="center">Median</TableCell>
+            <TableCell className={classes.short_cell_bordered} align="center">75th</TableCell>
+            <TableCell className={classes.short_cell_bordered} align="center">90th</TableCell>
             <TableCell />
           </TableRow>
           <TableRow className="sticky-row">
@@ -521,16 +518,16 @@ function Chart() {
               <Table className={classes.innerTable}>
                 <TableBody>
                   <TableRow>
-                    <TableCell />
-                    <TableCell colSpan={5} align="center" >Projected {options["tp"]} Depth (inches)</TableCell>
+                    <TableCell className={classes.maxedCellHead} style={{textAlign: "center"}}>County Change Factors:</TableCell>   
+                    <TableCell align="center">{_10}</TableCell>
+                    <TableCell align="center">{_25}</TableCell>
+                    <TableCell align="center">{median}</TableCell>
+                    <TableCell align="center">{_75}</TableCell>
+                    <TableCell align="center">{_90}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className={classes.bottomMaxed}>Duration</TableCell>   
-                    <TableCell className={classes.bottomCell} align="center">10th</TableCell>
-                    <TableCell className={classes.bottomCell} align="center">25th</TableCell>
-                    <TableCell className={classes.bottomCell} align="center">Median</TableCell>
-                    <TableCell className={classes.bottomCell} align="center">75th</TableCell>
-                    <TableCell className={classes.bottomCell} align="center">90th</TableCell>
+                    <TableCell className={classes.short_cell}>Duration</TableCell>   
+                    <TableCell className={classes.short_cell} colSpan={5} align="center" >Projected {options["tp"]} Depth (inches)</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
