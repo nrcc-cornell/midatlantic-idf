@@ -31,11 +31,11 @@ function Map() {
   useEffect(() => {
     const newCurrentData = data[emission][tp][rp];
   
-    let tempMax = Math.ceil(newCurrentData.max*10)/10;
-    let tempMin = Math.floor(newCurrentData.min*10)/10;
-  
-    setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*10)/10);
-    setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*10)/10);
+    let tempMax = Math.ceil(newCurrentData.max*100)/100;
+    let tempMin = Math.floor(newCurrentData.min*100)/100;
+
+    setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*100)/100);
+    setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*100)/100);
     setCurrentData(newCurrentData);
   }, [emission, tp, rp]);
 
@@ -182,21 +182,57 @@ function Map() {
   useEffect(() => {
     if (currentData) {
       let newColorExpression = ["match", ["get", "GEOID"]];
+
+      const getColorValue = (proportion, range, base) => {
+        return base + proportion * range;
+      };
+
+      // let values = {};
+      // let counter = 0;
+
       Object.entries(currentData).forEach(([id, { median }]) => {
         let color;
+
+        // if(median > (1 + (max -1) * 2/5)) {
+        //   color = `hsla(110, ${(median-1) / (max-1) * 25 + 75}%, ${50 - (median-1) / (max-1) * 50}%, 1)`;
+        // } else if (median > 1) {
+        //   color = `hsla(110, ${(median-1) / (max-1) * 25 + 50}%, ${50 - (median-1) / (max-1) * 40}%, 1)`;
+        // } else if (median<1) {
+        //   color = `hsla(40, ${(median-1) / (min-1) * 25 + 75}%, ${(median-1) / (min-1) * 20 + 50}%, 1)`;
+        // } else {
+        //   color = "hsla(110,50%,90%,1)";
+        // }
+        // counter += 1;
+        // (Object.keys(values).includes(String(median))) ? values[median]+=1 : values[median] = 1; 
         
-        if(median > (1 + (max -1) * 2/5)) {
-          color = `hsla(110, ${(median-1) / (max-1) * 25 + 75}%, ${50 - (median-1) / (max-1) * 50}%, 1)`;
-        } else if (median > 1) {
-          color = `hsla(110, ${(median-1) / (max-1) * 25 + 50}%, ${50 - (median-1) / (max-1) * 40}%, 1)`;
-        } else if (median<1) {
-          color = `hsla(40, ${(median-1) / (min-1) * 25 + 75}%, ${(median-1) / (min-1) * 20 + 50}%, 1)`;
+
+        if(median > 1) {
+          let value = median - 1;
+          let upperRange = max - 1;
+          let proportion = value / upperRange;
+
+          if (proportion < 0.05) {
+            proportion = value / (upperRange * 0.05);
+            color = `rgba(${getColorValue(proportion, -190, 255)}, ${getColorValue(proportion, -30, 255)}, ${getColorValue(proportion, -225, 255)}, 1)`;
+          } else if (proportion < 0.34) {
+            proportion = (value - upperRange * 0.05) / (upperRange * 0.34 - upperRange * 0.05);
+            color = `rgba(${getColorValue(proportion, -30, 65)}, ${getColorValue(proportion, -120, 225)}, 30, 1)`;
+          } else {
+            proportion = (value - upperRange * 0.34) / (upperRange - upperRange * 0.34);
+            color = `rgba(35, ${getColorValue(proportion, -65, 105)}, ${getColorValue(proportion, 195, 30)}, 1)`;
+          }
+        } else if (median < 1) {
+          let proportion = (1 - median) / (1 - min);
+          color = `rgba(255, ${getColorValue(proportion, -50, 255)}, ${getColorValue(proportion, -155, 255)}, 1)`;
         } else {
-          color = "hsla(110,50%,90%,1)";
+          color = "rgba(255,255,255,1)";
         }
         
         newColorExpression.push(id, color);
       });
+
+      // console.log(values);
+      // console.log(counter);
       
       newColorExpression.push("rgba(0, 0, 0, 0)");
       
@@ -230,10 +266,15 @@ function Map() {
     "source-layer": "counties-dasd61",
     layout: {
       "text-field": ["get", "name"],
-      "text-size": 12, 
+      "text-size": 14,
     },
     paint: {
-      "text-color": "#dddddd"
+      // "text-halo-width": 1,
+      // "text-halo-color": "rgba(0,0,0,1)",
+      // "text-color": "#dddddd"
+      "text-halo-width": 1,
+      "text-halo-color": "#dddddd",
+      "text-color": "rgba(0,0,0,1)"
     }
   };
 

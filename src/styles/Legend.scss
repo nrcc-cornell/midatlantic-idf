@@ -64,8 +64,37 @@
         font-weight: bold;
         background-color: white;
         padding: 3px 6px;
-        width: 175px;
+        width: 190px;
         border-radius: 100px;
+        
+        #cf-definition {
+          position: absolute;
+          top: -2px;
+          right: 6px;
+          font-size: 10px;
+    
+          &:hover {
+            cursor: pointer;
+          }
+
+          .MuiSvgIcon-root {
+            width: 14px;
+            color: #3678dc;
+          }
+
+          #cf-definition-popper {
+            position: absolute;
+            top: -180px;
+            transform: translateX(-50%);
+            background-color: white;
+            padding: 20px;
+            width: 200px;
+            font-size: 14px;
+            font-weight: 400;
+            border-radius: 7px;
+            box-shadow: 5px 5px 20px 0 rgba(0,0,0,0.20);
+          }
+        }
       }
     }
   }

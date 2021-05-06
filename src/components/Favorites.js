@@ -105,7 +105,7 @@ export default function Favorites() {
       
       <div id="favorites-cont">
         <div id="srw" className="card">
-          <Typography style = {{flexBasis: "100%"}} variant="caption">Favorited Stations</Typography>
+          <Typography style = {{flexBasis: "100%"}} variant="caption">Saved Stations</Typography>
           {renderFavorite()}
         </div>
       </div>

@@ -18,12 +18,14 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     width: "575px",
     height: "fit-content",
+    maxHeight: "calc(100vh - 40px)",
+    overflow: "auto",
     backgroundColor: theme.palette.background.paper,
     border: "none",
     borderRadius: "20px",
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2,4,3),
     outline: "none",
+    padding: "12px 32px"
   },
 }));
 
@@ -82,7 +84,11 @@ export default function CustomModal() {
           <li>Tania López-Cantú, Carnegie Mellon University</li>
           <li>Marissa Webber, Carnegie Mellon University</li>
         </ul>
-        <div className="modal-footnote"><i>For questions on the study please reach out to Michelle Miro at <a href="mailto: michelle_miro@rand.org">michelle_miro@rand.org</a></i></div>
+        <div className="list-title">Citation:</div>
+        <ul>
+          <li>Miro, M., DeGaetano, A., Samaras. C., Romita Grocholski, K., López-Cantú, T., Webber, M., Eck, B. (2021). “Projected Intensity-Duration-Frequency (IDF) Curve Tool for the Chesapeake Bay Watershed and Virginia”. Northeast Regional Climate Center. <a href="https://midatlantic-idf.rcc-acis.org/">https://midatlantic-idf.rcc-acis.org/</a></li>
+        </ul>
+        <div className="modal-footnote"><i>For feedback on the tool or questions on the study please reach out to Michelle Miro at <a href="mailto: michelle_miro@rand.org">michelle_miro@rand.org</a></i></div>
       </div>
     </div>
   );
@@ -131,12 +137,14 @@ export default function CustomModal() {
         <div className="list-title">Individual IDF Curves:</div>
         <ul>
           <li>For each station, IDF curves (see Chart tab) and tabular IDF curve values (see Table tab) can be accessed by clicking the blue location marker for the station of interest.</li>
+          <li>Stations can be saved clicking the star next to the station name in the &quot;Currently Selected&quot; box.</li>
           <li>Users can view a comparison of Projected and Atlas 14 values in the Comparison tab.</li>
         </ul>
         <div className="list-title">Selection Panel:</div>
         <ul>
           <li>Users can select the return period, future time period of interest and future emissions scenario in the drop-down menu.</li>
           <li>Area of Interest allows users to select the Chesapeake Bay Watershed, Virginia or Both.</li>
+          <li>For each time period, users can also select a future greenhouse gas emissions scenario under Emissions Scenario by selecting a low emissions future, Representative Concentration Pathway (RCP) 4.5, or a high emissions future, RCP 8.5.</li>
         </ul>
         <div className="list-title">Downloading Data:</div>
         <ul>
