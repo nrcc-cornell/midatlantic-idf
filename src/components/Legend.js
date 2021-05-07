@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 
-import { data } from "../data";
+// import { data } from "../data";
 
 import { OptionsContext } from "../contexts/OptionsContext";
 
@@ -15,13 +15,15 @@ export default function Legend() {
   const [max, setMax] = useState(0);
   
   useEffect(() => {
-    const currentData = data[emission][tp][rp];
+    // const currentData = data[emission][tp][rp];
   
-    let tempMax = Math.ceil(currentData.max*100)/100;
-    let tempMin = Math.floor(currentData.min*100)/100;
+    // let tempMax = Math.ceil(currentData.max*100)/100;
+    // let tempMin = Math.floor(currentData.min*100)/100;
   
-    setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*100)/100);
-    setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*100)/100);
+    // setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*100)/100);
+    // setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*100)/100);
+    setMax(1.30);
+    setMin(1.30);
   }, [emission, tp, rp]);
   
   return (
@@ -42,7 +44,7 @@ export default function Legend() {
               onMouseLeave={() => setIsShown(false)}
             >
               <HelpOutlineIcon />
-              {isShown && <div id="cf-definition-popper" className="card">The Change Factor is the ratio between future and historic IDF curve values and represents the change we anticipate in the magnitude of precipitation events. A change factor of 1.0 indicates no change between historic and future conditions.</div>}
+              {isShown && <div id="cf-definition-popper">The Change Factor is the ratio between future and historic IDF curve values and represents the change we anticipate in the magnitude of precipitation events. A change factor of 1.0 indicates no change between historic and future conditions.</div>}
             </div>
           </div>
           <div className="legend-text">{min}</div>

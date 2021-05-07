@@ -132,11 +132,11 @@ export default function CustomModal() {
         <div className="list-title">Available Data:</div>
         <ul>
           <li>County-level IDF curve change factors that can be accessed by hovering your mouse over a given county.</li>
-          <li>Station-based projected IDF curves, which constitute Atlas 14 values with the county-level change factors already applied. These can be accessed by selecting a station in the map, indicated with blue location markers.</li>
+          <li>Station-based projected IDF curves, which constitute Atlas 14 values with the county-level change factors already applied. These can be accessed by selecting a station in the map, indicated with white location markers.</li>
         </ul>
         <div className="list-title">Individual IDF Curves:</div>
         <ul>
-          <li>For each station, IDF curves (see Chart tab) and tabular IDF curve values (see Table tab) can be accessed by clicking the blue location marker for the station of interest.</li>
+          <li>For each station, IDF curves (see Chart tab) and tabular IDF curve values (see Table tab) can be accessed by clicking the white location marker for the station of interest.</li>
           <li>Stations can be saved clicking the star next to the station name in the &quot;Currently Selected&quot; box.</li>
           <li>Users can view a comparison of Projected and Atlas 14 values in the Comparison tab.</li>
         </ul>

@@ -31,11 +31,13 @@ function Map() {
   useEffect(() => {
     const newCurrentData = data[emission][tp][rp];
   
-    let tempMax = Math.ceil(newCurrentData.max*100)/100;
-    let tempMin = Math.floor(newCurrentData.min*100)/100;
+    // let tempMax = Math.ceil(newCurrentData.max*100)/100;
+    // let tempMin = Math.floor(newCurrentData.min*100)/100;
 
-    setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*100)/100);
-    setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*100)/100);
+    // setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*100)/100);
+    // setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*100)/100);
+    setMax(1.30);
+    setMin(1.30);
     setCurrentData(newCurrentData);
   }, [emission, tp, rp]);
 
@@ -266,15 +268,15 @@ function Map() {
     "source-layer": "counties-dasd61",
     layout: {
       "text-field": ["get", "name"],
-      "text-size": 14,
+      "text-size": 12,
     },
     paint: {
-      // "text-halo-width": 1,
-      // "text-halo-color": "rgba(0,0,0,1)",
-      // "text-color": "#dddddd"
       "text-halo-width": 1,
-      "text-halo-color": "#dddddd",
-      "text-color": "rgba(0,0,0,1)"
+      "text-halo-color": "rgba(0,0,0,1)",
+      "text-color": "#dddddd"
+      // "text-halo-width": 1,
+      // "text-halo-color": "#dddddd",
+      // "text-color": "rgba(0,0,0,1)"
     }
   };
 
