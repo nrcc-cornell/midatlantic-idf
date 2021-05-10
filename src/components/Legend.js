@@ -22,8 +22,8 @@ export default function Legend() {
   
     // setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*100)/100);
     // setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*100)/100);
+    setMin(0.7);
     setMax(1.30);
-    setMin(1.30);
   }, [emission, tp, rp]);
   
   return (
