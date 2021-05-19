@@ -23,21 +23,13 @@ function Map() {
   const [popup, setPopup] = useState(null);
   const [tooltip, setTooltip] = useState(null);
   const [countyFilter, setCountyFilter] = useState(counties);
-  const [min, setMin] = useState(0);
-  const [max, setMax] = useState(0);
   const [currentData, setCurrentData] = useState(null);
   const [colorExpression, setColorExpression] = useState(null);
+
+  const minMax = 1.30;
  
   useEffect(() => {
     const newCurrentData = data[emission][tp][rp];
-  
-    // let tempMax = Math.ceil(newCurrentData.max*100)/100;
-    // let tempMin = Math.floor(newCurrentData.min*100)/100;
-
-    // setMax(Math.round((1+Math.max(tempMax-1, 1-tempMin))*100)/100);
-    // setMin(Math.round((1-Math.max(tempMax-1, 1-tempMin))*100)/100);
-    setMax(1.30);
-    setMin(1.30);
     setCurrentData(newCurrentData);
   }, [emission, tp, rp]);
 
@@ -189,28 +181,12 @@ function Map() {
         return base + proportion * range;
       };
 
-      // let values = {};
-      // let counter = 0;
-
       Object.entries(currentData).forEach(([id, { median }]) => {
         let color;
 
-        // if(median > (1 + (max -1) * 2/5)) {
-        //   color = `hsla(110, ${(median-1) / (max-1) * 25 + 75}%, ${50 - (median-1) / (max-1) * 50}%, 1)`;
-        // } else if (median > 1) {
-        //   color = `hsla(110, ${(median-1) / (max-1) * 25 + 50}%, ${50 - (median-1) / (max-1) * 40}%, 1)`;
-        // } else if (median<1) {
-        //   color = `hsla(40, ${(median-1) / (min-1) * 25 + 75}%, ${(median-1) / (min-1) * 20 + 50}%, 1)`;
-        // } else {
-        //   color = "hsla(110,50%,90%,1)";
-        // }
-        // counter += 1;
-        // (Object.keys(values).includes(String(median))) ? values[median]+=1 : values[median] = 1; 
-        
-
         if(median > 1) {
           let value = median - 1;
-          let upperRange = max - 1;
+          let upperRange = minMax - 1;
           let proportion = value / upperRange;
 
           if (proportion < 0.05) {
@@ -224,7 +200,7 @@ function Map() {
             color = `rgba(35, ${getColorValue(proportion, -65, 105)}, ${getColorValue(proportion, 195, 30)}, 1)`;
           }
         } else if (median < 1) {
-          let proportion = (1 - median) / (1 - min);
+          let proportion = (1 - median) / (1 - minMax);
           color = `rgba(255, ${getColorValue(proportion, -50, 255)}, ${getColorValue(proportion, -155, 255)}, 1)`;
         } else {
           color = "rgba(255,255,255,1)";
@@ -233,9 +209,6 @@ function Map() {
         newColorExpression.push(id, color);
       });
 
-      // console.log(values);
-      // console.log(counter);
-      
       newColorExpression.push("rgba(0, 0, 0, 0)");
       
       setColorExpression(newColorExpression);
@@ -245,7 +218,7 @@ function Map() {
   const countyLayer = {
     id: "county-join",
     type: "fill",
-    "source-layer": "cb_2018_us_county_500k-bbf38a",
+    "source-layer": "cb_2019_us_county_500k-ctuas3",
     paint: {
       "fill-color": colorExpression,
       "fill-outline-color": "rgba(100,100,100,1)"
@@ -255,7 +228,7 @@ function Map() {
   const countyLines = {
     id: "county-join-line",
     type: "line",
-    "source-layer": "cb_2018_us_county_500k-bbf38a",
+    "source-layer": "cb_2019_us_county_500k-ctuas3",
     paint: {
       "line-color": "rgba(100,100,100,1)",
       "line-width": 1
@@ -265,7 +238,7 @@ function Map() {
   const countyNameLayer = {
     id: "county-join-names",
     type: "symbol",
-    "source-layer": "counties-dasd61",
+    "source-layer": "counties-04lavc",
     layout: {
       "text-field": ["get", "name"],
       "text-size": 12,
@@ -274,9 +247,6 @@ function Map() {
       "text-halo-width": 1,
       "text-halo-color": "rgba(0,0,0,1)",
       "text-color": "#dddddd"
-      // "text-halo-width": 1,
-      // "text-halo-color": "#dddddd",
-      // "text-color": "rgba(0,0,0,1)"
     }
   };
 
@@ -347,19 +317,22 @@ function Map() {
         width= "100%"
         height= "100%"
         onViewportChange={nextViewport => handlePanning(nextViewport)}
-        mapboxApiAccessToken="pk.eyJ1IjoiYmVuZWNrIiwiYSI6ImNrbTBvNWNtdTB1eXUyb21yeWhpbWZrYWMifQ.rSYtPIiS9ZbnnCdSbtm4wQ"
-        mapStyle="mapbox://styles/beneck/ckm0vcgpk82b117nlfwc1ixt8"
+        mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmRnbmZ0MDY4cTJxbXVtd2ljbzM1dCJ9.cJ61fxIj6jjOC21hvg6-Zw"
+        mapStyle="mapbox://styles/idfcurvetooladmin/ckove1z9e3ag118pejlfzr2mm"
         onHover={handleHover}
       >
-        <Source type = "vector" url = "mapbox://beneck.3at6c9tb" >
+        {/* <Source type = "vector" url = "mapbox://beneck.3at6c9tb" > */}
+        <Source type = "vector" url = "mapbox://idfcurvetooladmin.4m2esy6q" >
           <Layer beforeId='states-filtered' {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
         </Source>
 
-        <Source type = "vector" url = "mapbox://beneck.3at6c9tb" >
+        {/* <Source type = "vector" url = "mapbox://beneck.3at6c9tb" > */}
+        <Source type = "vector" url = "mapbox://idfcurvetooladmin.4m2esy6q" >
           <Layer beforeId='states-filtered' {...countyLines} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
         </Source>
 
-        <Source type = "vector" url = "mapbox://beneck.5cjncwf0" >
+        {/* <Source type = "vector" url = "mapbox://beneck.5cjncwf0" > */}
+        <Source type = "vector" url = "mapbox://idfcurvetooladmin.75wh3fpp" >
           <Layer {...countyNameLayer} filter={["in", ["to-string", ["get", "geoid"]], ["literal", countyFilter]]}/>
         </Source>
         
