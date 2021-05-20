@@ -70,9 +70,24 @@
     display: flex;
     align-items: center;
     text-align: center;
+    overflow: visible;
 
     &:hover {
       cursor: default;
+    }
+
+    #full-location {
+      position: absolute;
+      bottom: 40px;
+      right: 0px;
+      background-color: white;
+      border: 1px solid rgb(110,110,110);
+      box-shadow: 3px 3px 6px 1px rgba(110,110,110,0.5);
+      z-index: 1;
+      padding: 3px 10px;
+      white-space: nowrap;
+      border-radius: 5px;
+      width: fit-content;
     }
   }
 

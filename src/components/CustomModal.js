@@ -65,8 +65,9 @@ export default function CustomModal() {
         </ul>
         <div className="list-title">Instructional Webinar:</div>
         <ul>
-          <li>The following webinar provides an overview of the study and a demo of this tool: Coming soon.</li>
+          <li>The following webinar provides an overview of the study and a demo of this tool:</li>
         </ul>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/IjKMFIs7JX0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
         <div className="list-title">Journal Publications:</div>
         <ul>
           <li><i>Citations and links will be added as journal articles are published.</i></li>

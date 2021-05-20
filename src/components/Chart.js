@@ -113,15 +113,16 @@ function Chart() {
   const {chart, setChart} = useContext(ChartContext); // context that turns chart panel on/off
   const {current} = useContext(CurrentContext); // context that keeps track of the current station
   const {options} = useContext(OptionsContext); // context that keeps track of the chart options
- 
+  
   const [mode, setMode] = useState(0); // state that toggle between chart and tables, 0 for chart, 1 for table, 2 for comparison table
   const [showCIs, setShowCIs] = useState({ "projectedCIs": true, "observedCIs": false }); // state that toggles the CIs on the chart
   const [popperAnchor, setPopperAnchor] = useState(false);
- 
+  const [showStationName, setShowStationName] = useState(false);
+  
   const tabPanel = useRef();
- 
+  
   const classes = useStyles();
-
+  
   const handleDownload = () => {
     let station = stations[current];
     let fips = station.fips;
@@ -597,7 +598,13 @@ function Chart() {
 
   return (
     <div id="chart-cont" className={`card ${!chart && "hidden"}`}>
-      <div className="station-name"><div>{chart && current && stationName()}</div></div>
+      <div className="station-name"
+        onMouseEnter={() => setShowStationName(true)}
+        onMouseLeave={() => setShowStationName(false)}
+      >
+        {chart && current && stationName()}
+        {showStationName && <div id="full-location">{stations[current].station_name + ", " + data[options["emission"]][options["tp"]][options["rp"]][stations[current].fips]["name"] + " County, " + stations[current].state}</div>}
+      </div>
       <div className="zoom-instructions">Click and drag on chart to zoom</div>
       <div className="close-btn"><CloseIcon onClick={() => setChart(!chart)} /></div>
       <div id="chart-control">
