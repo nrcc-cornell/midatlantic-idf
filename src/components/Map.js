@@ -358,8 +358,7 @@ function Map() {
         width= "100%"
         height= "100%"
         onViewportChange={nextViewport => handlePanning(nextViewport)}
-        // mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmRnbmZ0MDY4cTJxbXVtd2ljbzM1dCJ9.cJ61fxIj6jjOC21hvg6-Zw"
-        mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmNzNDNpMDY3NjJ2cHVrZnQ0aGlzZCJ9.02I6HTQyYydrhUbM_D5s8A"
+        mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmRnbmZ0MDY4cTJxbXVtd2ljbzM1dCJ9.cJ61fxIj6jjOC21hvg6-Zw"
         mapStyle="mapbox://styles/idfcurvetooladmin/ckove1z9e3ag118pejlfzr2mm"
         onHover={handleHover}
       >
@@ -399,7 +398,7 @@ function Map() {
           <div className="popup-text">
             <div className="popup-title">{popup.station_name}</div>
             <hr/>
-            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} {citiesFips.includes(popup.fips) ? "City" : "County"}:</div>
+            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} {citiesFips.includes(String(popup.fips)) ? "City" : "County"}:</div>
             <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["10%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["25%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>Median:</div> <div>{data[emission][tp][rp][popup.fips].median.toFixed(2)}</div></div>
@@ -419,7 +418,7 @@ function Map() {
           onClose={() => setPopup(null)}
         >
           <div className="popup-text">
-            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} {citiesFips.includes(tooltip.id) ? "City" : "County"}:</div>
+            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} {citiesFips.includes(String(tooltip.id)) ? "City" : "County"}:</div>
             <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["10%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["25%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>Median:</div> <div>{data[emission][tp][rp][tooltip.id].median.toFixed(2)}</div></div>
