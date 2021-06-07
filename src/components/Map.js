@@ -27,6 +27,47 @@ function Map() {
   const [colorExpression, setColorExpression] = useState(null);
 
   const minMax = 1.30;
+  const citiesFips = [
+    "51510",
+    "51515",
+    "51520",
+    "51530",
+    "51540",
+    "51550",
+    "51570",
+    "51580",
+    "51590",
+    "51595",
+    "51600",
+    "51610",
+    "51620",
+    "51630",
+    "51640",
+    "51650",
+    "51660",
+    "51670",
+    "51678",
+    "51680",
+    "51683",
+    "51685",
+    "51690",
+    "51700",
+    "51710",
+    "51720",
+    "51730",
+    "51735",
+    "51740",
+    "51750",
+    "51760",
+    "51770",
+    "51775",
+    "51790",
+    "51800",
+    "51810",
+    "51820",
+    "51830",
+    "51840",
+  ];
  
   useEffect(() => {
     const newCurrentData = data[emission][tp][rp];
@@ -317,7 +358,8 @@ function Map() {
         width= "100%"
         height= "100%"
         onViewportChange={nextViewport => handlePanning(nextViewport)}
-        mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmRnbmZ0MDY4cTJxbXVtd2ljbzM1dCJ9.cJ61fxIj6jjOC21hvg6-Zw"
+        // mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmRnbmZ0MDY4cTJxbXVtd2ljbzM1dCJ9.cJ61fxIj6jjOC21hvg6-Zw"
+        mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmNzNDNpMDY3NjJ2cHVrZnQ0aGlzZCJ9.02I6HTQyYydrhUbM_D5s8A"
         mapStyle="mapbox://styles/idfcurvetooladmin/ckove1z9e3ag118pejlfzr2mm"
         onHover={handleHover}
       >
@@ -357,7 +399,7 @@ function Map() {
           <div className="popup-text">
             <div className="popup-title">{popup.station_name}</div>
             <hr/>
-            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} County:</div>
+            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][popup.fips]["name"]} {citiesFips.includes(popup.fips) ? "City" : "County"}:</div>
             <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["10%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][popup.fips]["25%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>Median:</div> <div>{data[emission][tp][rp][popup.fips].median.toFixed(2)}</div></div>
@@ -377,7 +419,7 @@ function Map() {
           onClose={() => setPopup(null)}
         >
           <div className="popup-text">
-            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} County:</div>
+            <div className="popup-title">Atlas 14 Change Factors for {data[emission][tp][rp][tooltip.id]["name"]} {citiesFips.includes(tooltip.id) ? "City" : "County"}:</div>
             <div className="popup-num"><div>10th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["10%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>25th Percentile:</div> <div>{data[emission][tp][rp][tooltip.id]["25%"].toFixed(2)}</div></div>
             <div className="popup-num"><div>Median:</div> <div>{data[emission][tp][rp][tooltip.id].median.toFixed(2)}</div></div>
