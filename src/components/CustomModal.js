@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
+import ReactGA from "react-ga4";
 
 import "../styles/CustomModal.scss";
 
@@ -41,6 +42,11 @@ export default function CustomModal() {
   };
 
   const handleOpen = (contentType) => {
+    ReactGA.event({
+      action: "clicked",
+      category: "modal",
+      label: contentType
+    });
     setOpen(true);
     contentType === "tr" ? setContent(trBody) : (contentType === "utt" ? setContent(uttBody) : setContent(utdBody));
   };
@@ -61,7 +67,7 @@ export default function CustomModal() {
         <div className="list-title">Technical Report on Data and Methods:</div>
         <ul>
           <li>The following report describes the motivation, data, methods and results from the study that produced this tool. The aim of this report is to make the project’s data and methodology clear and transparent to those using the interactive online IDF curve tool or those interested in replicating these methods in other contexts.</li>
-          <li>Link coming soon.</li>
+          <li>Find the report <a href="https://www.rand.org/pubs/tools/TLA1365-1.html">here</a>.</li>
         </ul>
         <div className="list-title">Instructional Webinar:</div>
         <ul>

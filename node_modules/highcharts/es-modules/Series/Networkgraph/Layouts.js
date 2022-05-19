@@ -2,7 +2,7 @@
  *
  *  Networkgraph series
  *
- *  (c) 2010-2020 Paweł Fus
+ *  (c) 2010-2021 Paweł Fus
  *
  *  License: www.highcharts.com/license
  *
@@ -446,7 +446,7 @@ H.layouts['reingold-fruchterman'].prototype, {
         */
         // Exponential:
         /*
-        var alpha = 0.1;
+        let alpha = 0.1;
         layout.temperature = Math.sqrt(layout.nodes.length) *
             Math.pow(alpha, layout.diffTemperature);
         */

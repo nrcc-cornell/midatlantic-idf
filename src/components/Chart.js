@@ -603,7 +603,7 @@ function Chart() {
         onMouseLeave={() => setShowStationName(false)}
       >
         {chart && current && stationName()}
-        {showStationName && <div id="full-location">{stations[current].station_name + ", " + data[options["emission"]][options["tp"]][options["rp"]][stations[current].fips]["name"] + " County, " + stations[current].state}</div>}
+        {showStationName && <div id="full-location">{stations[current].station_name + ", " + data[options["emission"]][options["tp"]][options["rp"]][stations[current].fips]["name"] + (stations[current].fips === "11001" ? ", " : " County, ") + stations[current].state}</div>}
       </div>
       <div className="zoom-instructions">Click and drag on chart to zoom</div>
       <div className="close-btn"><CloseIcon onClick={() => setChart(!chart)} /></div>

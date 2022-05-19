@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CloseIcon from "@material-ui/icons/Close";
+import ReactGA from "react-ga4";
 
 import "./styles/App.scss";
 
@@ -25,6 +26,11 @@ function App() {
 
   let width = useCurrentWidth();
   let height = useCurrentHeight();
+
+  useEffect(() => {
+    ReactGA.initialize("G-XECVSXTTQ9");
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  },[]);
 
   useEffect(() => {
     setWindowSize({height: (height > 650), width: (width > 1000)});
