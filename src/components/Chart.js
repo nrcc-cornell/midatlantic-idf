@@ -167,6 +167,8 @@ function Chart() {
     });
 
     var csvData = headers.concat(dataArr);
+    console.log(station);
+    console.log(csvData);
 
     var csvContent = "";
     csvData.forEach(function(infoArray, index) {
