@@ -25,8 +25,7 @@ import "../styles/Chart.scss";
 import {OptionsContext} from "../contexts/OptionsContext";
 import {ChartContext} from "../contexts/ChartContext";
 import {CurrentContext} from "../contexts/CurrentContext";
-
-import {stations, data} from "../data";
+import { DataContext } from "../contexts/DataContext";
 
 HC_exporting(Highcharts);
 HC_offline_exporting(Highcharts);
@@ -113,6 +112,7 @@ function Chart() {
   const {chart, setChart} = useContext(ChartContext); // context that turns chart panel on/off
   const {current} = useContext(CurrentContext); // context that keeps track of the current station
   const {options} = useContext(OptionsContext); // context that keeps track of the chart options
+  const {stations, data} = useContext(DataContext);
   
   const [mode, setMode] = useState(0); // state that toggle between chart and tables, 0 for chart, 1 for table, 2 for comparison table
   const [showCIs, setShowCIs] = useState({ "projectedCIs": true, "observedCIs": false }); // state that toggles the CIs on the chart
@@ -167,8 +167,6 @@ function Chart() {
     });
 
     var csvData = headers.concat(dataArr);
-    console.log(station);
-    console.log(csvData);
 
     var csvContent = "";
     csvData.forEach(function(infoArray, index) {
@@ -456,7 +454,7 @@ function Chart() {
     return (
       <HighchartsReact highcharts={Highcharts} options={chartOptions}/>
     );
-  }, [current, options, showCIs]);
+  }, [data, current, options, showCIs]);
  
   const renderComparisonTable = () => {
     let station = stations[current];

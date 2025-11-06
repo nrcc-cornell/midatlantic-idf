@@ -6,7 +6,9 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography
+  Typography,
+  Grid,
+  Switch
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
@@ -16,11 +18,13 @@ import "../styles/Options.scss";
 import {OptionsContext} from "../contexts/OptionsContext";
 import {ChartContext} from "../contexts/ChartContext";
 import {CurrentContext} from "../contexts/CurrentContext";
+import { DataContext } from "../contexts/DataContext";
 
 function Options() {
   const {options, setOptions} = useContext(OptionsContext);
   const {chart, setChart} = useContext(ChartContext);
   const {current} = useContext(CurrentContext);
+  const { dataSource, dataSources, setDataSource } = useContext(DataContext);
 
   const handleChange = (event, field) => {
     let newOptions = {...options};
@@ -100,6 +104,20 @@ function Options() {
           </Select>
         </FormControl>
       </FormGroup>
+
+      <Typography component="div">
+        <Grid component="label" container alignItems="center" spacing={1} style={{ marginTop: "6px" }}>
+          <Grid item style={{ fontSize: "12px", width: "75px", textAlign: "center" }}>Data Source 1</Grid>
+          <Grid item>
+            <Switch
+              checked={dataSource !== dataSources[0]}
+              onChange={setDataSource}
+              name="Data Source"
+            />
+          </Grid>
+          <Grid item style={{ fontSize: "12px", width: "75px", textAlign: "center" }}>Data Source 2</Grid>
+        </Grid>
+      </Typography>
 
       <Button
         id="chart-toggle"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import ReactMapGL, { NavigationControl,
   Source,
   Layer,
@@ -17,23 +17,69 @@ mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worke
 
 import "../styles/Map.scss";
 
-import {data, stations, counties, virginiaCounties} from "../data";
-
 import { OptionsContext } from "../contexts/OptionsContext";
 import { ChartContext } from "../contexts/ChartContext";
 import { CurrentContext } from "../contexts/CurrentContext";
+import { DataContext } from "../contexts/DataContext";
 import Legend from "./Legend";
+
+const getColorValue = (proportion, range, base) => {
+  return base + proportion * range;
+};
+
+const calculateColors = (data, emission, tp, rp) => {
+  const minMax = 1.30;
+
+  // Calculate new colors vvv
+  let newColorExpression = ["match", ["get", "GEOID"]];
+
+  if (Object.keys(data).length !== 0) {
+    Object.entries(data[emission][tp][rp]).forEach(([id, { median }]) => {
+      let color;
+
+      if(median > 1) {
+        let value = median - 1;
+        let upperRange = minMax - 1;
+        let proportion = value / upperRange;
+
+        if (proportion < 0.05) {
+          proportion = value / (upperRange * 0.05);
+          color = `rgba(${getColorValue(proportion, -190, 255)}, ${getColorValue(proportion, -30, 255)}, ${getColorValue(proportion, -225, 255)}, 1)`;
+        } else if (proportion < 0.34) {
+          proportion = (value - upperRange * 0.05) / (upperRange * 0.34 - upperRange * 0.05);
+          color = `rgba(${getColorValue(proportion, -30, 65)}, ${getColorValue(proportion, -120, 225)}, 30, 1)`;
+        } else {
+          proportion = (value - upperRange * 0.34) / (upperRange - upperRange * 0.34);
+          color = `rgba(35, ${getColorValue(proportion, -65, 105)}, ${getColorValue(proportion, 195, 30)}, 1)`;
+        }
+      } else if (median < 1) {
+        let proportion = (1 - median) / (1 - minMax);
+        color = `rgba(255, ${getColorValue(proportion, -50, 255)}, ${getColorValue(proportion, -155, 255)}, 1)`;
+      } else {
+        color = "rgba(255,255,255,1)";
+      }
+      
+      newColorExpression.push(id, color);
+    });
+
+    
+  }
+
+  newColorExpression.push("rgba(0, 0, 0, 0)");
+  return newColorExpression;
+};
 
 function Map() {
   const { options: { emission, rp, tp, area } } = useContext(OptionsContext);
+  const { data, stations, counties, virginiaCounties } = useContext(DataContext);
 
   const [popup, setPopup] = useState(null);
   const [tooltip, setTooltip] = useState(null);
   const [countyFilter, setCountyFilter] = useState(counties);
-  const [currentData, setCurrentData] = useState(null);
-  const [colorExpression, setColorExpression] = useState(null);
+  const [countyColors, setCountyColors] = useState(calculateColors({},null,null,null));
 
-  const minMax = 1.30;
+  const mRef = useRef(null);
+
   const citiesFips = [
     "51510",
     "51515",
@@ -77,9 +123,8 @@ function Map() {
   ];
  
   useEffect(() => {
-    const newCurrentData = data[emission][tp][rp];
-    setCurrentData(newCurrentData);
-  }, [emission, tp, rp]);
+    setCountyColors(calculateColors(data, emission, tp, rp));
+  }, [emission, tp, rp, data]);
 
   const getViewSettings = () => {
     let viewWidth = document.querySelector("html").clientWidth;
@@ -221,54 +266,12 @@ function Map() {
 
   const [viewport, setViewport] = useState(getViewSettings());
 
-  useEffect(() => {
-    if (currentData) {
-      let newColorExpression = ["match", ["get", "GEOID"]];
-
-      const getColorValue = (proportion, range, base) => {
-        return base + proportion * range;
-      };
-
-      Object.entries(currentData).forEach(([id, { median }]) => {
-        let color;
-
-        if(median > 1) {
-          let value = median - 1;
-          let upperRange = minMax - 1;
-          let proportion = value / upperRange;
-
-          if (proportion < 0.05) {
-            proportion = value / (upperRange * 0.05);
-            color = `rgba(${getColorValue(proportion, -190, 255)}, ${getColorValue(proportion, -30, 255)}, ${getColorValue(proportion, -225, 255)}, 1)`;
-          } else if (proportion < 0.34) {
-            proportion = (value - upperRange * 0.05) / (upperRange * 0.34 - upperRange * 0.05);
-            color = `rgba(${getColorValue(proportion, -30, 65)}, ${getColorValue(proportion, -120, 225)}, 30, 1)`;
-          } else {
-            proportion = (value - upperRange * 0.34) / (upperRange - upperRange * 0.34);
-            color = `rgba(35, ${getColorValue(proportion, -65, 105)}, ${getColorValue(proportion, 195, 30)}, 1)`;
-          }
-        } else if (median < 1) {
-          let proportion = (1 - median) / (1 - minMax);
-          color = `rgba(255, ${getColorValue(proportion, -50, 255)}, ${getColorValue(proportion, -155, 255)}, 1)`;
-        } else {
-          color = "rgba(255,255,255,1)";
-        }
-        
-        newColorExpression.push(id, color);
-      });
-
-      newColorExpression.push("rgba(0, 0, 0, 0)");
-      
-      setColorExpression(newColorExpression);
-    }
-  }, [currentData]);
-
   const countyLayer = {
     id: "county-join",
     type: "fill",
     "source-layer": "cb_2019_us_county_500k-ctuas3",
     paint: {
-      "fill-color": colorExpression,
+      "fill-color": countyColors,
       "fill-outline-color": "rgba(100,100,100,1)"
     }
   };
@@ -299,7 +302,9 @@ function Map() {
   };
 
   const handleMarkerMouseEnter = (id) => {
-    setPopup(stations[id]);
+    if (Object.keys(stations).length !== 0) {
+      setPopup(stations[id]);
+    }
   };
 
   const handleMarkerMouseLeave = () => {
@@ -342,7 +347,7 @@ function Map() {
       transitionDuration: 1000,
       transitionInterpolator: new FlyToInterpolator(),
     });
-  }, [area]);
+  }, [area, counties, virginiaCounties]);
 
   const handlePanning = (view) => {
     let nextView = view;
@@ -358,6 +363,7 @@ function Map() {
     setViewport(nextView);
   };
 
+  if (Object.keys(data).length === 0) return "";
   return (
     <div id="map-cont">
       <ReactMapGL
@@ -365,21 +371,17 @@ function Map() {
         width= "100%"
         height= "100%"
         onViewportChange={nextViewport => handlePanning(nextViewport)}
-        mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmRnbmZ0MDY4cTJxbXVtd2ljbzM1dCJ9.cJ61fxIj6jjOC21hvg6-Zw"
+        mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2xkdGFmZTd4MDJ3ZDNxb3h5dXdrb3cwbSJ9.-57RGzVhzLpxzp2WsX9xDQ"
+        // mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmRnbmZ0MDY4cTJxbXVtd2ljbzM1dCJ9.cJ61fxIj6jjOC21hvg6-Zw"
         mapStyle="mapbox://styles/idfcurvetooladmin/ckove1z9e3ag118pejlfzr2mm"
         onHover={handleHover}
+        ref={mRef}
       >
-        {/* <Source type = "vector" url = "mapbox://beneck.3at6c9tb" > */}
         <Source type = "vector" url = "mapbox://idfcurvetooladmin.4m2esy6q" >
           <Layer beforeId='states-filtered' {...countyLayer} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
-        </Source>
-
-        {/* <Source type = "vector" url = "mapbox://beneck.3at6c9tb" > */}
-        <Source type = "vector" url = "mapbox://idfcurvetooladmin.4m2esy6q" >
           <Layer beforeId='states-filtered' {...countyLines} filter={["in", ["get", "GEOID"], ["literal", countyFilter]]}/>
         </Source>
 
-        {/* <Source type = "vector" url = "mapbox://beneck.5cjncwf0" > */}
         <Source type = "vector" url = "mapbox://idfcurvetooladmin.75wh3fpp" >
           <Layer {...countyNameLayer} filter={["in", ["to-string", ["get", "geoid"]], ["literal", countyFilter]]}/>
         </Source>
@@ -443,6 +445,7 @@ function Map() {
 const Markers = ({onMarkerMouseEnter, onMarkerMouseLeave, scope}) => {
   const { current, setCurrent } = useContext(CurrentContext);
   const { setChart } = useContext(ChartContext);
+  const { stations, counties, virginiaCounties } = useContext(DataContext);
 
   const handleClick = (id, stn) => {
     ReactGA.event({

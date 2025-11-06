@@ -40,8 +40,8 @@
     }
   
     .nav {
-      position: relative;
-      top: 11px;
+      position: absolute;
+      bottom: -6px;
   
       #link-container {
         width: 500px;
@@ -78,18 +78,10 @@
   #site-title {
     font-size: 19px !important;
   }
-
-  .nav {
-    top: 13px !important;
-  }
 }
 
 @media (max-width: 961px) {
   #site-title {
     font-size: 18px !important;
-  }
-
-  .nav {
-    top: 15px !important;
   }
 }

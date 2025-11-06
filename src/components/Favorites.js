@@ -11,12 +11,12 @@ import "../styles/Favorites.scss";
 
 import {CurrentContext} from "../contexts/CurrentContext";
 import {ChartContext} from "../contexts/ChartContext";
-
-import {stations} from "../data";
+import { DataContext } from "../contexts/DataContext";
 
 export default function Favorites() {
   const {current, setCurrent} = useContext(CurrentContext);
   const {setChart} = useContext(ChartContext);
+  const {stations} = useContext(DataContext);
 
   const [favorite, setFavorite] = useState(store.get("favorite"));
 
@@ -57,22 +57,30 @@ export default function Favorites() {
 
   const renderSelected = () => {
     if (current) {
-      let name = stations[current]["station_name"];
-      
-      return (
-        <div id="current-station">
-          <Chip 
-            label={limitLabelLength(name)}
-            icon={(favorite && favorite[current]) ? (
-              <StarIcon onClick={(event) => toggleFavorite(current, name, event)}/>
-            ): (
-              <StarBorderIcon onClick={(event) => toggleFavorite(current, name, event)}/>
-            )}
-            color="secondary"
-            clickable
-            onClick = {() => handleChipClick(current)}
-          />
-        </div>);
+      if (Object.keys(stations).length === 0) {
+        return (
+          <div id="current-station" style={{paddingTop:"10px"}}>
+            <div> Error loading stations.</div>
+          </div>
+        );
+      } else {
+        let name = stations[current]["station_name"];
+        
+        return (
+          <div id="current-station">
+            <Chip 
+              label={limitLabelLength(name)}
+              icon={(favorite && favorite[current]) ? (
+                <StarIcon onClick={(event) => toggleFavorite(current, name, event)}/>
+              ): (
+                <StarBorderIcon onClick={(event) => toggleFavorite(current, name, event)}/>
+              )}
+              color="secondary"
+              clickable
+              onClick = {() => handleChipClick(current)}
+            />
+          </div>);
+      }
     } else {
       return (
         <div id="current-station" style={{paddingTop:"10px"}}>

@@ -43,7 +43,7 @@ function App() {
         <OptionsContext.Provider value={{options, setOptions}}>
           <ChartContext.Provider value={{chart, setChart}}>
             <CurrentContext.Provider value={{current, setCurrent}}>
-        
+                
               <Map />
               <div id="grid">
                 {warning && (!windowSize.height || !windowSize.width) && <div id="screen-warning">
@@ -55,7 +55,7 @@ function App() {
                 <Favorites />
                 <Chart />
               </div>
-      
+
             </CurrentContext.Provider>
           </ChartContext.Provider>
         </OptionsContext.Provider>
