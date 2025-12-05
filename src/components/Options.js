@@ -13,6 +13,8 @@ import {
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
+import Guidance from "./Guidance";
+
 import "../styles/Options.scss";
 
 import {OptionsContext} from "../contexts/OptionsContext";
@@ -111,7 +113,7 @@ function Options() {
           <Grid item>
             <Switch
               checked={dataSource !== dataSources[0]}
-              onChange={setDataSource}
+              onChange={() => setDataSource(dataSource === dataSources[0] ? dataSources[1] : dataSources[0])}
               name="Data Source"
             />
           </Grid>
@@ -119,6 +121,8 @@ function Options() {
         </Grid>
       </Typography>
 
+      <Guidance />
+      
       <Button
         id="chart-toggle"
         aria-label="toggle chart visibility"

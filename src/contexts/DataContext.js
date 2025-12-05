@@ -40,8 +40,7 @@ export const DataProvider = ({ children }) => {
     })();
   }, []);
 
-  const handleChangeDataSource = async () => {
-    const newDataSource = dataSource === dataSources[0] ? dataSources[1] : dataSources[0];
+  const handleChangeDataSource = async (newDataSource) => {
     setDataSource(newDataSource);
     await Promise.all([
       fetch(`${process.env.PUBLIC_URL}/data/${newDataSource}/data.json`)
