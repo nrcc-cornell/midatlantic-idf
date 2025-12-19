@@ -13,7 +13,7 @@ import {
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
-import Guidance from "./Guidance";
+import Guidance from "./Guidance/Guidance";
 
 import "../styles/Options.scss";
 

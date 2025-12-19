@@ -17,10 +17,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import ReactGA from "react-ga4";
 
-import { CurrentContext } from "../contexts/CurrentContext";
-import { DataContext } from "../contexts/DataContext";
-import {OptionsContext} from "../contexts/OptionsContext";
-import { ChartContext } from "../contexts/ChartContext";
+import { CurrentContext } from "../../contexts/CurrentContext";
+import { DataContext } from "../../contexts/DataContext";
+import {OptionsContext} from "../../contexts/OptionsContext";
+import { ChartContext } from "../../contexts/ChartContext";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
