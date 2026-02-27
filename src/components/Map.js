@@ -374,7 +374,7 @@ function Map() {
         width= "100%"
         height= "100%"
         onViewportChange={nextViewport => handlePanning(nextViewport)}
-        mapboxApiAccessToken=""
+        mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
         mapStyle="mapbox://styles/idfcurvetooladmin/ckove1z9e3ag118pejlfzr2mm"
         onHover={handleHover}
         ref={mRef}
