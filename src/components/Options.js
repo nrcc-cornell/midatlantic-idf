@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Guidance from "./Guidance/Guidance";
 
@@ -22,11 +23,24 @@ import {ChartContext} from "../contexts/ChartContext";
 import {CurrentContext} from "../contexts/CurrentContext";
 import { DataContext } from "../contexts/DataContext";
 
+const useStyles = makeStyles(() => ({
+  switch: {
+    "& > .MuiSwitch-track": {
+      backgroundColor: "#0e8a09",
+    },
+    "& > :not(.Mui-checked) > span > .MuiSwitch-thumb": {
+      color: "#0e8a09",
+    },
+  },
+}));
+
 function Options() {
   const {options, setOptions} = useContext(OptionsContext);
   const {chart, setChart} = useContext(ChartContext);
   const {current} = useContext(CurrentContext);
   const { dataSource, dataSources, setDataSource } = useContext(DataContext);
+
+  const classes = useStyles();
 
   const handleChange = (event, field) => {
     let newOptions = {...options};
@@ -60,20 +74,38 @@ function Options() {
           </Select>
         </FormControl>
 
-        <FormControl>
-          <InputLabel id="es" shrink>
-            Emissions Scenario
-          </InputLabel>
-          <Select
-            labelId="es"
-            displayEmpty
-            value={options["emission"]}
-            onChange={event => handleChange(event, "emission")}
-          >
-            <MenuItem value={8.5}>High RCP 8.5</MenuItem>
-            <MenuItem value={4.5}>Low RCP 4.5</MenuItem>
-          </Select>
-        </FormControl>
+        {dataSource === "cmip5" ? (
+          <FormControl>
+            <InputLabel id="es" shrink>
+              Emissions Scenario
+            </InputLabel>
+            <Select
+              labelId="es"
+              displayEmpty
+              value={options["emission"]}
+              onChange={event => handleChange(event, "emission")}
+            >
+              <MenuItem value={8.5}>High RCP 8.5</MenuItem>
+              <MenuItem value={4.5}>Low RCP 4.5</MenuItem>
+            </Select>
+          </FormControl>
+        ) : (
+          <FormControl>
+            <InputLabel id="es" shrink>
+              Emissions Scenario
+            </InputLabel>
+            <Select
+              labelId="es"
+              displayEmpty
+              value={options["emission"]}
+              onChange={event => handleChange(event, "emission")}
+            >
+              <MenuItem value={"585"}>High SSP 585</MenuItem>
+              <MenuItem value={"370"}>Medium SSP 370</MenuItem>
+              <MenuItem value={"245"}>Low SSP 245</MenuItem>
+            </Select>
+          </FormControl>
+        )}
 
         <FormControl>
           <InputLabel id="tp">
@@ -109,15 +141,16 @@ function Options() {
 
       <Typography component="div">
         <Grid component="label" container alignItems="center" spacing={1} style={{ marginTop: "6px" }}>
-          <Grid item style={{ fontSize: "12px", width: "75px", textAlign: "center" }}>Data Source 1</Grid>
+          <Grid item style={{ fontSize: "12px", width: "75px", textAlign: "center" }}>2026 Analysis</Grid>
           <Grid item>
             <Switch
               checked={dataSource !== dataSources[0]}
               onChange={() => setDataSource(dataSource === dataSources[0] ? dataSources[1] : dataSources[0])}
               name="Data Source"
+              className={classes.switch}
             />
           </Grid>
-          <Grid item style={{ fontSize: "12px", width: "75px", textAlign: "center" }}>Data Source 2</Grid>
+          <Grid item style={{ fontSize: "12px", width: "75px", textAlign: "center" }}>2021 Analysis</Grid>
         </Grid>
       </Typography>
 

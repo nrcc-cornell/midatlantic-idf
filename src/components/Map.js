@@ -123,7 +123,10 @@ function Map() {
   ];
  
   useEffect(() => {
-    setCountyColors(calculateColors(data, emission, tp, rp));
+    console.log(data, emission, tp, rp);
+    if (Object.keys(data).includes(emission)) {
+      setCountyColors(calculateColors(data, emission, tp, rp));
+    }
   }, [emission, tp, rp, data]);
 
   const getViewSettings = () => {
@@ -371,8 +374,7 @@ function Map() {
         width= "100%"
         height= "100%"
         onViewportChange={nextViewport => handlePanning(nextViewport)}
-        mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2xkdGFmZTd4MDJ3ZDNxb3h5dXdrb3cwbSJ9.-57RGzVhzLpxzp2WsX9xDQ"
-        // mapboxApiAccessToken="pk.eyJ1IjoiaWRmY3VydmV0b29sYWRtaW4iLCJhIjoiY2tvdmRnbmZ0MDY4cTJxbXVtd2ljbzM1dCJ9.cJ61fxIj6jjOC21hvg6-Zw"
+        mapboxApiAccessToken=""
         mapStyle="mapbox://styles/idfcurvetooladmin/ckove1z9e3ag118pejlfzr2mm"
         onHover={handleHover}
         ref={mRef}

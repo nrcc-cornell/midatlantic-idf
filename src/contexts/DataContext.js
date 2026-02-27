@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import PropTypes from "prop-types";
 
-const dataSources = ["data1", "data2"];
+const dataSources = ["cmip6", "cmip5"];
 
 export const DataContext = createContext({
   data: {},
