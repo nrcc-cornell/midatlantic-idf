@@ -14,7 +14,8 @@ const useStyles = makeStyles(() => ({
   mainContainer: {
     padding: "0px 24px",
     display: "flex",
-    gap: "20px"
+    gap: "20px",
+    minHeight: "450px"
   },
   selectionsContainer: {
     display: "flex",
@@ -34,9 +35,6 @@ const useStyles = makeStyles(() => ({
         textAlign: "right"
       }
     }
-  },
-  flowchart: {
-    width: "60%"
   },
   highlighted: {
     backgroundColor: "#30f44aff"
@@ -78,6 +76,19 @@ const useStyles = makeStyles(() => ({
   },
   tableHeader: {
     backgroundColor: "#fafafa"
+  },
+  imgStackContainer: {
+    marginTop: "40px",
+    position: "relative",
+    width: "60%",
+    "& > img": {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      width: "100%"
+    }
   }
 }));
 
@@ -114,8 +125,6 @@ export default function ChangeFactorSummary({ options, data }) {
     }
   }
 
-
-
   const {median, "10%": _10, "90%": _90, "25%": _25, "75%": _75} = data[emissionsScenario][options.timePeriod][options.returnPeriod][options.station.fips];
 
   const station = options.station;
@@ -144,12 +153,31 @@ export default function ChangeFactorSummary({ options, data }) {
     return str.replace("min", " min").replace("hr", " hr").replace("day", " day");
   };
 
+  const getFlowchartImageStack = (riskOrientation, resourceLevel) => {
+    const stack = [];
+
+    // Add the base flowchart no matter what
+    stack.push(<img key="base-flowchart" src={process.env.PUBLIC_URL + "/assets/flowcharts/cf_flowchart.jpg"} alt="Flowchart that shows how selected options alter the recommended change factor scenario and percentiles" />);
+    
+    if (riskOrientation) {
+      stack.push(<img key="risk-orientation-overlay" src={process.env.PUBLIC_URL + `/assets/flowcharts/cf_risk_orientation_${riskOrientation}.png`} alt="Overlay highlighting risk orientation selection" />);
+
+      if (resourceLevel) {
+        stack.push(<img key="resource-level-overlay" src={process.env.PUBLIC_URL + `/assets/flowcharts/cf_risk_orientation_${riskOrientation}_resource_level_${resourceLevel}.png`} alt="Overlay highlighting resource level selection and resulting recommendations for change scenario and percentiles" />);
+      }
+    }
+
+    return (
+      <div className={classes.imgStackContainer}>
+        {stack}
+      </div>
+    );
+  };
+
   return (
     <>
       <div className={classes.mainContainer}>
-        <div className={classes.flowchart}>
-          <img width="100%" src={process.env.PUBLIC_URL + "/assets/original_change_factor_flowchart.jpg"} alt="Flowcharts that show how selected options alter risk orientation outcomes" />
-        </div>
+        {getFlowchartImageStack(options.riskOrientation.riskOrientation, options.resourceLevel)}
 
         <div className={ classes.selectionsContainer }>
           <p className={classes.label}>Your Selections</p>

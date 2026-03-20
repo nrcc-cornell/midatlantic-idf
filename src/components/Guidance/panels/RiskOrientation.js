@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: "column",
     height: "100%",
     justifyContent: "flex-end",
+    width: "45%"
   },
   selector: {
     padding: "6px 12px",
@@ -32,10 +33,23 @@ const useStyles = makeStyles(() => ({
   },
   bodyContainer: {
     display: "flex",
-    gap: "12px"
+    gap: "12px",
   },
   radioContainer: {
     paddingLeft: "40px"
+  },
+  imgStackContainer: {
+    marginTop: "60px",
+    position: "relative",
+    width: "55%",
+    "& > img": {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      width: "100%"
+    }
   }
 }));
 
@@ -117,6 +131,42 @@ export default function RiskOrientation({ options, handleOptionsChange }) {
     handleOptionsChange("riskOrientation", newRiskOrientation);
   };
 
+  const getFlowchartImageStack = (riskOrientationObj) => {
+    const { exposure, sensitivity, capacity, riskOrientation } = riskOrientationObj;
+    
+    const stack = [];
+    if (exposure === "") {
+      stack.push(<img key="base-flowchart" src={process.env.PUBLIC_URL + "/assets/flowcharts/risk_orientation_flowchart.jpg"} alt="Flowcharts that show how selected options alter risk orientation outcomes" />);
+    } else {
+      // Add the base flowchart no matter what
+      stack.push(<img key="exposure-overlay" src={process.env.PUBLIC_URL + `/assets/flowcharts/exposure_${exposure}_flowchart.jpg`} alt="Overlay highlighting exposure selection" />);
+
+      if (sensitivity) {
+        stack.push(<img key="sensitivity-overlay" src={process.env.PUBLIC_URL + `/assets/flowcharts/exposure_${exposure}_sensitivity_${sensitivity}.png`} alt="Overlay highlighting sensitivity selection" />);
+
+        if (
+          (exposure === "low" && (sensitivity === "low" || sensitivity === "high")) ||
+          (exposure === "moderate" && (sensitivity === "moderate" || sensitivity === "high")) ||
+          (exposure === "high" && (sensitivity === "low" || sensitivity === "high"))
+        ) {
+          stack.push(<img key="risk-orientation-overlay" src={process.env.PUBLIC_URL + `/assets/flowcharts/exposure_${exposure}_risk_orientation_${riskOrientation}.png`} alt="Overlay highlighting risk orientation selection" />);
+        } else if (capacity) {
+          stack.push(<img key="capacity-overlay" src={process.env.PUBLIC_URL + `/assets/flowcharts/exposure_${exposure}_capacity_${capacity}.png`} alt="Overlay highlighting capacity selection" />);
+
+          if (riskOrientation) {
+            stack.push(<img key="risk-orientation-overlay" src={process.env.PUBLIC_URL + `/assets/flowcharts/exposure_${exposure}_risk_orientation_${riskOrientation}.png`} alt="Overlay highlighting risk orientation selection" />);
+          } 
+        }
+      }
+    }
+
+    return (
+      <div className={classes.imgStackContainer}>
+        {stack}
+      </div>
+    );
+  };
+
   return (
     <div className={classes.mainContainer}>
       <div className={ classes.bodyContainer }>
@@ -156,9 +206,7 @@ export default function RiskOrientation({ options, handleOptionsChange }) {
           </div>
         </div>
 
-        <div>
-          <img width="100%" src={process.env.PUBLIC_URL + "/assets/original_risk_orientation_flowchart.jpg"} alt="Flowcharts that show how selected options alter risk orientation outcomes" />
-        </div>
+        {getFlowchartImageStack(options.riskOrientation)}
       </div>
 
       <p className={ classes.endnote }>Refer to page X-Y of the decision support guide for more details on these choices.</p>
