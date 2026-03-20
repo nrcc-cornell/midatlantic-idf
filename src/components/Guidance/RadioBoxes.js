@@ -8,6 +8,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 
+import HoverPopper from "../hover-popper/hover-popper.component";
+
 const useStyles = makeStyles({
   root: {
     "&:hover": {
@@ -54,13 +56,19 @@ const useStyles = makeStyles({
   label: {
     color: "black !important",
     fontWeight: "bold",
-    fontSize: "1.2rem"
+    fontSize: "1.2rem",
   },
   itemLabel: {
     "& > .MuiFormControlLabel-label": {
       color: "black",
     }
-  }
+  },
+  hoverItemLabel: {
+    "& > .MuiFormControlLabel-label": {
+      color: "rgb(83,122,238)",
+      fontWeight: "bold"
+    }
+  },
 });
 
 // Inspired by blueprintjs
@@ -79,14 +87,20 @@ function StyledRadio(props) {
   );
 }
 
-export default function RadioBoxes({ label, items, selected, handleChange }) {
+export default function RadioBoxes({ label, items, selected, handleChange, gap=0 }) {
   const classes = useStyles();
 
   return (
     <FormControl component="fieldset">
       {label && <FormLabel className={classes.label} component="legend">{label}</FormLabel>}
-      <RadioGroup value={selected} aria-label={label} onChange={handleChange}>
-        {items.map((item, i) => <FormControlLabel key={i} className={classes.itemLabel} value={item.value} control={<StyledRadio />} label={item.label} />)}
+      <RadioGroup value={selected} aria-label={label} onChange={handleChange} style={{ gap: `${gap}px` }}>
+        {items.map((item, i) => {
+          if ("hoverText" in item) {
+            return <HoverPopper key={i} popperText={item.hoverText}><FormControlLabel className={classes.hoverItemLabel} value={item.value} control={<StyledRadio />} label={item.label} /></HoverPopper>;
+          } else {
+            return <FormControlLabel key={i} className={classes.itemLabel} value={item.value} control={<StyledRadio />} label={item.label} />;
+          }
+        })}
       </RadioGroup>
     </FormControl>
   );
@@ -97,4 +111,5 @@ RadioBoxes.propTypes = {
   items: PropTypes.array,
   selected: PropTypes.string,
   handleChange: PropTypes.func,
+  gap: PropTypes.number
 };

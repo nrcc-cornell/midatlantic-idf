@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -11,10 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import ReactGA from "react-ga4";
 
-import UseCase from "./UseCase";
+import Introduction from "./panels/Introduction";
 import { siteGuidance } from "./SiteGuidance";
-import { riskGuidance } from "./RiskGuidance";
-import { policyGuidance } from "./PolicyGuidance";
 
 import { CurrentContext } from "../../contexts/CurrentContext";
 import { DataContext } from "../../contexts/DataContext";
@@ -70,16 +68,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const guidancePathways = [siteGuidance, riskGuidance, policyGuidance];
+const guidancePathways = [siteGuidance];
 
 export default function Guidance() {
-  const { setOptions:setMapOptions } = useContext(OptionsContext);
+  const { options:mapOptions, setOptions:setMapOptions } = useContext(OptionsContext);
   const {setChart} = useContext(ChartContext);
-  const { current } = useContext(CurrentContext);
-  const { stations, data, setDataSource } = useContext(DataContext);
+  const { current, setCurrent } = useContext(CurrentContext);
+  const { stations, data } = useContext(DataContext);
+  // const { stations, data, setDataSource } = useContext(DataContext);
   
   const [open, setOpen] = useState(false);
-  const [useCase, setUseCase] = useState("");
+  const [useCase, setUseCase] = useState("site");
   const [activePathway, setActivePathway] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
 
@@ -88,6 +87,12 @@ export default function Guidance() {
   }, {}));
 
   const classes = useStyles();
+
+  useEffect(() => {
+    if (current && useCase && options[useCase]?.station && stations[current].fips !== options[useCase].station.fips) {
+      handleOptionsChange("station", stations[current]);
+    }
+  }, [current]);
 
   const handleClose = () => {
     setOpen(false);
@@ -131,7 +136,6 @@ export default function Guidance() {
   };
 
   const handleOptionsChange = (field, value) => {
-    console.log(field, value, useCase);
     setOptions((prevOptions) => {
       const newOptions = JSON.parse(JSON.stringify(prevOptions));
       newOptions[useCase][field] = value;
@@ -141,14 +145,16 @@ export default function Guidance() {
 
   const handleSetMapOptions = () => {
     if (useCase === "site") {
-      setDataSource(options.site.dateSource);
-      setMapOptions((prevMapOptions) => {
-        return {
-          "emission": parseFloat(options.site.emissionsScenario),
-          "tp": options.site.timePeriod,
-          "rp": prevMapOptions.rp,
-          "area": prevMapOptions.area
-        };
+      const newCurrent = Object.entries(stations).find((stn) => stn[1].station_name === options.site.station.station_name);
+      setCurrent(newCurrent[0]);
+
+      // setDataSource(options.site.dateSource);
+
+      setMapOptions({
+        ...mapOptions,
+        "emission": options.site.riskOrientation.riskOrientation === "averse" ? "8.5" : "4.5",
+        "tp": options.site.timePeriod,
+        "rp": String(options.site.returnPeriod)
       });
     }
     
@@ -157,12 +163,12 @@ export default function Guidance() {
   };
 
   const getHeading = (step, pathway) => {
-    let headingText = `Step ${step + 1}: `;
+    let headingText = "";
     if (step === 0) {
-      headingText += "Selecting your use case";
+      headingText = "Introduction/Purpose of the Guidance";
     } else if (pathway) {
       if (step === pathway.steps.length + 1) {
-        headingText = "Summary of results";
+        headingText = "Change Factor Summary";
       } else {
         headingText += pathway.steps[step - 1];
       }
@@ -180,30 +186,28 @@ export default function Guidance() {
           handleOptionsChange={handleOptionsChange}
           data={data}
           selectedLocation={stations[current]}
+          stations={stations}
         />
       );
     } else {
-      return <UseCase guidancePathways={guidancePathways} setUseCase={handleSetUseCase} />;
+      return <Introduction nextFunction={() => handleSetUseCase("site")} />;
     }
   };
 
   return (
-    <div style={{ marginTop: "8px" }}>
+    <div style={{ marginTop: "28px" }}>
       <Button
         id="guidance-button"
         aria-label="open guidance modal"
-        disabled={!current}
         onClick={handleOpen}
-        style={{
-          border: current ? "1px solid rgb(80,80,80)" : "1px solid rgb(200,200,200)",
-        }}
+        style={{ border: "1px solid rgb(80,80,80)" }}
       >
         Tool Guidance
       </Button>
 
       <Button
         id="communication-guidance-button"
-        href="https://www.google.com" 
+        // href="https://www.google.com" 
         target="_blank" 
         style={{
           border: "1px solid rgb(80,80,80)",
@@ -230,7 +234,7 @@ export default function Guidance() {
                     onClick={handleSetStep(0)}
                     completed={true}
                   >
-                    Selecting your use case
+                    Introduction
                   </StepButton>
                 </Step>
               
@@ -258,10 +262,10 @@ export default function Guidance() {
                         onClick={handleSetStep(activePathway.steps.length + 1)}
                         completed={true}
                       >
-                          Summary of results
+                          Change Factor Summary
                       </StepButton>
                     ) : (
-                      <StepLabel>Summary of results</StepLabel>
+                      <StepLabel>Change Factor Summary</StepLabel>
                     )}
                   </Step>
                 }

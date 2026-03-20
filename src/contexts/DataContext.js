@@ -14,8 +14,9 @@ export const DataContext = createContext({
   calculateColors: () => null
 });
 
+const INIT_DATA_INDEX = 1;
 export const DataProvider = ({ children }) => {
-  const [dataSource, setDataSource] = useState(dataSources[0]);
+  const [dataSource, setDataSource] = useState(dataSources[INIT_DATA_INDEX]);
   const [data, setData] = useState({});
   const [stations, setStations] = useState({});
   const [counties, setCounties] = useState([]);
@@ -30,10 +31,10 @@ export const DataProvider = ({ children }) => {
         fetch(`${process.env.PUBLIC_URL}/data/virginiaCounties.json`)
           .then(response => response.json())
           .then(d => setVirginiaCounties(d)),
-        fetch(`${process.env.PUBLIC_URL}/data/${dataSources[0]}/data.json`)
+        fetch(`${process.env.PUBLIC_URL}/data/${dataSources[INIT_DATA_INDEX]}/data.json`)
           .then(response => response.json())
           .then(d => setData(d)),
-        fetch(`${process.env.PUBLIC_URL}/data/${dataSources[0]}/stations.json`)
+        fetch(`${process.env.PUBLIC_URL}/data/${dataSources[INIT_DATA_INDEX]}/stations.json`)
           .then(response => response.json())
           .then(d => setStations(d))
       ]);

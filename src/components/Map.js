@@ -123,7 +123,6 @@ function Map() {
   ];
  
   useEffect(() => {
-    console.log(data, emission, tp, rp);
     if (Object.keys(data).includes(emission)) {
       setCountyColors(calculateColors(data, emission, tp, rp));
     }
