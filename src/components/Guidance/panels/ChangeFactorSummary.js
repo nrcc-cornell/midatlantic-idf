@@ -80,7 +80,7 @@ const useStyles = makeStyles(() => ({
   imgStackContainer: {
     marginTop: "40px",
     position: "relative",
-    width: "60%",
+    width: "55%",
     "& > img": {
       position: "absolute",
       left: 0,
