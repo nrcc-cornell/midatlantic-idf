@@ -17,6 +17,7 @@ export const siteGuidance = {
     "Select a Resource Level",
   ],
   optionsState: {
+    state: undefined,
     station: undefined,
     riskOrientation: {
       exposure: "",

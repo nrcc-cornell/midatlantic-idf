@@ -37,7 +37,7 @@ const useStyles = makeStyles({
     },
   },
   checkedIcon: {
-    backgroundColor: "#2592d6ff",
+    backgroundColor: "#3f51b5",
     boxShadow: "none",
     "&:before": {
       // eslint-disable-next-line quotes
@@ -50,7 +50,7 @@ const useStyles = makeStyles({
       fontSize: "15px",
     },
     "input:hover ~ &": {
-      backgroundColor: "#2592d6ff",
+      backgroundColor: "#3f51b5",
     },
   },
   label: {

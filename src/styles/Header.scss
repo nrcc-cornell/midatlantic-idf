@@ -1,8 +1,8 @@
 .header {
   display: flex;
-  height: 100px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  max-width: 1024px;
+  height: 120px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  max-width: 1040px;
   margin: 0 auto;
 
   .marisa-logo,
@@ -42,6 +42,8 @@
     .nav {
       position: absolute;
       bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
   
       #link-container {
         width: 500px;
@@ -49,11 +51,11 @@
         font-size: 17px;
         display: flex;
         justify-content: space-between;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   
         .link {
           box-sizing: border-box;
-          padding: 7px 10px;
+          padding: 7px 10px 12px;
           transition: all .2s;
           border-color: rgba(210,210,210,0.5);
           border-style: solid;

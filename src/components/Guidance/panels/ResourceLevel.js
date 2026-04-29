@@ -55,8 +55,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 const resourceLevelOptions = [
-  { value: "low", label: "Low", hoverText: "Term definition"},
-  { value: "moderateHigh", label: "Moderate/High", hoverText: "Term definition"}
+  { value: "low", label: "Low", hoverText: "Relevant personnel may have little/no experience with climate data, minimal time, limited financial resources, or other constraints, or any combination thereof."},
+  { value: "moderateHigh", label: "Moderate/High", hoverText: "Relevant personnel may have some familiarity with climate data up to detailed technical expertise, moderate to advanced internal capacity or the ability to seek external support, and abundant time for analysis and iteration."}
 ];
 
 export default function ResourceLevel({ options, handleOptionsChange }) {
@@ -85,6 +85,8 @@ export default function ResourceLevel({ options, handleOptionsChange }) {
 
   return (
     <div className={ classes.mainContainer }>
+      <p>In this case, resources constitute not just financial resources, but also how much time and number of personnel are available for the analysis, the degree of familiarity and experience relevant personnel have with climate data, and the flexibility of the process. Resources available or needed for the infrastructure project itself are <i>not</i> considered at this stage.</p>
+
       <div className={ classes.bodyContainer }>
         <div className={ classes.selectorsContainer }>
           <div className={ classes.selector } style={{ maxWidth: "1000px" }}>
@@ -103,7 +105,7 @@ export default function ResourceLevel({ options, handleOptionsChange }) {
         {getFlowchartImageStack(options.riskOrientation.riskOrientation, options.resourceLevel)}
       </div>
 
-      <p className={ classes.endnote }>Refer to page X-Y of the decision support guide for more details on these choices.</p>
+      <p className={ classes.endnote }>Refer to page 12 of the <a href="https://www.rand.org/pubs/tools/TLA4308-2.html" rel="noreferrer" target="_blank">decision support guide</a> for more details on these choices.</p>
     </div>
   );
 }

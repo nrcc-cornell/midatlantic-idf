@@ -24,9 +24,6 @@ const useStyles = makeStyles(() => ({
   btn: {
     padding: "16px 32px",
     fontWeight: "bold"
-  },
-  indentedParagraph: {
-    textIndent: "18px"
   }
 }));
 
@@ -35,10 +32,10 @@ export default function Introduction({ nextFunction }) {
 
   return (
     <div className={ classes.container }>
-      <p className={ classes.indentedParagraph }>This tool is an interactive companion to <i>Decision Support for Selecting Projected Intensity-Duration-Frequency Curvey Change Factors – A Guide for Stormwater Professionals</i>, a guide designed to help stormwater professionals make structured, transparent decisions about which projected change factors to use in design, planning, and policy. The full guide walks through three steps: determining the purpose and context of the work, selecting a risk orientation, and selecting a change factor. Rather than prescribing a single &quot;correct&quot; factor, it explains the reasoning that supports different choices, recognizing that the right choice depends on each user&apos;s context, goals, and risk orientation.</p>
-      <p className={ classes.indentedParagraph }>This tool focuses on Steps 2 and 3. Before using it, users should consult the full guide to complete Step 1 which helps you identify the purpose of the work (e.g., designing infrastructure, assessing vulnerability, updating policy) and clarify what outcomes matter most. That context will inform the selections you make here.</p>
-      <p className={ classes.indentedParagraph }>Once you are ready to proceed, the tool will guide you through a series of questions about the asset, system, or jurisdiction you are working with, including its exposure, sensitivity, and adaptive capacity. Your responses will determine an appropriate risk orientation and, ultimately, a recommended change factor specifying the time period, emissions scenario, and percentile that should inform your planning or design. At the end of the tool, you will receive a summary of your inputs and decisions alongside your recommended change factor.</p>
-      <p className={ classes.indentedParagraph }>A more detailed version of this guidance, which can be used as a companion to this interactive tool is available here: COMING SOON</p>
+      <p>This tool is an interactive companion to <i>Decision Support for Selecting Projected Intensity-Duration-Frequency Curvey Change Factors – A Guide for Stormwater Professionals</i>, a guide designed to help stormwater professionals make structured, transparent decisions about which projected change factors to use in design, planning, and policy. The full guide walks through three steps: determining the purpose and context of the work, selecting a risk orientation, and selecting a change factor. Rather than prescribing a single &quot;correct&quot; factor, it explains the reasoning that supports different choices, recognizing that the right choice depends on each user&apos;s context, goals, and risk orientation.</p>
+      <p>This tool focuses on Steps 2 and 3. Before using it, users should consult the full guide to complete Step 1 which helps you identify the purpose of the work (e.g., designing infrastructure, assessing vulnerability, updating policy) and clarify what outcomes matter most. That context will inform the selections you make here.</p>
+      <p>Once you are ready to proceed, the tool will guide you through a series of questions about the asset, system, or jurisdiction you are working with, including its exposure, sensitivity, and adaptive capacity. Your responses will determine an appropriate risk orientation and, ultimately, a recommended change factor specifying the time period, emissions scenario, and percentile that should inform your planning or design. At the end of the tool, you will receive a summary of your inputs and decisions alongside your recommended change factor.</p>
+      <p>A more detailed version of this guidance, which can be used as a companion to this interactive tool is available here: <a href="https://www.rand.org/pubs/tools/TLA4308-2.html" rel="noreferrer" target="_blank">Decision Support for Selecting Projected Intensity-Duration-Frequency Curve Change Factors: A Guide for Stormwater Professionals</a></p>
 
       <div className={ classes.btnContainer }>
         <Button

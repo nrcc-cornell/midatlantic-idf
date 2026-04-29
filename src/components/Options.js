@@ -14,8 +14,6 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 // import { makeStyles } from "@material-ui/core/styles";
 
-import Guidance from "./Guidance/Guidance";
-
 import "../styles/Options.scss";
 
 import {OptionsContext} from "../contexts/OptionsContext";
@@ -155,8 +153,6 @@ function Options() {
         </Grid>
       </Typography> */}
 
-      <Guidance />
-      
       <Button
         id="chart-toggle"
         aria-label="toggle chart visibility"

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import {
   Select,
   MenuItem,
+  InputLabel,
+  FormControl
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -47,6 +49,10 @@ const useStyles = makeStyles(() => ({
   select: {
     marginLeft: "24px",
     minWidth: "150px"
+  },
+  multiSelect: {
+    display: "flex",
+    gap: "24px"
   }
 }));
 
@@ -79,13 +85,25 @@ const durationOptions = [
 export default function UserSelections({ options, handleOptionsChange, stations }) {
   const classes = useStyles();
 
-  const stationOptions = Object.entries(stations).map(([stnKey, stnObj]) => {
-    return {
+  const stationOptions = Object.entries(stations).reduce((acc, [stnKey, stnObj]) => {
+    if (!Object.keys(acc).includes(stnObj.state)) {
+      acc[stnObj.state] = [];
+    }
+    
+    acc[stnObj.state].push({
       station_name: stnObj.station_name,
       state: stnObj.state,
       key: stnKey
-    };
-  }).sort((a,b) => a.state.localeCompare(b.state) || a.station_name.localeCompare(b.station_name));
+    });
+
+    acc[stnObj.state].sort((a,b) => a.station_name.localeCompare(b.station_name));
+    
+    return acc;
+  }, {});
+
+  const handleStateChange = (e) => {
+    handleOptionsChange("state", e.target.value);
+  };
 
   const handleStationChange = (e) => {
     handleOptionsChange("station", Object.values(stations).find(obj => obj.station_name === e.target.value));
@@ -107,13 +125,32 @@ export default function UserSelections({ options, handleOptionsChange, stations 
         <div className={ classes.selector } style={{ maxWidth: "1000px" }}>
           <p className={ classes.selectText }>Select a Station within the Chesapeake Bay watershed or Virginia:</p>
           
-          <Select
-            value={options["station"]?.station_name || ""}
-            onChange={handleStationChange}
-            className={ classes.select }
-          >
-            {stationOptions.map((obj, i) => <MenuItem key={obj.station_name + i} value={obj.station_name}>{obj.station_name} ({obj.state})</MenuItem>)}
-          </Select>
+          <div className={ classes.multiSelect }>
+            <FormControl>
+              <InputLabel shrink id="state-label">State</InputLabel>
+              <Select
+                labelId="state-label"
+                value={options["state"] || ""}
+                onChange={handleStateChange}
+                className={ classes.select }
+              >
+                {Object.keys(stationOptions).toSorted().map((stateAbbr) => <MenuItem key={stateAbbr} value={stateAbbr}>{stateAbbr}</MenuItem>)}
+              </Select>
+            </FormControl>
+            
+            <FormControl>
+              <InputLabel shrink id="station-label">Station</InputLabel>
+              <Select
+                labelId="station-label"
+                disabled={options["state"] === undefined}
+                value={options["station"]?.station_name || ""}
+                onChange={handleStationChange}
+                className={ classes.select }
+              >
+                {(options["state"] ? stationOptions[options["state"]] : []).map((obj, i) => <MenuItem key={obj.station_name + i} value={obj.station_name}>{obj.station_name}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </div>
         </div>
 
         <div className={ classes.selector } style={{ maxWidth: "1000px" }}>
@@ -141,7 +178,7 @@ export default function UserSelections({ options, handleOptionsChange, stations 
         </div>
       </div>
 
-      <p className={ classes.endnote }>Refer to page X-Y of the decision support guide for more details on these choices.</p>
+      <p className={ classes.endnote }>Refer to pages 10-11 of the <a href="https://www.rand.org/pubs/tools/TLA4308-2.html" rel="noreferrer" target="_blank">decision support guide</a> for more details on these choices.</p>
     </div>
   );
 }

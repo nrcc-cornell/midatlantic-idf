@@ -4,6 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import ReactGA from "react-ga4";
 
+import Guidance from "./Guidance/Guidance";
+
 import "../styles/CustomModal.scss";
 
 function getModalStyle() {
@@ -28,6 +30,25 @@ const useStyles = makeStyles((theme) => ({
     outline: "none",
     padding: "12px 32px"
   },
+  tgPaper: {
+    position: "absolute",
+    boxSizing: "border-box",
+    minHeight: "478px",
+    height: "calc(100vh - 100px)",
+    maxHeight: "800px",
+    minWidth: "984px",
+    width: "calc(100vw - 40px)",
+    maxWidth: "1400px",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+    backgroundColor: theme.palette.background.paper,
+    border: "none",
+    borderRadius: "20px",
+    boxShadow: theme.shadows[5],
+    outline: "none",
+    padding: "6px 12px 12px 12px",
+  }
 }));
 
 export default function CustomModal() {
@@ -48,7 +69,11 @@ export default function CustomModal() {
       label: contentType
     });
     setOpen(true);
-    contentType === "tr" ? setContent(trBody) : (contentType === "utt" ? setContent(uttBody) : setContent(utdBody));
+    if (contentType === "cf") {
+      setContent(cfBody);
+    } else if (contentType === "rd") {
+      setContent(rdBody);
+    }
   };
 
   const handleDownload = () => {
@@ -58,10 +83,73 @@ export default function CustomModal() {
     a.click();
   };
 
-  const trBody = (
+  const rdBody = (
     <div style={modalStyle} className={classes.paper}>
       <div className="close-modal"><CloseIcon onClick={handleClose} /></div>
-      
+
+
+      <h2 id="custom-modal-title">Using the Tool</h2>
+      <div id="custom-modal-description">
+        <div className="list-title">Available Data:</div>
+        <ul>
+          <li>County-level IDF curve change factors that can be accessed by hovering your mouse over a given county.</li>
+          <li>Station-based projected IDF curves, which constitute Atlas 14 values with the county-level change factors already applied. These can be accessed by selecting a station in the map, indicated with white location markers.</li>
+        </ul>
+        <div className="list-title">Individual IDF Curves:</div>
+        <ul>
+          <li>For each station, IDF curves (see Chart tab) and tabular IDF curve values (see Table tab) can be accessed by clicking the white location marker for the station of interest.</li>
+          <li>Stations can be saved clicking the star next to the station name in the &quot;Currently Selected&quot; box.</li>
+          <li>Users can view a comparison of Projected and Atlas 14 values in the Comparison tab.</li>
+        </ul>
+        <div className="list-title">Selection Panel:</div>
+        <ul>
+          <li>Users can select the return period, future time period of interest and future emissions scenario in the drop-down menu.</li>
+          <li>Area of Interest allows users to select the Chesapeake Bay Watershed, Virginia or Both.</li>
+          <li>For each time period, users can also select a future greenhouse gas emissions scenario under Emissions Scenario by selecting a low emissions future, Representative Concentration Pathway (RCP) 4.5, or a high emissions future, RCP 8.5.</li>
+        </ul>
+        <div className="list-title">Downloading Data:</div>
+        <ul>
+          <li>Images of station-based projected IDF curve charts can be downloaded by selecting the three horizontal lines in the upper right corner of the Charts tab for a given station.</li>
+          <li>A .csv file of station-based projected IDF curve values can be downloaded by selecting “Download CSV” from the Table tab for a given station.</li>
+          <li>All data can be downloaded from the &quot;Using the Data&quot; tab.</li>
+        </ul>
+        <div className="list-title">Supported Browsers:</div>
+        <ul>
+          <li>This tool is available on Firefox, Safari, Google Chrome, and Microsoft Edge. It is not supported on Internet Explorer.</li>
+        </ul>
+      </div>
+
+      <br/>
+      <br/>
+
+      <h2 id="custom-modal-title">Using the Data</h2>
+      <div id="custom-modal-description">
+        <div className="list-title">Correct applications of the data tool:</div>
+        <ul>
+          <li>Use the station-based projected Atlas 14 IDF curves in the online tool for typical engineering applications.</li>
+          <li>Apply county-level change factors to gridded Atlas 14 values within that county and that cover a roughly similar historic period (1950-1999).</li>
+          <li>Compare 2020-2070 or 2050-2100 station-based projected Atlas 14 IDF curves values from the tool (not the change factors) to any updated Atlas 14 values that cover a more recent time period than those offered in the tool.</li>
+          <li>Examine the range of uncertainty (shown as confidence intervals) in the station-based projected Atlas 14 IDF curves or the county-level change factors. Users can toggle on or off the confidence intervals at the top of the IDF curve chart.</li>
+        </ul>
+        <div className="list-title">Incorrect application of the data tool:</div>
+        <ul>
+          <li>Do not apply change factors directly to Atlas 14 values that have a different time period than that in the tool (1950-2000).</li>
+          <li>Do not apply change factors to IDF curves not available from Atlas 14.</li>
+        </ul>
+        <Button
+          id="download-all"
+          aria-label="download all data"
+          backgroundColor="secondary"
+          onClick={handleDownload}
+        >
+          Download All Data
+        </Button>
+      </div>
+
+      <br/>
+      <br/>
+      <br/>
+
       <h2 id="custom-modal-title">Technical Resources</h2>
       <div id="custom-modal-description">
         <div className="list-title">Technical Report on Data and Methods:</div>
@@ -100,78 +188,17 @@ export default function CustomModal() {
     </div>
   );
 
-  const utdBody = (
-    <div style={modalStyle} className={classes.paper}>
+  const cfBody = (
+    <div style={modalStyle} className={classes.tgPaper}>
       <div className="close-modal"><CloseIcon onClick={handleClose} /></div>
-     
-      <h2 id="custom-modal-title">Using the Data</h2>
-      <div id="custom-modal-description">
-        <div className="list-title">Correct applications of the data tool:</div>
-        <ul>
-          <li>Use the station-based projected Atlas 14 IDF curves in the online tool for typical engineering applications.</li>
-          <li>Apply county-level change factors to gridded Atlas 14 values within that county and that cover a roughly similar historic period (1950-1999).</li>
-          <li>Compare 2020-2070 or 2050-2100 station-based projected Atlas 14 IDF curves values from the tool (not the change factors) to any updated Atlas 14 values that cover a more recent time period than those offered in the tool.</li>
-          <li>Examine the range of uncertainty (shown as confidence intervals) in the station-based projected Atlas 14 IDF curves or the county-level change factors. Users can toggle on or off the confidence intervals at the top of the IDF curve chart.</li>
-        </ul>
-        <div className="list-title">Incorrect application of the data tool:</div>
-        <ul>
-          <li>Do not apply change factors directly to Atlas 14 values that have a different time period than that in the tool (1950-2000).</li>
-          <li>Do not apply change factors to IDF curves not available from Atlas 14.</li>
-        </ul>
-        <Button
-          id="download-all"
-          aria-label="download all data"
-          backgroundColor="secondary"
-          onClick={handleDownload}
-        >
-          Download All Data
-        </Button>
-      </div>
-    </div>
-  );
-  
-  const uttBody = (
-    <div style={modalStyle} className={classes.paper}>
-      <div className="close-modal"><CloseIcon onClick={handleClose} /></div>
-
-      <h2 id="custom-modal-title">Using the Tool</h2>
-      <div id="custom-modal-description">
-        <div className="list-title">Available Data:</div>
-        <ul>
-          <li>County-level IDF curve change factors that can be accessed by hovering your mouse over a given county.</li>
-          <li>Station-based projected IDF curves, which constitute Atlas 14 values with the county-level change factors already applied. These can be accessed by selecting a station in the map, indicated with white location markers.</li>
-        </ul>
-        <div className="list-title">Individual IDF Curves:</div>
-        <ul>
-          <li>For each station, IDF curves (see Chart tab) and tabular IDF curve values (see Table tab) can be accessed by clicking the white location marker for the station of interest.</li>
-          <li>Stations can be saved clicking the star next to the station name in the &quot;Currently Selected&quot; box.</li>
-          <li>Users can view a comparison of Projected and Atlas 14 values in the Comparison tab.</li>
-        </ul>
-        <div className="list-title">Selection Panel:</div>
-        <ul>
-          <li>Users can select the return period, future time period of interest and future emissions scenario in the drop-down menu.</li>
-          <li>Area of Interest allows users to select the Chesapeake Bay Watershed, Virginia or Both.</li>
-          <li>For each time period, users can also select a future greenhouse gas emissions scenario under Emissions Scenario by selecting a low emissions future, Representative Concentration Pathway (RCP) 4.5, or a high emissions future, RCP 8.5.</li>
-        </ul>
-        <div className="list-title">Downloading Data:</div>
-        <ul>
-          <li>Images of station-based projected IDF curve charts can be downloaded by selecting the three horizontal lines in the upper right corner of the Charts tab for a given station.</li>
-          <li>A .csv file of station-based projected IDF curve values can be downloaded by selecting “Download CSV” from the Table tab for a given station.</li>
-          <li>All data can be downloaded from the &quot;Using the Data&quot; tab.</li>
-        </ul>
-        <div className="list-title">Supported Browsers:</div>
-        <ul>
-          <li>This tool is available on Firefox, Safari, Google Chrome, and Microsoft Edge. It is not supported on Internet Explorer.</li>
-        </ul>
-      </div>
+      <Guidance handleClose={handleClose} />   
     </div>
   );
 
   return (
     <div id="link-container">
-      <div className="link" onClick={() => handleOpen("tr")}>Technical Resources</div>
-      <div className="link" onClick={() => handleOpen("utd")}>Using the Data</div>
-      <div className="link" onClick={() => handleOpen("utt")}>Using the Tool</div>
+      <div className="link" onClick={() => handleOpen("cf")}>How to Select a Change Factor</div>
+      <div className="link" onClick={() => handleOpen("rd")}>Resources and Documentation</div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -179,7 +206,6 @@ export default function CustomModal() {
         aria-describedby="custom-modal-description"
       >
         {content}
-          
       </Modal>
     </div>
   );

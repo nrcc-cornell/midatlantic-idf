@@ -32,7 +32,9 @@ const useStyles = makeStyles(() => ({
     fontWeight: "bold"
   },
   radioContainer: {
-    paddingLeft: "40px"
+    paddingLeft: "40px",
+    marginTop: "12px",
+    marginBottom: "12px"
   }
 }));
 
@@ -61,7 +63,7 @@ export default function TimePeriod({ options, handleOptionsChange }) {
         </div>
       </div>
 
-      <p className={ classes.endnote }>Refer to page X-Y of the decision support guide for more details on these choices.</p>
+      <p className={ classes.endnote }>Refer to page 11 of the <a href="https://www.rand.org/pubs/tools/TLA4308-2.html" rel="noreferrer" target="_blank">decision support guide</a> for more details on these choices.</p>
     </div>
   );
 }

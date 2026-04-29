@@ -2,3 +2,5 @@ node_modules
 build
 .eslint*
 .env
+
+/public/assets/flowcharts-old

@@ -23,6 +23,14 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     width: "35%",
     margin: "0 auto",
+  },
+  selectionsMain: {
+    border: "1px solid rgb(150,150,150)",
+    borderRadius: "5px",
+    display: "flex",
+    padding: "12px",
+    flexDirection: "column",
+    justifyContent: "center",
     "& > div": {
       display: "flex",
       justifyContent: "space-between",
@@ -44,14 +52,13 @@ const useStyles = makeStyles(() => ({
   },
   cfsTable: {
     border: "1px solid rgb(150,150,150)",
-    width: "50%",
     borderRadius: "5px",
+    width: "50%",
     overflow: "hidden"
   },
   durationsTable: {
-    border: "1px solid rgb(150,150,150)",
-    width: "75%",
-    borderRadius: "5px",
+    borderTop: "1px solid rgb(150,150,150)",
+    width: "100%",
     overflow: "hidden"
   },
   tableColRightBorder: {
@@ -63,16 +70,24 @@ const useStyles = makeStyles(() => ({
     }
   },
   tableContainer: {
+    border: "1px solid rgb(150,150,150)",
+    borderRadius: "5px",
+    width: "75%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "12px",
-    margin: "24px 0px"
+    margin: "24px auto",
+    overflow: "hidden"
+  },
+  tableLabel: {
+    fontSize: "24px",
+    textAlign: "center",
+    margin: "12px 0px"
   },
   label: {
     fontSize: "24px",
     textAlign: "center",
-    margin: 0
+    margin: "0px 0px 12px"
   },
   tableHeader: {
     backgroundColor: "#fafafa"
@@ -89,6 +104,49 @@ const useStyles = makeStyles(() => ({
       bottom: 0,
       width: "100%"
     }
+  },
+  recommendationContainer: {
+    border: "1px solid rgb(150,150,150)",
+    borderRadius: "5px",
+    display: "flex",
+    gap: "12px",
+    flexDirection: "column",
+    alignItems: "center",
+    margin: "24px auto",
+    padding: "12px",
+    width: "fit-content"
+  },
+  recommendationTitle: {
+    fontSize: "24px",
+    textAlign: "center",
+    margin: 0
+  },
+  recommendationMain: {
+    display: "flex",
+    gap: "12px"
+  },
+  recommendationAnd: {
+    fontSize: "20px" 
+  },
+  recommendation: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  recommendationCf: {
+    fontSize: "50px",
+    lineHeight: "44px",
+    fontWeight: "bold",
+    margin: "0",
+    height: "fit-content"
+  },
+  recommendationPercentile: {
+    fontSize: "14px",
+    fontStyle: "italic",
+    color: "rgb(100,100,100)",
+    margin: "0",
+    height: "fit-content",
+    width: "fit-content",
   }
 }));
 
@@ -97,6 +155,8 @@ export default function ChangeFactorSummary({ options, data }) {
 
   let emissionsScenario;
   const percentiles = {
+    _10th: false,
+    _25th: false,
     _median: false,
     _75th: false,
     _90th: false
@@ -125,7 +185,15 @@ export default function ChangeFactorSummary({ options, data }) {
     }
   }
 
-  const {median, "10%": _10, "90%": _90, "25%": _25, "75%": _75} = data[emissionsScenario][options.timePeriod][options.returnPeriod][options.station.fips];
+  const {median: _median, "10%": _10th, "90%": _90th, "25%": _25th, "75%": _75th} = data[emissionsScenario][options.timePeriod][options.returnPeriod][options.station.fips];
+  const cfs = {_median, _10th, _90th, _25th, _75th};
+
+  const cfsToShow = ["_median","_75th","_90th"].reduce((acc, k) => {
+    if (percentiles[k]) {
+      acc.push([cfs[k], k]);
+    }
+    return acc;
+  }, []);
 
   const station = options.station;
   const categories = ["5min", "10min", "15min", "30min", "60min", "2hr", "3hr", "6hr", "12hr", "24hr", "2day", "3day", "4day", "7day"];
@@ -180,55 +248,57 @@ export default function ChangeFactorSummary({ options, data }) {
         {getFlowchartImageStack(options.riskOrientation.riskOrientation, options.resourceLevel)}
 
         <div className={ classes.selectionsContainer }>
-          <p className={classes.label}>Your Selections</p>
-
-          <div>
-            <p><b>Station Name</b>:</p>
-            <p>{options["station"]["station_name"]}</p>
-          </div>
-          <div>
-            <p><b>Return Period</b>:</p>
-            <p>{options["returnPeriod"]}-yr</p>
-          </div>
-          <div>
-            <p><b>Duration</b>:</p>
-            <p>{formatDurationString(options["duration"])}</p>
-          </div>
-          <div>
-            <p><b>Risk Exposure</b>:</p>
-            <p>{capitalizeFirstLetter(options["riskOrientation"]["exposure"])}</p>
-          </div>
-          <div>
-            <p><b>Risk Sensitivity</b>:</p>
-            <p>{capitalizeFirstLetter(options["riskOrientation"]["sensitivity"])}</p>
-          </div>
-          <div>
-            <p><b>Risk Capacity</b>:</p>
-            <p>{capitalizeFirstLetter(options["riskOrientation"]["capacity"])}</p>
-          </div>
-          <div>
-            <p><b>Risk Orientation</b>:</p>
-            <p>{capitalizeFirstLetter(options["riskOrientation"]["riskOrientation"])}</p>
-          </div>
-          <div>
-            <p><b>Time Period</b>:</p>
-            <p>{options["timePeriod"]}</p>
-          </div>
-          <div>
-            <p><b>Resource Level</b>:</p>
-            <p>{options["resourceLevel"].length > 3 ? "Moderate/High" : "Low"}</p>
-          </div>
-          <div>
-            <p><b>Emissions Scenario</b>:</p>
-            <p>RCP {emissionsScenario}</p>
+          <div className={classes.selectionsMain}>
+            <p className={classes.label}>Your Selections</p>
+            <div>
+              <p><b>Station Name</b>:</p>
+              <p>{options["station"]["station_name"]}</p>
+            </div>
+            <div>
+              <p><b>Return Period</b>:</p>
+              <p>{options["returnPeriod"]}-yr</p>
+            </div>
+            <div>
+              <p><b>Duration</b>:</p>
+              <p>{formatDurationString(options["duration"])}</p>
+            </div>
+            <div>
+              <p><b>Exposure</b>:</p>
+              <p>{capitalizeFirstLetter(options["riskOrientation"]["exposure"])}</p>
+            </div>
+            <div>
+              <p><b>Sensitivity</b>:</p>
+              <p>{capitalizeFirstLetter(options["riskOrientation"]["sensitivity"])}</p>
+            </div>
+            <div>
+              <p><b>Capacity</b>:</p>
+              <p>{capitalizeFirstLetter(options["riskOrientation"]["capacity"])}</p>
+            </div>
+            <div>
+              <p><b>Orientation</b>:</p>
+              <p>{capitalizeFirstLetter(options["riskOrientation"]["riskOrientation"])}</p>
+            </div>
+            <div>
+              <p><b>Time Period</b>:</p>
+              <p>{options["timePeriod"]}</p>
+            </div>
+            <div>
+              <p><b>Resource Level</b>:</p>
+              <p>{options["resourceLevel"].length > 3 ? "Moderate/High" : "Low"}</p>
+            </div>
+            <div>
+              <p><b>Emissions Scenario</b>:</p>
+              <p>RCP {emissionsScenario}</p>
+            </div>
           </div>
         </div>
       </div>
 
 
-      <div className={classes.tableContainer}>
-        <p className={classes.label}>Your recommended Change Factors</p>
-        <div className={classes.cfsTable}>
+      <div className={classes.recommendationContainer}>
+        <p className={classes.recommendationTitle}>Your recommended Change Factor{cfsToShow.length > 1 ? "s" : ""}</p>
+        
+        {/* <div className={classes.cfsTable}>
           <Table>
             <TableHead className={classes.tableHeader}>
               <TableRow>
@@ -251,11 +321,25 @@ export default function ChangeFactorSummary({ options, data }) {
               </TableRow>
             </TableBody>
           </Table>
+        </div> */}
+        
+        
+        
+        <div className={classes.recommendationMain}>
+          {cfsToShow.map(([cf, k], i) => {
+            return <React.Fragment key={k}>
+              {i > 0 && <p className={classes.recommendationAnd}>&</p>}
+              <div className={classes.recommendation}>
+                <p className={classes.recommendationCf}>{cf.toFixed(2)}</p>
+                <p className={classes.recommendationPercentile}>({k.slice(1)})</p>
+              </div>
+            </React.Fragment>;
+          })}
         </div>
       </div>
 
       <div className={classes.tableContainer}>
-        <p className={classes.label}>Depths for {options.returnPeriod}-year Storm</p>
+        <p className={classes.tableLabel}>Depths for {options.returnPeriod}-year Storm</p>
 
         <div className={classes.durationsTable}>
           <Table>
@@ -281,11 +365,11 @@ export default function ChangeFactorSummary({ options, data }) {
                 return (
                   <TableRow key={duration}>
                     <TableCell className={determineHighlighting(isDuration, false, [classes.tableColRightBorder])} align="center">{formatDurationString(duration)}</TableCell>
-                    <TableCell className={determineHighlighting(isDuration, percentiles._90th)} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_10).toFixed(2)}</TableCell>
-                    <TableCell className={determineHighlighting(isDuration, percentiles._75th)} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_25).toFixed(2)}</TableCell>
-                    <TableCell className={determineHighlighting(isDuration, percentiles._median)} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*median).toFixed(2)}</TableCell>
-                    <TableCell className={determineHighlighting(isDuration, percentiles._75th)} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_75).toFixed(2)}</TableCell>
-                    <TableCell className={determineHighlighting(isDuration, percentiles._90th, [classes.tableColRightBorder])} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_90).toFixed(2)}</TableCell>
+                    <TableCell className={determineHighlighting(isDuration, percentiles._10th)} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_10th).toFixed(2)}</TableCell>
+                    <TableCell className={determineHighlighting(isDuration, percentiles._25th)} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_25th).toFixed(2)}</TableCell>
+                    <TableCell className={determineHighlighting(isDuration, percentiles._median)} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_median).toFixed(2)}</TableCell>
+                    <TableCell className={determineHighlighting(isDuration, percentiles._75th)} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_75th).toFixed(2)}</TableCell>
+                    <TableCell className={determineHighlighting(isDuration, percentiles._90th, [classes.tableColRightBorder])} align="center">{(parseFloat(station[duration][`${options["returnPeriod"]}-mid`])*_90th).toFixed(2)}</TableCell>
                     <TableCell className="col-shaded" align="center">{parseFloat(station[duration][`${options["returnPeriod"]}-mid`])}</TableCell>
                   </TableRow>
                 );

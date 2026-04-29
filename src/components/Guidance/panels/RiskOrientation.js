@@ -54,21 +54,21 @@ const useStyles = makeStyles(() => ({
 }));
 
 const exposureOptions = [
-  { value: "low", label: "Low", hoverText: "Term definition"},
-  { value: "moderate", label: "Moderate", hoverText: "Term definition"},
-  { value: "high", label: "High", hoverText: "Term definition"},
+  { value: "low", label: "Low", hoverText: "Located on high ground or outside flood-prone areas; no flood history."},
+  { value: "moderate", label: "Moderate", hoverText: "Some drainage concerns or occasional localized flooding events."},
+  { value: "high", label: "High", hoverText: "Frequent or severe flooding, limited drainage capacity, or multiple overlapping hazards such as tidal or riparian influences."},
 ];
 
 const sensitivityOptions = [
-  { value: "low", label: "Low", hoverText: "Term definition"},
-  { value: "moderate", label: "Moderate", hoverText: "Term definition"},
-  { value: "high", label: "High", hoverText: "Term definition"},
+  { value: "low", label: "Low", hoverText: "Performs reliably under a wide range of conditions or includes redundancy that limits performance loss."},
+  { value: "moderate", label: "Moderate", hoverText: "Some degradation in performance under heavier rainfall but retains function or recovers quickly."},
+  { value: "high", label: "High", hoverText: "Fails or floods when rainfall modestly exceeds design thresholds."},
 ];
 
 const capacityOptions = [
-  { value: "low", label: "Low", hoverText: "Term definition"},
-  { value: "moderate", label: "Moderate", hoverText: "Term definition"},
-  { value: "high", label: "High", hoverText: "Term definition"},
+  { value: "low", label: "Low", hoverText: "Minimal redundancy or contingency capacity; few operations for temporary or permanent response."},
+  { value: "moderate", label: "Moderate", hoverText: "Some alternatives or interim responses exist but may be limited in scope or duration."},
+  { value: "high", label: "High", hoverText: "Strong redundancy, clear contingency plans, and access to resources enable continued service or rapid restoration."},
 ];
 
 const determineRiskOrientation = (exposure, sensitivity, capacity) => {
@@ -209,7 +209,7 @@ export default function RiskOrientation({ options, handleOptionsChange }) {
         {getFlowchartImageStack(options.riskOrientation)}
       </div>
 
-      <p className={ classes.endnote }>Refer to page X-Y of the decision support guide for more details on these choices.</p>
+      <p className={ classes.endnote }>Refer to pages 6-9 of the <a href="https://www.rand.org/pubs/tools/TLA4308-2.html" rel="noreferrer" target="_blank">decision support guide</a> for more details on these choices.</p>
     </div>
   );
 }
