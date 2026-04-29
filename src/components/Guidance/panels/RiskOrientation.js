@@ -136,7 +136,7 @@ export default function RiskOrientation({ options, handleOptionsChange }) {
     
     const stack = [];
     if (exposure === "") {
-      stack.push(<img key="base-flowchart" src={process.env.PUBLIC_URL + "/assets/flowcharts/risk_orientation_flowchart.jpg"} alt="Flowcharts that show how selected options alter risk orientation outcomes" />);
+      stack.push(<img style={{ width: "unset", height: "100%", margin: "0 auto" }} key="base-flowchart" src={process.env.PUBLIC_URL + "/assets/flowcharts/risk_orientation_flowchart.jpg"} alt="Flowcharts that show how selected options alter risk orientation outcomes" />);
     } else {
       // Add the base flowchart no matter what
       stack.push(<img key="exposure-overlay" src={process.env.PUBLIC_URL + `/assets/flowcharts/exposure_${exposure}_flowchart.jpg`} alt="Overlay highlighting exposure selection" />);
