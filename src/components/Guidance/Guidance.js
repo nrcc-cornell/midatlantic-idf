@@ -91,10 +91,11 @@ export default function Guidance({ handleClose }) {
   const classes = useStyles();
 
   useEffect(() => {
-    if (currentContextObj?.current && useCase && options[useCase]?.station && stations[currentContextObj.current].fips !== options[useCase].station.fips) {
+    if (currentContextObj?.current && useCase && (!options[useCase]?.station || options[useCase]?.station && stations[currentContextObj.current].fips !== options[useCase].station.fips)) {
+      handleOptionsChange("state", stations[currentContextObj.current].state);
       handleOptionsChange("station", stations[currentContextObj.current]);
     }
-  }, [currentContextObj]);
+  }, [currentContextObj?.current]);
 
   // const handleClose = () => {
   //   setOpen(false);

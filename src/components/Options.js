@@ -50,7 +50,7 @@ function Options() {
   return (
     <div id="options-cont" className="card">
       <Typography variant="h5" component = "h2">
-        Selection Panel
+        Manual Selection Panel
       </Typography>
 
       <FormGroup id="input-cont">
@@ -84,8 +84,8 @@ function Options() {
               value={options["emission"]}
               onChange={event => handleChange(event, "emission")}
             >
-              <MenuItem value={8.5}>High RCP 8.5</MenuItem>
-              <MenuItem value={4.5}>Low RCP 4.5</MenuItem>
+              <MenuItem value={8.5}>RCP 8.5</MenuItem>
+              <MenuItem value={4.5}>RCP 4.5</MenuItem>
             </Select>
           </FormControl>
         ) : (

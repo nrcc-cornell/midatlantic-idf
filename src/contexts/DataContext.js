@@ -1,6 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import PropTypes from "prop-types";
 
+const version = "1.2.1";
+
 const dataSources = ["cmip6", "cmip5"];
 
 export const DataContext = createContext({
@@ -11,7 +13,8 @@ export const DataContext = createContext({
   dataSource: "",
   dataSources: [""],
   setDataSource: () => null,
-  calculateColors: () => null
+  version,
+  versionHasChanged: () => false
 });
 
 const INIT_DATA_INDEX = 1;
@@ -60,7 +63,9 @@ export const DataProvider = ({ children }) => {
     setDataSource: handleChangeDataSource,
     stations,
     counties,
-    virginiaCounties
+    virginiaCounties,
+    version,
+    versionHasChanged: () => !(localStorage.getItem("show-midatlantic-idf-updates") === version)
   };
   return (
     <DataContext.Provider value={value}>{children}</DataContext.Provider>

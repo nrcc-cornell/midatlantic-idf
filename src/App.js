@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import ReactGA from "react-ga4";
 
@@ -13,14 +13,18 @@ import Footer from "./components/Footer";
 
 import { ChartContext } from "./contexts/ChartContext";
 import { CurrentContext } from "./contexts/CurrentContext";
+import { DataContext } from "./contexts/DataContext";
 
 import { useCurrentHeight, useCurrentWidth } from "./hooks/WindowSize";
+import RecentUpdates from "./components/recent-updates/recent-updates.component";
 
 function App() {
   const [chart, setChart] = useState(false);
   const [current, setCurrent] = useState(null);
   const [windowSize, setWindowSize] = useState({height: true, width: true});
   const [warning, setWarning] = useState(true);
+
+  const { versionHasChanged } = useContext(DataContext);
 
   let width = useCurrentWidth();
   let height = useCurrentHeight();
@@ -35,12 +39,11 @@ function App() {
   }, [height, width]);
 
   return (
-    <div className="App">
-      <Header />
-      <div className="content" id="content">
-        <ChartContext.Provider value={{chart, setChart}}>
-          <CurrentContext.Provider value={{current, setCurrent}}>
-              
+    <ChartContext.Provider value={{chart, setChart}}>
+      <CurrentContext.Provider value={{current, setCurrent}}>
+        <div className="App">
+          <Header />
+          <div className="content" id="content">
             <Map />
             <div id="grid">
               {warning && (!windowSize.height || !windowSize.width) && <div id="screen-warning">
@@ -52,12 +55,13 @@ function App() {
               <Favorites />
               <Chart />
             </div>
+          </div>
+          <Footer />
 
-          </CurrentContext.Provider>
-        </ChartContext.Provider>
-      </div>
-      <Footer />
-    </div>
+          {versionHasChanged() ? <RecentUpdates hideButton={true} /> : ""}
+        </div>
+      </CurrentContext.Provider>
+    </ChartContext.Provider>
   );
 }
 

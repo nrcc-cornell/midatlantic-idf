@@ -5,6 +5,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import ReactGA from "react-ga4";
 
 import Guidance from "./Guidance/Guidance";
+import RecentUpdates from "./recent-updates/recent-updates.component";
 
 import "../styles/CustomModal.scss";
 
@@ -185,6 +186,12 @@ export default function CustomModal() {
         </ul>
         <div className="modal-footnote"><i>For feedback on the tool or questions on the study please reach out to Michelle Miro at <a href="mailto: michelle_miro@rand.org">michelle_miro@rand.org</a></i></div>
       </div>
+
+      <br/>
+      <br/>
+      <br/>
+
+      <RecentUpdates />
     </div>
   );
 
@@ -197,7 +204,7 @@ export default function CustomModal() {
 
   return (
     <div id="link-container">
-      <div className="link" onClick={() => handleOpen("cf")}>How to Select a Change Factor</div>
+      <div className="link" onClick={() => handleOpen("cf")}>Step-By-Step Interactive Guide</div>
       <div className="link" onClick={() => handleOpen("rd")}>Resources and Documentation</div>
       <Modal
         open={open}
