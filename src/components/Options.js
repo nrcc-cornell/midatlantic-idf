@@ -7,12 +7,12 @@ import {
   MenuItem,
   Select,
   Typography,
-  // Grid,
-  // Switch
+  Grid,
+  Switch
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-// import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import "../styles/Options.scss";
 
@@ -21,25 +21,25 @@ import {ChartContext} from "../contexts/ChartContext";
 import {CurrentContext} from "../contexts/CurrentContext";
 import { DataContext } from "../contexts/DataContext";
 
-// const useStyles = makeStyles(() => ({
-//   switch: {
-//     "& > .MuiSwitch-track": {
-//       backgroundColor: "#0e8a09",
-//     },
-//     "& > :not(.Mui-checked) > span > .MuiSwitch-thumb": {
-//       color: "#0e8a09",
-//     },
-//   },
-// }));
+const useStyles = makeStyles(() => ({
+  switch: {
+    "& > .MuiSwitch-track": {
+      backgroundColor: "#0e8a09",
+    },
+    "& > :not(.Mui-checked) > span > .MuiSwitch-thumb": {
+      color: "#0e8a09",
+    },
+  },
+}));
 
 function Options() {
   const {options, setOptions} = useContext(OptionsContext);
   const {chart, setChart} = useContext(ChartContext);
   const {current} = useContext(CurrentContext);
-  const { dataSource } = useContext(DataContext);
-  // const { dataSource, dataSources, setDataSource } = useContext(DataContext);
+  // const { dataSource } = useContext(DataContext);
+  const { dataSource, dataSources, setDataSource } = useContext(DataContext);
 
-  // const classes = useStyles();
+  const classes = useStyles();
 
   const handleChange = (event, field) => {
     let newOptions = {...options};
@@ -138,7 +138,7 @@ function Options() {
         </FormControl>
       </FormGroup>
 
-      {/* <Typography component="div">
+      <Typography component="div">
         <Grid component="label" container alignItems="center" spacing={1} style={{ marginTop: "6px" }}>
           <Grid item style={{ fontSize: "12px", width: "75px", textAlign: "center" }}>2026 Analysis</Grid>
           <Grid item>
@@ -151,7 +151,7 @@ function Options() {
           </Grid>
           <Grid item style={{ fontSize: "12px", width: "75px", textAlign: "center" }}>2021 Analysis</Grid>
         </Grid>
-      </Typography> */}
+      </Typography>
 
       <Button
         id="chart-toggle"
